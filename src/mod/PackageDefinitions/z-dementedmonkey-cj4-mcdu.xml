@@ -1,0 +1,30 @@
+<AssetPackage Name="z-dementedmonkey-cj4-mcdu" Version="0.1.0">
+	<ItemSettings>
+		<ContentType>MISC</ContentType>
+		<Title>CJ4 MCDU</Title>
+		<Manufacturer/>
+		<Creator>Demented Monkey</Creator>
+	</ItemSettings>
+	<Flags>
+		<VisibleInStore>false</VisibleInStore>
+		<CanBeReferenced>false</CanBeReferenced>
+	</Flags>
+	<AssetGroups>
+		<AssetGroup Name="ContentInfo">
+			<Type>ContentInfo</Type>
+			<Flags>
+				<FSXCompatibility>false</FSXCompatibility>
+			</Flags>
+			<AssetDir>PackageDefinitions\ContentInfo</AssetDir>
+			<OutputDir>ContentInfo\dementedmonkey-cj4-mcdu</OutputDir>
+		</AssetGroup>
+		<AssetGroup Name="overlay-files">
+			<Type>Copy</Type>
+			<Flags>
+				<FSXCompatibility>false</FSXCompatibility>
+			</Flags>
+			<AssetDir>dementedmonkey-cj4-mcdu</AssetDir>
+			<OutputDir>.\</OutputDir>
+		</AssetGroup>
+	</AssetGroups>
+</AssetPackage>

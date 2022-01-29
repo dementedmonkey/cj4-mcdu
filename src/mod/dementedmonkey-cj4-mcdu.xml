@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Version="2" Name="z-dementedmonkey-cj4-mcdu" FolderName="Packages">
+	<OutputDirectory>build</OutputDirectory>
+	<TemporaryOutputDirectory>_PackageInt</TemporaryOutputDirectory>
+	<Packages>
+		<Package>PackageDefinitions\z-dementedmonkey-cj4-mcdu.xml</Package>
+	</Packages>
+</Project>

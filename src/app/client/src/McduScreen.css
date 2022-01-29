@@ -1,0 +1,211 @@
+@font-face {
+  font-family: "Collins ProLine";
+  src: url("CollinsProLine-Condensed.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal; }
+
+  @font-face {
+    font-family: "Collins ProLine Regular";
+    src: url("CollinsProLine-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal; }
+
+.screen {
+    --displayBackground: rgba(13, 20, 35, 1);
+    --displaySeparator: #3c3c3c;
+    --displaySeparatorLight: #aaaaaa;
+
+    --displayWhite: #ffffff;
+    --displayGrey: #787878;
+    --displayDarkGrey: #b3b3b3;
+    --displayLightGrey: lightgray;
+    --displayAmber: #e68000;
+    --displayCyan: #00ffff;
+    --displayGreen: #00ff00;
+    --displayMagenta: #ff94ff;
+    --displayRed: #ff0000;
+    --displayYellow: #ffff00;
+
+    --mcduWhite: #ffffff;
+    --mcduLightGrey: #666666;
+    --mcduGrey: #787878;
+    --mcduGreen: #00a54f;
+    --mcduAmber: #ff9a00;
+    --mcduCyan: #00ffff;
+    --mcduYellow: #fff201;
+    --mcduRed: #ff886d;
+    --mcduMagenta: #ff00ff;
+    --mcduBlue: #4580a7;
+
+    --mcdu-font-size: calc(calc(0.052 * var(--screen-scale)) * var(--app-width));
+    --mcdu-line-height: calc(calc(0.034 * var(--screen-scale)) * var(--app-width));
+
+    font-family: "Collins ProLine", monospace;
+    letter-spacing: 0.15vw;
+
+    margin: 0 !important;
+    font-size: var(--mcdu-font-size);
+    color: var(--displayWhite);
+    line-height: var(--mcdu-font-size);
+    
+    position: relative;
+    width: calc(100% * var(--screen-scale));
+    left: 13.5%;
+    height: calc(var(--app-width) * var(--screen-scale) / 1.26);
+}
+
+.fullscreen .screen {
+  left: 0;
+  width: 100%;
+}
+
+.label {
+    margin: 0;
+    white-space: pre;
+    position: relative;
+}
+
+.label-left {
+    position: absolute;
+    left: 4.5%;
+    bottom: 0;
+    width: 100%;
+    text-align: left;
+}
+
+.label-right {
+    position: absolute;
+    right: 4.5%;
+    bottom: 0;
+    width: 100%;
+    text-align: right;
+}
+
+.label-center {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.line {
+    height: 6%;
+    margin: 0;
+    white-space: pre;
+}
+
+.screen .line:nth-child(2) {
+  height: 12%;
+}
+
+
+/* Fixes cut-off text in Safari */
+/* https://stackoverflow.com/questions/36294234/safari-cuts-off-fonts-with-characters-that-go-outside-of-font-file-bounding-box */
+
+.fmc-block > span {
+  padding: 20px;
+  margin: -20px;
+}
+
+.line-left {
+    position: absolute;
+    left: 2%;
+    width: 100%;
+    text-align: left;
+}
+
+.line-right {
+    position: absolute;
+    right: 2%;
+    width: 100%;
+    text-align: right;
+}
+
+.line-center {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.white {
+    color: var(--mcduWhite);
+}
+
+.inop, .disabled {
+    color: var(--mcduLightGrey);
+}
+
+.cyan {
+    color: var(--mcduCyan);
+}
+
+.yellow {
+    color: var(--mcduYellow);
+}
+
+.green {
+    color: var(--mcduGreen);
+}
+
+.amber {
+    color: var(--mcduAmber);
+}
+
+.red {
+    color: var(--mcduRed);
+}
+
+.magenta {
+    color: var(--mcduMagenta);
+}
+
+.blue {
+  color: var(--mcduBlue);
+}
+
+.small, .label {
+  font-family: "Collins ProLine Regular", "Collins ProLine", monospace;
+  font-size: calc(var(--mcdu-font-size) *.75);
+  letter-spacing: 0.4vw;
+}
+
+.blackwhite {
+  position:relative
+}
+
+.blackwhite > .bg {
+  display:block;
+  position:absolute;
+  width:100%;
+  height:100%;
+  left:0;
+  top:0;
+}
+
+.blackwhite > .bg > span {
+  display:block;
+  background-color:var(--mcduWhite);
+  height:calc(var(--mcdu-font-size) - 5px);
+  margin:20px
+}
+
+.blackwhite > .fg {
+  color:black;
+  position:relative
+}
+
+.b-text {
+  font-family: "Collins ProLine", monospace;
+}
+
+.left {
+    margin-left: 4%;
+    float: left;
+}
+
+.right {
+    margin-right: 6%;
+    float: right;
+}
