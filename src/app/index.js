@@ -28,7 +28,7 @@ const readNumber = (prompt, min, max, callback) => {
 
 // Parse command line args
 let httpPort = 8126;
-let websocketPort = 8081;
+let websocketPort = 8088;
 let debug = false;
 
 const args = [...process.argv];
@@ -182,5 +182,5 @@ function printUsage() {
     console.log('--debug              enables debug mode');
     console.log('-h, --help           print command line options');
     console.log('--http-port=...      sets port for http server (default: 8126)');
-    console.log('--websocket-port=... sets port for websocket server (default: 8081)');
+    console.log('--websocket-port=... sets port for websocket server (default: 8088)');
 }
