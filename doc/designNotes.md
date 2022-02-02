@@ -5,7 +5,7 @@ Their documentation is currently TODO, so I'm making a few notes
 here about how it works for my own sanity.
 
 The server will run on two ports.  Port 8126 is the web server
-which just serves up the HTML and javascript.   Port 8081 is the
+which just serves up the HTML and javascript.   Port 8088 is the
 web socket server.   The web socket server is basically a mirror.
 Any message it receives is echoed out to all listeners.
 

@@ -114,7 +114,7 @@ class WT_FMC_Renderer {
         const mainFrame = document.getElementById("Electricity");
         mainFrame.appendChild(container);
 
-        const scratch = this._fmc.isDisplayingErrorMessage ? [this._fmc._errorMessage,"center"] : this.inOut;
+        const scratch = this._fmc.isDisplayingErrorMessage ? [this._fmc._errorMessage,"center"] : this._fmc.inOut;
         this._socket.update(template, scratch , this._fmc._msg);
         this._socket.showExec(this._fmc.fpHasChanged);
         this._socket.sendData();
@@ -642,7 +642,7 @@ class WT_FMC_Renderer {
 
 class FWR_FMC_Websocket {
     constructor(eventHandler) {
-        let port = 8081;
+        let port = 8088;
 
         this._template = null;
         this._scratchpad = "";

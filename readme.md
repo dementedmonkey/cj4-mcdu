@@ -18,8 +18,8 @@ a specific version of the CJ4, currently [0.12.11](https://www.workingtitle.aero
 *Note:* Mods are loaded in alphabetical order.  The folder name must sort after "workingtitle" to be able to successfully
 replace the existing files.
 
-## Using the MCDU
-* Run the `MCDU SERVER\cj4-mcdu-server.exe` application.
+## Using the MCDU_
+* Run the `MCDU SERVER\cj4-mcdu-server-x.y.z.exe` application.
 * Start a flight with the CJ4
 * The screen from the MCDU server will change to show that
 the sim has connected, and will give you an address to enter
