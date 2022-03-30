@@ -34,6 +34,32 @@ let debug = false;
 const args = [...process.argv];
 args.splice(0, 2);
 
+const blankScreen = {
+    lines: [
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', ''],
+    ],
+    scratchpad: '',
+    message: '',
+    title: '',
+    titleLeft: '',
+    page: '',
+    exec: false,
+    power: false,
+};
+
+const powerOffMessage = "update:" + JSON.stringify({ left: blankScreen, right: blankScreen });
+
 for (const arg of args) {
     if (arg.startsWith('--http-port=')) {
         httpPort = parseInt(arg.split('=')[1], 10);
@@ -77,23 +103,23 @@ function start() {
         const extname = path.extname(filePath);
         let contentType = 'text/html';
         switch (extname) {
-        case '.js':
-            contentType = 'text/javascript';
-            break;
-        case '.css':
-            contentType = 'text/css';
-            break;
-        case '.json':
-            contentType = 'application/json';
-            break;
-        case '.png':
-            contentType = 'image/png';
-            break;
-        case '.jpg':
-            contentType = 'image/jpg';
-            break;
-        default:
-            break;
+            case '.js':
+                contentType = 'text/javascript';
+                break;
+            case '.css':
+                contentType = 'text/css';
+                break;
+            case '.json':
+                contentType = 'application/json';
+                break;
+            case '.png':
+                contentType = 'image/png';
+                break;
+            case '.jpg':
+                contentType = 'image/jpg';
+                break;
+            default:
+                break;
         }
 
         fs.readFile(path.join(__dirname, './client/build/', filePath), (error, content) => {
@@ -167,6 +193,11 @@ function start() {
             });
             ws.on('close', () => {
                 if (isMcdu) {
+                    wss.clients.forEach((client) => {
+                        if (client.readyState === WebSocket.OPEN) {
+                            client.send(powerOffMessage);
+                        }
+                    });
                     console.clear();
                     console.log('\x1b[31mLost connection to simulator.\x1b[0m\n\nWaiting for simulator...');
                 }
