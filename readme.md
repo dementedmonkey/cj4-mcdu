@@ -10,7 +10,7 @@ or another PC.
 
 In addition to this application, it includes a Flight Simulator mod
 that will connect the CJ4 to this application.   This mod requires
-a specific version of the CJ4, currently [0.12.11](https://www.workingtitle.aero/packages/cj4/2021/12/07/cj4-release-v0.12.11.html)
+a specific version of the CJ4, currently [0.12.12](https://www.workingtitle.aero/packages/cj4/2022/02/28/cj4-release-v0.12.12.html)
 
 ## Installation
 * Install the [Working Title CJ4](https://www.workingtitle.aero/packages/cj4/) if you haven't already
