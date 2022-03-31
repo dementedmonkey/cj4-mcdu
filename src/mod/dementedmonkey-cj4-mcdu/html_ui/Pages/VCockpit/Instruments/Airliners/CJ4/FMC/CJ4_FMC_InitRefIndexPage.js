@@ -477,7 +477,7 @@ class CJ4_FMC_InitRefIndexPage {
                         : WT_ConvertUnit.getWeight(fuelQuantityTotal - (totalFuelFlow * destinationDistance / groundSpeed)).Value;
                 }
 
-                const prevWaypointDistanceConst = prevWaypointDist >= 100 ? prevWaypointDist.toFixed(0) : prevWaypointDist.toFixed(1);
+                const prevWaypointDistanceConst = prevWaypointDist[0] === "-" ? "-----" : (prevWaypointDist >= 100 ? prevWaypointDist.toFixed(0) : prevWaypointDist.toFixed(1));
                 const activeWaypointDistanceConst = activeWaypointDist >= 100 ? activeWaypointDist.toFixed(0) : activeWaypointDist.toFixed(1);
                 const nextWaypointDistanceConst = nextWaypointDist === "----" ? "0" : (nextWaypointDist >= 100 ? nextWaypointDist.toFixed(0) : nextWaypointDist.toFixed(1));
                 const destWaypointDistanceConst = destinationDistance >= 100 ? destinationDistance.toFixed(0) : destinationDistance.toFixed(1);

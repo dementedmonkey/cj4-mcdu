@@ -118,6 +118,9 @@ function start() {
             case '.jpg':
                 contentType = 'image/jpg';
                 break;
+            case '.mp3':
+                contentType = 'audio/mpeg';
+                break;
             default:
                 break;
         }
@@ -179,6 +182,8 @@ function start() {
                         console.log(`To control the MCDU from another device on your network, open \x1b[47m\x1b[30mhttp://${ip}:${httpPort}\x1b[0m in your browser.`);
                         console.log(`To control the MCDU from this device, open \x1b[47m\x1b[30mhttp://localhost:${httpPort}\x1b[0m in your browser.`);
                     }
+                    console.log(`\nCan't connect? You may need to open TCP ports ${httpPort} and ${websocketPort} on your firewall.\n`);
+                    console.log('Add "/sound" to your browser´s URL to get click sounds.');
                     isMcdu = true;
                     return;
                 }
