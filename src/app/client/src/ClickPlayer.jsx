@@ -6,7 +6,9 @@ const loadedSound = init();
 
 async function init() {
     context = new (window.AudioContext || window.webkitAudioContext)();
-    await loadSound("button-click.mp3").then(x => audioBuffer = x);
+    if (!audioBuffer) {
+        await loadSound("button-click.mp3").then(x => audioBuffer = x);
+    }
 }
 
 function loadSound(url) {
@@ -23,13 +25,7 @@ function loadSound(url) {
 
 export default async function playClick() {
     // Make sure initialization finished
-    await loadedSound;
-    
-    // Deal with IOS slience after screen lock
-    if (context.state == "suspended") {
-        await context.resume();
-    }
-    
+    await init();
     const source = context.createBufferSource();
     source.buffer = audioBuffer;
     source.connect(context.destination);
