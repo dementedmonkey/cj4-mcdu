@@ -1,7 +1,7 @@
 # Changelog
 ## 0.3.0
 * Add optional click sounds to button presses _(Available by adding /sound to the URL)_
-* Update readme to reference 0.12.12 version of WT mod
+* Update readme to reference 0.12.14 version of WT mod
 * Clear the screen when the sim disconnects
 * Fix WT bug showing GS on POS INIT 2 page
 * Fix WT bug causing PROGRESS page to flicker
