@@ -2,19 +2,22 @@
     class DM_FMC_Sender {
         constructor(fmc) {
             this._fmc = fmc;
-            //this._index = fmc.instrument.instrumentIndex;
+            this._circuit = new URL(fmc.instrument.getAttribute("Url")).searchParams.get("Circuit") || 0;
             this._editOutputTemplate = fmc.fmcRenderer.editOutputTemplate.bind(fmc.fmcRenderer);
             fmc.fmcRenderer.editOutputTemplate = this.editOutputTemplate.bind(this);            
-            
+
+            const powerOn = this._fmc.instrument.onPowerOn.bind(this._fmc.instrument);
+            const shutDown = this._fmc.instrument.onShutDown.bind(this._fmc.instrument);
+            this._fmc.instrument.onPowerOn = ()=> { powerOn(); this.setPower(true);} 
+            this._fmc.instrument.onShutDown = ()=> { shutDown(); this.setPower(false);} 
+
             const port = 8088;
             
             this._template = [];
             for (let i = 0; i < 16; i++) {
                 this._template.push([""]);
             }
-            this._power = false;
-
-            this._power = true;
+            this._power = fmc.instrument.isElectricityAvailable();
 
             setInterval(() => {
                 if (!this._socket || this._socket.readyState !== 1) {
@@ -38,6 +41,7 @@
 
         setPower(power) {
             this._power = power;
+            this.sendData();
         }
 
         connectWebsocket(port) {
@@ -82,9 +86,13 @@
                 lines: lines,
                 power: this._power
             };
-            var json = {};
+
+            if (this._circuit) {
+                screen.power = screen.power && SimVar.GetSimVarValue(`CIRCUIT ON:${this._circuit}`,'bool');
+            }
+            let  json = {};
             json[this._fmc.instrument.instrumentIndex == 2 ? 'right' : 'left'] = screen;
-            var msg = "update:" + JSON.stringify(json);
+            let msg = "update:" + JSON.stringify(json);
             this.sendToSocket(msg);
         }
 
@@ -119,8 +127,10 @@
             const elements = panel.getElementsByTagName("wt21-fmc");
             if (elements.length > 0) {
                 const fmc = elements[0].fsInstrument;
-                fmc.dmSender = new DM_FMC_Sender(fmc);
-                console.log("dm21: FMC hooked");
+                if (fmc) {
+                    fmc.dmSender = new DM_FMC_Sender(fmc);
+                    console.log("dm21: FMC hooked");
+                }
                 registered = true;
             }
         }

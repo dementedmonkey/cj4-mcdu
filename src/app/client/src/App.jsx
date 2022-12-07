@@ -95,7 +95,7 @@ function App() {
                     {!fullscreen && (
                         <>
                             <McduScreen content={content} />
-                            <McduButtons sound={sound} screenId={content.id} />
+                            <McduButtons sound={sound} screenId={content.power ? content.id : 0} />
                             <div className="button-grid" style={{ left: `${200 / 14.00}%`, top: `${128 / 16.50}%`, width: `${980 / 14.00}%`, height: `${80 / 16.50}%` }}>
                                 <div className="button-row">
                                     <div className="button" title="Fullscreen" onClick={() => setFullscreen(!fullscreen)} />
