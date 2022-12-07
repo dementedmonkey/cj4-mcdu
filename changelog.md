@@ -1,4 +1,8 @@
 # Changelog
+
+## 0.4.0
+* Compatibility with AAU1 version 1.30.5.0
+
 ## 0.3.0
 * Add optional click sounds to button presses _(Available by adding /sound to the URL)_
 * Update readme to reference 0.12.14 version of WT mod

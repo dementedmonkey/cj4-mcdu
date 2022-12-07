@@ -1,16 +1,50 @@
 import React from 'react';
 import './McduScreen.css';
 
-function escapeHTML(unsafeText) {
-    const div = document.createElement('div');
-    div.innerText = unsafeText;
-    return div.innerHTML;
+function escapeHTML(unsafe) {
+    return unsafe.replace(
+      /[\u0000-\u002F\u003A-\u0040\u005B-\u0060\u007B-\u00FF]/g,
+      c => '&#' + ('000' + c.charCodeAt(0)).slice(-4) + ';'
+    )
+  }
+
+function parseContent(content) {
+    const resultInfo = [];
+    // if it starts with a bracket its probably empty
+    if (content.startsWith('[')) {
+        return resultInfo;
+    }
+    // eslint-disable-next-line no-useless-escape
+    const regex = /([^\[\]\n]+)(\[[^\[\]\n]+\])*/g;
+    let match = regex.exec(content);
+    if (match) {
+        while (match != null) {
+            const el = {
+                content: match[1].replace('__LSB', '[').replace('__RSB', ']'),
+                styles: ''
+            };
+            if (match[2]) {
+                // eslint-disable-next-line no-useless-escape
+                const classes = match[2].match(/[^\s\[\]]+/g);
+                if (classes) {
+                    el.styles = classes.join(' ');
+                }
+            }
+            resultInfo.push(el);
+            match = regex.exec(content);
+        }
+    }
+    return resultInfo;
 }
 
 function formatCell(str, raw) {
     if (raw) {
         return str;
     }
+    const content = parseContent(str);
+    const result = content.map((v)=>(`<span class="${v.styles}">${escapeHTML(v.content)}</span>`)).join("");
+
+    /*
     var result = "";
     var remainder = escapeHTML(str);
     const regex = /([^\[]*)(\[([^\]]+)\])?(.*)/;
@@ -39,7 +73,7 @@ function formatCell(str, raw) {
     }
     if (remainder) {
         result += remainder;
-    }
+    }*/
     return result;
 }
 
