@@ -6,10 +6,8 @@ in Microsoft Flight Simulator 2020 with AAU1.
 ## Beta release
 * This version is for *AAU1 Beta 1.30.5.0* only.  Any other version will most
 likely not work.
-* Only the left CDU is currently implemented.  The ability to swich between the
-left and right is coming Soon™
 * This is a quick fix to get things working again with the AAU1 beta.   If anything
-isn't working right, open an Issue.
+isn't working right, please open an Issue.
 
 ## About
 This project contains an application that will allow you to access
@@ -35,6 +33,13 @@ the sim has connected, and will give you an address to enter
 into your browser.   Typically it will be something like http://192.168.1.x:8126/
 * Open your web browser, pointed to the address supplied.   You should see the MCDU immediately.   The screen will be
 blank until it's powered up in the plane
+
+## Multiple screens
+You can control both the left and right MCDUs.  There are two ways of selecting which
+MCDU you are controlling:
+1. Click the top-left or top-right screw to control the left or right MCDU
+2. Add `?screen=1` or `?screen=2` to the end of your URL to select the left or right screen.  This will
+disable switching by the screws.
 
 ## Acknowlegements
 The MCDU application is based on code from the FlyByWire a32nx https://github.com/flybywiresim/a32nx 

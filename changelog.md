@@ -2,6 +2,7 @@
 
 ## 0.4.0
 * Compatibility with AAU1 version 1.30.5.0
+* Support split CDUs (click the top left/right screws)
 
 ## 0.3.0
 * Add optional click sounds to button presses _(Available by adding /sound to the URL)_

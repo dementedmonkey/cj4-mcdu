@@ -2,18 +2,16 @@
     class DM_FMC_Sender {
         constructor(fmc) {
             this._fmc = fmc;
+            //this._index = fmc.instrument.instrumentIndex;
             this._editOutputTemplate = fmc.fmcRenderer.editOutputTemplate.bind(fmc.fmcRenderer);
-            fmc.fmcRenderer.editOutputTemplate = this.editOutputTemplate.bind(this);
-
-            let port = 8088;
-
+            fmc.fmcRenderer.editOutputTemplate = this.editOutputTemplate.bind(this);            
+            
+            const port = 8088;
+            
             this._template = [];
-            for (let i = 0; i < 14; i++) {
+            for (let i = 0; i < 16; i++) {
                 this._template.push([""]);
             }
-            this._scratchpad = "";
-            this._message = "";
-            this._showExec = false;
             this._power = false;
 
             this._power = true;
@@ -27,29 +25,12 @@
         }
         editOutputTemplate(output, rowIndex) {
             this._editOutputTemplate(output, rowIndex);
-            const start = rowIndex;
-            const end = Math.min(rowIndex + output.length, this._template.length);
-            for (let i=0; i< output.length; i++)
+            const end = Math.min(output.length, this._template.length - rowIndex);
+            for (let i=0; i< end; i++)
             {
                 let targetRow = i + rowIndex;
                 var data = output[i];
-                if (targetRow < 13) {
-                    this._template[targetRow] = data;
-                }
-                if (targetRow == 13)  {
-                    const rx= /\](.+)\[/.exec(data[0]);
-                    if (rx) {
-                        this._scratchpad = rx[1];
-                    }
-                    else {
-                        this._scratchpad = "";
-                    }
-                }
-                if (targetRow == 14) {
-                    this._message = data[0];
-                    this._showExec = data.length >1 && data[1].indexOf("EXEC") >=0;
-                }
-
+                this._template[targetRow] = data;
             }
             this.sendData();
         }
@@ -66,13 +47,13 @@
             }
             this._socket = new WebSocket(`ws://localhost:${port}`);
             this._socket.onopen = () => {
-                console.log("Connected to server");
+                console.log("dm21: Connected to websocket");
                 this.sendToSocket("mcduConnected");
             };
             this._socket.addEventListener('message', (event) => {
                 const msg = event.data;
                 if (msg.startsWith("event:")) {
-                    this.onEvent(`CJ4_FMC_1_BTN_${msg.substring(6)}`);
+                    this.onEvent(`${msg.substring(6)}`);
                 } else if (msg == "requestUpdate") {
                     this.sendData();
                 }
@@ -80,33 +61,29 @@
         }
 
         onEvent(event) {
-            this._fmc.onInteractionEvent([event]);
+            const index = this._fmc.instrument.instrumentIndex
+            const prefix = `CJ4_${index}:`;
+            if (event.startsWith(prefix)) {
+                const button = `CJ4_FMC_${index}_BTN_${event.substring(prefix.length)}`;
+                this._fmc.onInteractionEvent([button]);
+            }
         }
 
         isConnected() {
             return this._socket && this._socket.readyState;
         }
+
         sendData() {
             if (!this.isConnected() || !this._template) {
                 return;
             }
-
-            const template = this._template;
-            const message = this._message ? this._message : "";
-            const scratchpad = this._scratchpad ? this._scratchpad : "";
-            var lines = template.slice(1, 13).map((l, i) => this.templateToLine(l, i));
-
+            var lines = this._template.slice(0, 15).map((l, i) => this.templateToLine(l, i));
             var screen = {
                 lines: lines,
-                scratchpad: this.fixLine(scratchpad),
-                message: this.fixLine(message),
-                title: this.fixLine(template[0][2]),
-                titleLeft: this.fixLine(template[0][0]),
-                page: this.fixLine(template[0][1]),
-                exec: this._showExec,
                 power: this._power
             };
-            var json = { right: screen, left: screen }
+            var json = {};
+            json[this._fmc.instrument.instrumentIndex == 2 ? 'right' : 'left'] = screen;
             var msg = "update:" + JSON.stringify(json);
             this.sendToSocket(msg);
         }
@@ -128,7 +105,7 @@
             if (!Array.isArray(templateLine)) {
                 templateLine = [templateLine];
             }
-            var result = templateLine.map(x => this.fixLine(x, index % 2 == 0));
+            var result = templateLine.map(x => this.fixLine(x, false));
             while (result.length < 3) {
                 result.push("");
             }
@@ -143,12 +120,12 @@
             if (elements.length > 0) {
                 const fmc = elements[0].fsInstrument;
                 fmc.dmSender = new DM_FMC_Sender(fmc);
-                console.log("Hooked the FMC");
+                console.log("dm21: FMC hooked");
                 registered = true;
             }
         }
         if (!registered) {
-            console.log("Didn't find the FMC, retrying");
+            console.log("dm21: FMC not yet ready");
             window.setTimeout(tryToHookFmc, 500);
         }
     }
