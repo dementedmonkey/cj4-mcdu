@@ -56,7 +56,7 @@ jobs:
       - name: Run build script
         id: run_build_script
         run: ./build.ps1
-        working-directory: src/app
+        working-directory: src
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
