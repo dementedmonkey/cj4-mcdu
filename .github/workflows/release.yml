@@ -62,7 +62,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: release_files
-          path: "*.zip"
+          path: "release/*.zip"
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -70,4 +70,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: "${{ env.MCDUServerFileNameBase }}-${{ env.version }}.zip"
+          files: "release/*.zip"

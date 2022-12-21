@@ -22,3 +22,6 @@ if (-not (test-path ..\release)) {
 }
 Compress-Archive ..\build\* $filename -force
 pop-location
+
+# Ensures the GitHub workflow knows the script succeeded
+exit 0
