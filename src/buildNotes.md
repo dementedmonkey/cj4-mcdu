@@ -9,7 +9,7 @@ Notes for myself becuase every time I step away from this for a while I forget t
 
 ## The mod
 * Temporarily rename the community folder
-* From FS Dev Mode, Project Editor, open `mod\dementedmonkye-cj4-mcdu.xml`
+* From FS Dev Mode, Project Editor, open `mod\dementedmonkey-cj4-mcdu.xml`
 * Click `build all` button for FS to discover the files/changes
 * Start on the runway somewhere
 * From the MSFS SDK, launch `Tools\CoherentGT Debugger\Debugger.exe`
