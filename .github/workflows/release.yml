@@ -1,0 +1,107 @@
+name: Release build
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Test version"
+        required: true
+        default: "0.0.1"
+jobs:
+  build:
+    runs-on: windows-2022
+
+    defaults:
+      run:
+        shell: pwsh
+
+    env:
+      MCDUServerFileNameBase: "cj4-mcdu"
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # Get the version of the GitHub release for use later. This is only valid
+      # when run in a release context
+      - name: Get GitHub release version
+        id: get_github_version
+        uses: battila7/get-version-action@v2
+        if: startsWith(github.ref, 'refs/tags/')
+      - name: Store GitHub release version
+        id: save_github_version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          echo "version=${{ steps.get_github_version.outputs.version-without-v }}" >> $env:GITHUB_ENV
+          echo ${{ steps.get_github_version.outputs.version-without-v }} > ./version
+
+      # Get the version from the workflow input. This is only valid
+      # when run manually as a workflow.
+      - name: Store workflow version
+        id: save_workflow_version
+        if: startsWith(github.ref, 'refs/tags/') == false
+        run: |
+          echo "version=${{ github.event.inputs.version }}" >> $env:GITHUB_ENV
+          echo ${{ github.event.inputs.version }} > ./version
+
+      - name: Use Node.js 16.x
+        id: install_node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: "npm"
+          cache-dependency-path: "src/app/package-lock.json"
+
+      - name: Set versions in code
+        id: set_versions
+        run: |
+          echo "Building with version ${{ env.version }}"
+          node ./updateversions.js
+        working-directory: src
+
+      - name: Setup node dependencies
+        id: install_dependencies
+        working-directory: src/app
+        run: npm ci
+
+      - name: Build client
+        id: build_client
+        working-directory: src/app
+        run: npm run build:client
+
+      - name: Build server
+        id: build_server
+        working-directory: src/app
+        run: npm run build:mcdu-server
+
+      - name: Build mod
+        id: build_mod
+        working-directory: src/mod
+        run: ./build.ps1
+
+      - name: Build release folder contents
+        id: build_release_folder
+        run: |
+          Move-Item "build/MCDU SERVER/${{ env.MCDUServerFileNameBase }}-server.exe" "build/MCDU SERVER/${{ env.MCDUServerFileNameBase }}-server-${{ env.version }}.exe"
+          Copy-Item readme.md build
+          Copy-Item version build
+
+      - name: Zip output
+        id: zip_output
+        working-directory: build
+        run: Compress-Archive ./* "../${{ env.MCDUServerFileNameBase }}-${{ env.version }}.zip"
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: release_files
+          path: "*.zip"
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: "${{ env.MCDUServerFileNameBase }}-${{ env.version }}.zip"
