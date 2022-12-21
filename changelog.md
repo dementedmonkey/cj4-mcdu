@@ -1,6 +1,12 @@
 # Changelog
 
+## 0.5.0
+* Requires AAU1 1.30.7.0 beta.  Use 0.3.0 if you're still on the released SU11.
+* Rework electrical bus logic to not require hacking panel.xml
+* Change data format of the mod for future expansion
+
 ## 0.4.0
+* Requires the AAU1 beta.  Use 0.3.0 if you're still on the released SU11.
 * Compatibility with AAU1 version 1.30.5.0
 * Support split CDUs (click the top left/right screws)
 
