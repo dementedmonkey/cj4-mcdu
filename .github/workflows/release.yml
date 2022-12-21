@@ -53,44 +53,10 @@ jobs:
           cache: "npm"
           cache-dependency-path: "src/app/package-lock.json"
 
-      - name: Set versions in code
-        id: set_versions
-        run: |
-          echo "Building with version ${{ env.version }}"
-          node ./updateversions.js
-        working-directory: src
-
-      - name: Setup node dependencies
-        id: install_dependencies
-        working-directory: src/app
-        run: npm ci
-
-      - name: Build client
-        id: build_client
-        working-directory: src/app
-        run: npm run build:client
-
-      - name: Build server
-        id: build_server
-        working-directory: src/app
-        run: npm run build:mcdu-server
-
-      - name: Build mod
-        id: build_mod
-        working-directory: src/mod
+      - name: Run build script
+        id: run_build_script
         run: ./build.ps1
-
-      - name: Build release folder contents
-        id: build_release_folder
-        run: |
-          Move-Item "build/MCDU SERVER/${{ env.MCDUServerFileNameBase }}-server.exe" "build/MCDU SERVER/${{ env.MCDUServerFileNameBase }}-server-${{ env.version }}.exe"
-          Copy-Item readme.md build
-          Copy-Item version build
-
-      - name: Zip output
-        id: zip_output
-        working-directory: build
-        run: Compress-Archive ./* "../${{ env.MCDUServerFileNameBase }}-${{ env.version }}.zip"
+        working-directory: src/app
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
