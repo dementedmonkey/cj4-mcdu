@@ -24,7 +24,7 @@ export const McduButtons = ({ sound, screenId }) => {
             await playClick();
         }
         if (screenId) {
-            socket.sendMessage(`event:CJ4_${screenId}:${name}`);
+            socket.sendMessage(`event:cj4:${screenId}:${name}`);
         }
     };
 

@@ -4,10 +4,12 @@ This application provides a web-based MCDU for the CJ4
 in Microsoft Flight Simulator 2020 with AAU1.
 
 ## Beta release
-* This version is for *AAU1 Beta 1.30.5.0* only.  Any other version will most
+* This version is for *AAU1 Beta 1.30.7.0* only.  Any other version will most
 likely not work.
 * This is a quick fix to get things working again with the AAU1 beta.   If anything
 isn't working right, please open an Issue.
+* You *MUST* remove previous versions of the mod, even the 0.4.0 version.  If you don't
+do this and the mod doesn't work, I'll make fun of you.
 
 ## About
 This project contains an application that will allow you to access

@@ -66,9 +66,9 @@ function App() {
 
     useEffect(() => {
         if (lastMessage != null) {
-            const messageType = lastMessage.data.split(':')[0];
-            if (messageType === 'update') {
-                const jsonIn = JSON.parse(lastMessage.data.substring(lastMessage.data.indexOf(':') + 1));
+            const prefix = "update:cj4:";
+            if (lastMessage.data.startsWith(prefix)) {
+                const jsonIn = JSON.parse(lastMessage.data.substring(prefix.length));
                 const screenName = screenId == 2 ? 'right' : 'left';
                 const newContent = jsonIn[screenName];
                 if (newContent) {
