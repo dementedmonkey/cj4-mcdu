@@ -53,6 +53,11 @@ jobs:
           cache: "npm"
           cache-dependency-path: "src/app/package-lock.json"
 
+      - name: Update versions
+        id: update_versions
+        run: node ./updateversions.js
+        working-directory: src
+
       - name: Run build script
         id: run_build_script
         run: ./build.ps1
