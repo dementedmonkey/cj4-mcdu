@@ -110,7 +110,7 @@
             if (this._circuit) {
                 screen.power = screen.power && SimVar.GetSimVarValue(`CIRCUIT ON:${this._circuit}`,'bool');
             }
-            let  json = { aircraft: "CJ4" };
+            let  json = { aircraft: "cj4" };
             json[this._fmc.instrument.instrumentIndex == 2 ? 'right' : 'left'] = screen;
             let msg = "update:cj4:" + JSON.stringify(json);
             this.sendToSocket(msg);
