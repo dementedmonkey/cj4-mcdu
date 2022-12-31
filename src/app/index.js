@@ -8,7 +8,7 @@ const path = require('path');
 const fs = require('fs');
 const network = require('network');
 const os = require('os');
-
+const net = require('net');
 
 const readline = require('readline').createInterface({
     input: process.stdin,
@@ -90,7 +90,20 @@ for (const arg of args) {
     process.exit(1);
 }
 
-start();
+checkConflictAndStart();
+
+function checkConflictAndStart() {
+    console.log("Checking for port conflicts...");
+    const socket = new net.Socket();
+    socket.on('connect', ()=>{
+        console.error(`Another process is listening on port ${websocketPort}.`)
+        console.error("You must stop this process for the MCDU server to work.")
+        process.exit(1);
+    });
+    socket.on('error', start);
+    socket.connect(websocketPort);
+}
+
 
 function start() {
     console.log('Starting server...');
