@@ -26,11 +26,20 @@ Notes for myself becuase every time I step away from this for a while I forget t
 
 Releases are built using the GitHub action defined in `.github\workflows\release.yml`.
 
-To build an official release create a release in GitHub and specify the desired
-version as the tag, e.g. `v0.5.0`. The package will build automatically and get
-attached to the release as a zip file.
+To build an official release create and push a tag with the version,
+e.g. `v0.5.0`.   The package will build automatically, a new draft release created,
+and the output will be attached to the release as a zip file.
 
 To build a one-off release the action can be triggered manually via the Actions
 tab in GitHub. Click on the `Release build` workflow on the left, then `Run workflow`
 on the right. Specify the version number then hit `Run workflow`. After the run completes
 the zip file will be attached as an artifact at the bottom of the workflow run results.
+
+You can use the `src/build.ps1` script to run the build locally.
+
+## Version numbering
+The JSON and XML files need to have a version number and can't import one.   The `build.ps1`
+script will update them with the version tag for CI, or the number `9999.9999.9999` for local
+builds.   Note that building with a non-default version will leave the file edited locally with
+the last build number embedded.   The alternative would be to template the file and exclude the
+generated version, but I think that's worse than what we have now.
