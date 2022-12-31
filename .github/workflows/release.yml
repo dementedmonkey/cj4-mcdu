@@ -1,16 +1,73 @@
-# Dummy build because it needs to be on master
-# for github to see it on a branch
-
 name: Release build
 
 on:
+  push:
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Version number for test build"
+        required: true
+        default: "9999.0.0"
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: windows-2022
+
+    defaults:
+      run:
+        shell: pwsh
+
+    env:
+      MCDUServerFileNameBase: "cj4-mcdu"
 
     steps:
-      - name: Show environment v2
-        run: env | grep ^GITHUB
-      - name: Show ref v2
-        run: echo "===============> Version from $GITHUB_REF"
+      # Get the version of the GitHub release for use later. This is only valid
+      # when run in a release context
+      - name: Store GitHub release version
+        id: save_github_version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          $versionIn = '${{ github.ref }}'
+          $version = $versionIn -replace '^refs/tags/v', ''
+          if ($versionIn -eq $version) { exit 1 }
+          echo "version=$version" >> $env:GITHUB_ENV
+
+      # Get the version from the workflow input. This is only valid
+      # when run manually as a workflow.
+      - name: Store manual workflow version
+        id: save_workflow_version
+        if: startsWith(github.ref, 'refs/tags/') == false
+        run: |
+          echo "version=${{ github.event.inputs.version }}" >> $env:GITHUB_ENV
+
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js 16.x
+        id: install_node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+
+      - name: Run build script
+        id: run_build_script
+        run: ./build.ps1 -version ${{ env.version }}
+        working-directory: src
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        if: startsWith(github.ref, 'refs/tags/') == false
+        with:
+          name: release_files
+          path: "release/**"
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: "release/**"
+          draft: true
+          name: "Release ${{ env.version }}"
+          generate_release_notes: true
