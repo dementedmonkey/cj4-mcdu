@@ -1,0 +1,16 @@
+# Dummy build because it needs to be on master
+# for github to see it on a branch
+
+name: Release build
+
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Show environment v2
+        run: env | grep ^GITHUB
+      - name: Show ref v2
+        run: echo "===============> Version from $GITHUB_REF"
