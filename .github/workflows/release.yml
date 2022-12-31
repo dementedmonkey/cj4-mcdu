@@ -1,14 +1,16 @@
 name: Release build
 
 on:
-  release:
-    types: [published]
+on:
+  push:
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
   workflow_dispatch:
     inputs:
       version:
-        description: "Test version"
+        description: "Version number for test build"
         required: true
-        default: "0.0.1"
+        default: "9999.0.0"
 jobs:
   build:
     runs-on: windows-2022
@@ -21,29 +23,26 @@ jobs:
       MCDUServerFileNameBase: "cj4-mcdu"
 
     steps:
-      - uses: actions/checkout@v3
-
       # Get the version of the GitHub release for use later. This is only valid
       # when run in a release context
-      - name: Get GitHub release version
-        id: get_github_version
-        uses: battila7/get-version-action@v2
-        if: startsWith(github.ref, 'refs/tags/')
       - name: Store GitHub release version
         id: save_github_version
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          echo "version=${{ steps.get_github_version.outputs.version-without-v }}" >> $env:GITHUB_ENV
-          echo ${{ steps.get_github_version.outputs.version-without-v }} > ./version
+          $versionIn = '${{ github.ref }}'
+          $version = $versionIn -replace '^refs/tags/v', ''
+          if ($versionIn -eq $version) { exit 1 }
+          echo "version=$version" >> $env:GITHUB_ENV
 
       # Get the version from the workflow input. This is only valid
       # when run manually as a workflow.
-      - name: Store workflow version
+      - name: Store manual workflow version
         id: save_workflow_version
         if: startsWith(github.ref, 'refs/tags/') == false
         run: |
           echo "version=${{ github.event.inputs.version }}" >> $env:GITHUB_ENV
-          echo ${{ github.event.inputs.version }} > ./version
+
+      - uses: actions/checkout@v3
 
       - name: Use Node.js 16.x
         id: install_node
@@ -51,28 +50,25 @@ jobs:
         with:
           node-version: 16.x
           cache: "npm"
-          cache-dependency-path: "src/app/package-lock.json"
-
-      - name: Update versions
-        id: update_versions
-        run: node ./updateversions.js
-        working-directory: src
+          cache-dependency-path: "**/package-lock.json"
 
       - name: Run build script
         id: run_build_script
-        run: ./build.ps1
+        run: ./build.ps1 -version ${{ env.version }}
         working-directory: src
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
+        if: startsWith(github.ref, 'refs/tags/') == false
         with:
           name: release_files
-          path: "release/*.zip"
+          path: "release/**"
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: "release/*.zip"
+          files: "release/**"
+          draft: true
+          name: "Release ${{ env.version }}"
+          generate_release_notes: true

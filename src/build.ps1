@@ -1,4 +1,7 @@
-$version = (get-content ..\version).trim()
+param ($version = "9999.9999.9999")
+
+Set-Content -path ../version -Encoding Ascii -value $version -NoNewline
+node updateversions.js
 
 Push-Location (join-path $PSScriptRoot mod)
 .\build.ps1
