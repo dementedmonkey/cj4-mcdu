@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1
+* Requires AAU1 1.30.7.0 beta.  Use 0.3.0 if you're still on the released SU11.
+* Add check for conflicting programs at startup
+
 ## 0.5.0
 * Requires AAU1 1.30.7.0 beta.  Use 0.3.0 if you're still on the released SU11.
 * Rework electrical bus logic to not require hacking panel.xml
