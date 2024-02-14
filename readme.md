@@ -1,15 +1,12 @@
 # MCDU Web application for the Working Title CJ4
 
 This application provides a web-based MCDU for the CJ4
-in Microsoft Flight Simulator 2020 with AAU1.
+in Microsoft Flight Simulator 2020 SU14.
 
-## Beta release
-* This version is for *AAU1 Beta 1.30.7.0* only.  Any other version will most
-likely not work.
-* This is a quick fix to get things working again with the AAU1 beta.   If anything
-isn't working right, please open an Issue.
-* You *MUST* remove previous versions of the mod, even the 0.4.0 version.  If you don't
-do this and the mod doesn't work, I'll make fun of you.
+> [!WARNING]
+> This version is NOT currently compatible with SU15 beta.
+> Working Title made changes to the CJ4 that will be helpful for this mod in the future,
+> but a new version of the mod will be required because of these changes.
 
 ## About
 This project contains an application that will allow you to access
@@ -21,7 +18,6 @@ that will connect the CJ4 to this application.
 
 ## Installation
 * Remove any previous versions of the Working Title mod and this mod
-* Install [AAU1](https://forums.flightsimulator.com/t/read-first-welcome-to-the-aau-i-beta/562534)
 * Copy the `z-dementedmonkey-cj4-mcdu` folder into your MSFS `Community` folder.<br/>
 *Note:* Mods are loaded in alphabetical order.  The folder name must sort after "workingtitle" to be able to successfully
 replace the existing files.
