@@ -1,12 +1,14 @@
 # MCDU Web application for the Working Title CJ4
 
 This application provides a web-based MCDU for the CJ4
-in Microsoft Flight Simulator 2020 SU14.
+in Microsoft Flight Simulator 2020 SU15 BETA 1.37.2.0.
 
 > [!WARNING]
-> This version is NOT currently compatible with SU15 beta.
-> Working Title made changes to the CJ4 that will be helpful for this mod in the future,
-> but a new version of the mod will be required because of these changes.
+> This version is compatible with SU15 beta 1, version 1.37.2.0.
+> It does **NOT** work with older versions.   Use v0.5.1 for those.
+> 
+> The SU15 beta is a work in progress, so is this mod.
+> Newer betas have a strong likelyhood of breaking this mod.  Be patient.
 
 ## About
 This project contains an application that will allow you to access
@@ -17,10 +19,8 @@ In addition to this application, it includes a Flight Simulator mod
 that will connect the CJ4 to this application.   
 
 ## Installation
-* Remove any previous versions of the Working Title mod and this mod
+* Remove any previous versions of the this mod
 * Copy the `z-dementedmonkey-cj4-mcdu` folder into your MSFS `Community` folder.<br/>
-*Note:* Mods are loaded in alphabetical order.  The folder name must sort after "workingtitle" to be able to successfully
-replace the existing files.
 
 ## Using the MCDU
 * Run the `MCDU SERVER\cj4-mcdu-server-x.y.z.exe` application.  <br/>

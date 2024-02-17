@@ -1,0 +1,5 @@
+<Plugins>
+    <Plugin target="WT21_FMC">
+        coui://html_ui/Pages/VCockpit/Instruments/DM21/FMC/DM21_FMC.js        
+    </Plugin>
+</Plugins>
