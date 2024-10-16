@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+* Updated for SU15.
+* Use the new WT21 plugin system
+
 ## 0.5.1
 * Requires AAU1 1.30.7.0 beta.  Use 0.3.0 if you're still on the released SU11.
 * Add check for conflicting programs at startup
