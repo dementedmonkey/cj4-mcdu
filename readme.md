@@ -1,14 +1,7 @@
 # MCDU Web application for the Working Title CJ4
 
 This application provides a web-based MCDU for the CJ4
-in Microsoft Flight Simulator 2020 SU15 BETA 1.37.2.0.
-
-> [!WARNING]
-> This version is compatible with SU15 beta 1, version 1.37.2.0.
-> It does **NOT** work with older versions.   Use v0.5.1 for those.
-> 
-> The SU15 beta is a work in progress, so is this mod.
-> Newer betas have a strong likelyhood of breaking this mod.  Be patient.
+in Microsoft Flight Simulator 2020 1.38.2.0 or newer.
 
 ## About
 This project contains an application that will allow you to access
