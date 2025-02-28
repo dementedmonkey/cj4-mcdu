@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+* Update documentation to indicate FS2024 support
+* Add support for FFX Piaggio P180 in FS2020
+
 ## 0.6.0
 * Updated for SU15.
 * Use the new WT21 plugin system
