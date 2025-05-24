@@ -1,4 +1,5 @@
-<AssetPackage Name="z-dementedmonkey-cj4-mcdu" Version="0.7.0">
+<AssetPackage Name="z-dementedmonkey-cj4-mcdu" Version="0.8.0-beta">
+	<PackageOrderHint>GENERIC_AIRPORT_PATCH</PackageOrderHint>
 	<ItemSettings>
 		<ContentType>MISC</ContentType>
 		<Title>CJ4 MCDU</Title>

@@ -32,6 +32,7 @@ function Update-Packages {
         $manifest = New-Object -TypeName PSObject -Property @{
             dependencies         = @()
             content_type         = $packageDef.ItemSettings.ContentType
+            package_order_hint   = $packageDef.PackageOrderHint
             title                = $packageDef.ItemSettings.Title
             manufacturer         = ""
             creator              = $packageDef.ItemSettings.Creator

@@ -1,0 +1,29 @@
+.App {
+    --app-width: min(100vw, calc(var(--vh) * var(--aspect-ratio)));
+    --app-height: calc(min(var(--vh), calc(100vw * calc(1 / var(--aspect-ratio)))) - calc(var(--app-width) * var(--top-padding)));
+    height: var(--app-height);
+    padding-top: calc(var(--app-width) * var(--top-padding));
+    left: calc(50vw - calc(var(--app-width) / 2));
+    width: var(--app-width);
+    position: relative;
+    user-select: none;
+}
+
+.normal {
+  --aspect-ratio: calc(1400/1650);
+  --top-padding: .06875;
+  --screen-scale: .72;
+}
+
+.normal .App {
+  background-image: url("mcdu-cj4.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.fullscreen {
+  --aspect-ratio: 1.2;
+  --top-padding: 0;
+  --screen-scale: 1;
+  cursor: pointer;
+}
