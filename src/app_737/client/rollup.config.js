@@ -11,7 +11,7 @@ const path = require('path');
 function subpath(subPath) {
     // rollup doesn't like backslashes.  Undo them.
     var rval = `${path.join(__dirname, subPath)}`;
-    rval = rval.replaceAll('\\','/');
+    rval = rval.replaceAll('\\', '/');
     return rval;
 }
 
@@ -28,7 +28,7 @@ export default {
         copy({
             targets: [
                 {
-                    src:subpath('./public/*'),
+                    src: subpath('./public/*'),
                     dest: subpath('./build/'),
                 },
             ],

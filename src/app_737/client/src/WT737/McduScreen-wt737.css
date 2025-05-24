@@ -1,0 +1,40 @@
+@font-face {
+  font-family: "Boeing";
+  src: url("boeing-cdu.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.App-wt737 .screen {
+  --mcdu-font-size: calc(calc(0.059 * var(--screen-scale)) * var(--app-width));
+
+  font-family: "Boeing", "Harlow Solid Italic", monospace;
+  letter-spacing: calc(var(--app-width) / 150);
+
+  width: calc(100% * var(--screen-scale));
+  left: 19%;
+  height: calc(var(--app-width) * var(--screen-scale) / 1.26);
+}
+
+.App-wt737 .line {
+  height: 7%;
+  margin: 0;
+  white-space: pre;
+}
+
+.App-wt737 .line span span {
+  width: 4%;
+  display: inline-block;
+}
+
+
+
+.line-wt737 .s-text>.d-text,
+.line-wt737 .d-text {
+  font-size: var(--mcdu-font-size);
+}
+
+.line-wt737 .d-text>.s-text,
+.line-wt737 .s-text {
+  font-size: calc(var(--mcdu-font-size) *.75);
+}

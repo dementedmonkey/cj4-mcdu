@@ -1,15 +1,28 @@
 class DM_FMC_Hook {
-    constructor(instance) {
-        this.instance = instance;
-        const orig = instance.onAfterRender;
+    constructor(cdu) {
+        this.cdu = cdu;
         const self = this;
-        instance.onAfterRender = function (node) {
-            orig.call(this, node);
+
+        // We send the data after the render occurs
+        const origAfterRender = cdu.onAfterRender;
+        cdu.onAfterRender = function (node) {
+            origAfterRender.call(this, node);
             self.onAfterRender();
         };
 
-        const port = 8088;
+        // Hook into the main instrument to get power notifications
+        const instrument = document.getElementsByTagName('wtb38m-cdu')[0].fsInstrument;
+        this.instrument = instrument;
 
+        const origPowerChanged = instrument.onPowerChanged;
+        instrument.onPowerChanged = function (current, previous) {
+            origPowerChanged.call(this, current, previous);
+            self.sendData();
+        };
+
+        // Connect to the websocket server.
+        // Keep retrying every 5 seconds if it fails.
+        const port = 8088;
         setInterval(() => {
             if (!this._socket || this._socket.readyState !== 1) {
                 this.connectWebsocket(port);
@@ -29,7 +42,7 @@ class DM_FMC_Hook {
         };
         this._socket.addEventListener('message', (event) => {
             const msg = event.data;
-            const prefix = `event:wt737:${this.instance.cduSideIndex}:`;
+            const prefix = `event:wt737:${this.cdu.cduSideIndex}:`;
             if (msg.startsWith(prefix)) {
                 this.onEvent(`${msg.substring(prefix.length)}`);
             } else if (msg == "requestUpdate") {
@@ -43,29 +56,43 @@ class DM_FMC_Hook {
     }
 
     onEvent(event) {
-        //const button = `${this.instance.cduHEventPrefix}${event}`;
+        //const button = `${this.cdu.cduHEventPrefix}${event}`;
         console.log("dm21: button: " + event);
-        this.instance.handleCduHEvent(event);
+        this.cdu.handleCduHEvent(event);
+    }
+
+    rowStyles() {
+        if (this._rowStyles) {
+            return this._rowStyles;
+        }
+        let rowElements = this.cdu.fmcScreen.renderer.rowElArr;
+        this._rowStyles = rowElements.map(row => row.attributes["class"] ? row.attributes["class"].value : "");
+        return this._rowStyles;
     }
 
     sendData() {
         if (!this.isConnected()) {
             return;
         }
-        const fmcScreen = this.instance.fmcScreen;
+        const fmcScreen = this.cdu.fmcScreen;
         if (!fmcScreen) { return; }
         const renderer = fmcScreen.renderer;
         if (!renderer) { return; }
 
-        let lines = renderer.columnData
+        const rowStyles = this.rowStyles();
+        let lines = [];
+        for (let row = 0; row < renderer.columnData.length; row++) {
+            const rowStyle = rowStyles.length > row ? rowStyles[row] : "";
+            lines.push({ rowStyle: rowStyle, cols: renderer.columnData[row] });
+        }
         let screen = {
             lines: lines,
-            power: true, //  TODO
-
+            exec: fmcScreen.fms.planInMod.value,
+            power: this.instrument.isPowered,
         };
 
         let json = { aircraft: "wt737" };
-        json[this.instance.cduSideIndex == 2 ? 'right' : 'left'] = screen;
+        json[this.cdu.cduSideIndex == 2 ? 'right' : 'left'] = screen;
         const msg = "update:wt737:" + JSON.stringify(json);
         this.sendToSocket(msg);
     }
@@ -77,7 +104,7 @@ class DM_FMC_Hook {
     }
 
     onAfterRender() {
-        const renderer = this.instance.fmcScreen.renderer;
+        const renderer = this.cdu.fmcScreen.renderer;
         const orig = renderer.renderToDom;
         const self = this;
         renderer.renderToDom = function () {
@@ -87,6 +114,10 @@ class DM_FMC_Hook {
     }
 }
 
+/*
+The code has a plugin system, but nothing ever sets it up.
+Create our own fake one to be able to hook the CDU creation.
+*/
 class PluginSystem {
     onComponentCreating(type, props) {
         return undefined;

@@ -35,20 +35,7 @@ const args = [...process.argv];
 args.splice(0, 2);
 
 const blankScreen = {
-    lines: [
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', ''],
-    ],
+    lines: [],
     scratchpad: '',
     message: '',
     title: '',
@@ -58,7 +45,7 @@ const blankScreen = {
     power: false,
 };
 
-const powerOffMessage = "update:" + JSON.stringify({ left: blankScreen, right: blankScreen });
+const powerOffMessage = "update:*:" + JSON.stringify({ left: blankScreen, right: blankScreen });
 
 for (const arg of args) {
     if (arg.startsWith('--http-port=')) {
@@ -95,7 +82,7 @@ checkConflictAndStart();
 function checkConflictAndStart() {
     console.log("Checking for port conflicts...");
     const socket = new net.Socket();
-    socket.on('connect', ()=>{
+    socket.on('connect', () => {
         console.error(`Another process is listening on port ${websocketPort}.`)
         console.error("You must stop this process for the MCDU server to work.")
         process.exit(1);
@@ -198,7 +185,6 @@ function start() {
                     console.log(`\nCan't connect? You may need to open TCP ports ${httpPort} and ${websocketPort} on your firewall.\n`);
                     console.log('Add "/sound" to your browser´s URL to get click sounds.');
                     isMcdu = true;
-                    return;
                 }
                 wss.clients.forEach((client) => {
                     if (client.readyState === WebSocket.OPEN) {

@@ -1,10 +1,13 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
-import { McduScreen } from './McduScreen';
-import { McduButtons } from './McduButtons';
 import { WebsocketContext } from './WebsocketContext';
-import { ButtonGrid, ButtonRow } from './Buttons';
+
+
+
+import { McduWt737 } from './WT737/McduWt737.jsx';
+import { McduWt21 } from './WT21/McduWt21.jsx';
+
 
 function App() {
     let requestedId = 1;
@@ -26,27 +29,36 @@ function App() {
     const [sound] = useState(window.location.href.endsWith('/sound'));
     const socketUrl = `ws://${window.location.hostname}:__WEBSOCKET_PORT__`;
     const [screenId, setScreenId] = useState(requestedId);
+    const [cduType, setCduType] = useState("wt737");
     const [content, setContent] = useState(
         {
             id: 1,
-            lines: [
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', ''],
-            ],
+            lines: [],
             power: false,
+            exec: false,
         },
     );
+    const [variant, setVariant] = useState("wt21");
+    const [mcduConnected, setMcduConnected] = useState(false);
+
+
+    function changeVariant(messageType) {
+        if (variant != messageType) {
+            setVariant(messageType);
+        }
+        let newType = messageType;
+        switch (messageType) {
+            case "cj4":
+                newType = "wt21";
+                break;
+            default:
+                newType = messageType;
+                break;
+        }
+        if (newType != cduType) {
+            setCduType(newType);
+        }
+    }
 
     const {
         sendMessage,
@@ -56,6 +68,8 @@ function App() {
         shouldReconnect: () => true,
         reconnectAttempts: Infinity,
         reconnectInterval: 500,
+        onClose: disconnect,
+        onError: disconnect,
     });
 
     useEffect(() => {
@@ -64,20 +78,53 @@ function App() {
         }
     }, [readyState]);
 
+
     useEffect(() => {
         if (lastMessage != null) {
-            const prefix = "update:wt737:";
+            const prefix = "update:";
+
+            if (lastMessage.data == "mcduConnected") {
+                // New connection from server
+                // It might not push, request explicitly
+                sendMessage('requestUpdate');
+                return;
+            }
+
             if (lastMessage.data.startsWith(prefix)) {
-                const jsonIn = JSON.parse(lastMessage.data.substring(prefix.length));
+                const colon2 = lastMessage.data.indexOf(':', prefix.length);
+                if (colon2 < 0) {
+                    return;
+                }
+                const msgAircraft = lastMessage.data.substring(prefix.length, colon2);
+                const jsonIn = JSON.parse(lastMessage.data.substring(colon2 + 1));
                 const screenName = screenId == 2 ? 'right' : 'left';
                 const newContent = jsonIn[screenName];
-                if (newContent) {
+                if (!newContent) {
+                    return;
+                }
+                if (msgAircraft == "*") {
+                    // Sim disconnect sends a power off message, but doesn't
+                    // know the plane type.
+                    // The only guaranteed value is the power state.
+                    // You will get this from each screen that disconnects,
+                    // and we don't know which one it is.   Having 1 of 2 screens
+                    // disconnect should never happen unless a crash or debugging.                    
+                    let tempContent = { ...content, power: newContent.power };
+                    setContent(tempContent);
+                } else {
+                    changeVariant(msgAircraft);
                     newContent.id = screenId;
                     setContent(newContent);
                 }
             }
         }
     }, [lastMessage]);
+
+    function disconnect() {
+        let tempContent = { ...content, power: false };
+        setContent(tempContent);
+    }
+
 
     function changeCdu(screen) {
         if (screen == screenId) {
@@ -88,41 +135,34 @@ function App() {
             sendMessage('requestUpdate');
         }
     }
-    return (
-        <div className={fullscreen ? 'fullscreen' : 'normal'}>
-            <div className="App">
-                <WebsocketContext.Provider value={{ sendMessage, lastMessage, readyState }}>
-                    {!fullscreen && (
-                        <>
-                            <McduScreen content={content} />
-                            <McduButtons sound={sound} screenId={content.power ? content.id : 0} />
-                            <div className="button-grid" style={{ left: `${200 / 14.00}%`, top: `${128 / 16.50}%`, width: `${980 / 14.00}%`, height: `${80 / 16.50}%` }}>
-                                <div className="button-row">
-                                    <div className="button" title="Fullscreen" onClick={() => setFullscreen(!fullscreen)} />
-                                </div>
-                            </div>
-                            {allowScreenSwitch && (
-                                <>
-                                    <ButtonGrid x={15} y={120} width={100} height={100} >
-                                        <ButtonRow>
-                                            <div className="button" title="Left MCDU" onClick={() => changeCdu(1)} />
-                                        </ButtonRow>
-                                    </ButtonGrid>
-                                    <ButtonGrid x={1290} y={120} width={100} height={100} >
-                                        <ButtonRow>
-                                            <div className="button" title="Right  MCDU" onClick={() => changeCdu(2)} />
-                                        </ButtonRow>
-                                    </ButtonGrid>
-                                </>
-                            )}
 
-                        </>
-                    )}
-                    {fullscreen && (
-                        <div title="Exit fullscreen" onClick={() => setFullscreen(false)}>
-                            <McduScreen content={content} />
-                        </div>
-                    )}
+    function getAircraftMcdu() {
+        switch (cduType) {
+            case "wt737":
+                return (<McduWt737
+                    content={content}
+                    sound={sound}
+                    fullscreen={fullscreen}
+                    setFullscreen={setFullscreen}
+                    changeCdu={allowScreenSwitch ? changeCdu : () => { }} />);
+            case "cj4":
+            default:
+                return (<McduWt21
+                    content={content}
+                    sound={sound}
+                    fullscreen={fullscreen}
+                    setFullscreen={setFullscreen}
+                    changeCdu={allowScreenSwitch ? changeCdu : () => { }} />);
+
+        }
+    }
+
+
+    return (
+        <div className={fullscreen ? `fullscreen fullscreen-${cduType}` : `normal normal-${cduType}`}>
+            <div className={`App App-${variant} App-${cduType}`}>
+                <WebsocketContext.Provider value={{ sendMessage, lastMessage, readyState }}>
+                    {getAircraftMcdu()}
                 </WebsocketContext.Provider>
             </div>
         </div>

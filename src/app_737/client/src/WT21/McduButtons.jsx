@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 
-import './McduButtons.css';
+import '../McduButtons.css';
 
 import { WebsocketContext } from './WebsocketContext';
 import { ButtonGrid, ButtonRow } from './Buttons.jsx';
-import playClick from './ClickPlayer';
+import playClick from '../ClickPlayer';
 
 
 const Button = ({ onClick, name }) => {
@@ -24,7 +24,7 @@ export const McduButtons = ({ sound, screenId }) => {
             await playClick();
         }
         if (screenId) {
-            socket.sendMessage(`event:wt737:${screenId}:${name}`);
+            socket.sendMessage(`event:cj4:${screenId}:${name}`);
         }
     };
 
