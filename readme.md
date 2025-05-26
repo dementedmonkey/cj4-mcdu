@@ -11,24 +11,15 @@ that will connect the simulator aircraft to this application.
 
 ## Supported Aircraft
 
-Even though the name is still "CJ4" the app now supports
-other aircraft that use the Working Title "WT21"
-avionics suite.
+The "CJ4" name is increasingly inaccurate, as the mod now supports
+4 different aircraft.
 
-Both MSFS2020 and MSFS2024 are supported for the 
-following aircraft:
-
-| Aircraft            |  FS2020  |  FS2024  |
-| --------            | :------: | :------: | 
-| Citation CJ4        | ✅       | ✅      |
-| King Air C90        | N/A       | ✅      |
-| FFX P180 (2020 version) |✅    | ❌     |
-
-In FS2024, Asobo has intentionally broken the ability to modify
-any part of the HTML gauges using a mod.   Because of this, the
-MCDU will still not work with the P180 in FS2024.   The workaround
-for this is possible but really ugly, so I'm going to hold off
-on that until we see what the native 2024 version does.
+| Aircraft                      | FS2020 | FS2024 |
+| ----------------------------- | :----: | :----: |
+| Citation CJ4                  |   ✅    |   ✅    |
+| King Air C90                  |  N/A   |   ✅    |
+| Asobo 737 Max 8               |  N/A   |   ✅    |
+| FFX P180 1.2.1 (2020 version) |   ✅    |   ✅    |
 
 ## Installation
 * Remove any previous versions of the this mod
@@ -42,7 +33,8 @@ _Note:_ It is important that the mod and the MCDU server are the same version.
 the sim has connected, and will give you an address to enter
 into your browser.   Typically it will be something like http://192.168.1.x:8126/
 * Open your web browser, pointed to the address supplied.   You should see the MCDU immediately.   The screen will be
-blank until it's powered up in the plane
+blank until it's powered up in the plane.   The CDU will default to the CJ4 type, but will switch
+to the appropriate hardware for the aircraft once the sim loads.
 
 ## Multiple screens
 You can control both the left and right MCDUs, if the aircraft is so equipped.  There are two ways of selecting which

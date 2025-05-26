@@ -12,6 +12,21 @@
   font-style: normal;
 }
 
+.App-c90 .screen {
+  --mcdu-font-size: calc(calc(0.052 * var(--screen-scale)) * var(--app-width));
+  --mcdu-line-height: calc(calc(0.03 * var(--screen-scale)) * var(--app-width));
+  letter-spacing: 0.18vw;
+  height: calc(var(--app-width) * var(--screen-scale) / 1.45);
+  left: 15%;
+}
+
+.App-cj4 .screen {
+  --mcdu-font-size: calc(calc(0.052 * var(--screen-scale)) * var(--app-width));
+  --mcdu-line-height: calc(calc(0.034 * var(--screen-scale)) * var(--app-width));
+  letter-spacing: 0.15vw;
+  left: 13.5%;
+  height: calc(var(--app-width) * var(--screen-scale) / 1.26);
+}
 
 .App-wt21 .screen {
   --displayBackground: rgba(13, 20, 35, 1);
@@ -40,21 +55,16 @@
   --mcduMagenta: #ff00ff;
   --mcduBlue: #4580a7;
 
-  --mcdu-font-size: calc(calc(0.052 * var(--screen-scale)) * var(--app-width));
-  --mcdu-line-height: calc(calc(0.034 * var(--screen-scale)) * var(--app-width));
 
   font-family: "Collins ProLine", monospace;
-  letter-spacing: 0.15vw;
 
   margin: 0 !important;
   font-size: var(--mcdu-font-size);
   color: var(--displayWhite);
-  line-height: var(--mcdu-font-size);
+  line-height: var(--mcdu-line-height);
 
   position: relative;
   width: calc(100% * var(--screen-scale));
-  left: 13.5%;
-  height: calc(var(--app-width) * var(--screen-scale) / 1.26);
 }
 
 .App-wt21 .label-left {

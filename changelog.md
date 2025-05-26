@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.0
+* Support different CDU hardware styles in the app
+* Add support for Asobo 737 MAX 8
+* Add Turboprop-style CDU for WT21 (C90, P180)
+* Improve handling of sim connection and disconnection
+* Adjust package to correctly override P180 in SU2
+
 ## 0.7.0
 * Update documentation to indicate FS2024 support
 * Add support for FFX Piaggio P180 in FS2020

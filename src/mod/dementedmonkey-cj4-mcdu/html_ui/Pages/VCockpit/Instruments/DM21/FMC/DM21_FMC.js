@@ -1,37 +1,39 @@
 var dmPlugin = (function (exports, msfsSdk, msfsWt21Shared, msfsWt21Fmc) {
-    console.log("invoked plugin");
+    console.log("DM21 plugin loaded");
 
     function override(object, methodName, callback) {
         object[methodName] = callback(object[methodName])
-      }
-      
-      function after(extraBehavior) {
-        return function(original) {
-          return function() {
-            var returnValue = original.apply(this, arguments)
-            extraBehavior.apply(this, arguments)
-            return returnValue
-          }
+    }
+
+    function after(extraBehavior) {
+        return function (original) {
+            return function () {
+                var returnValue = original.apply(this, arguments)
+                extraBehavior.apply(this, arguments)
+                return returnValue
+            }
         }
-      }
-      
-    class AnotherPlugin extends msfsWt21Fmc.WT21FmcAvionicsPlugin {
-        onInstalled()  {
+    }
+
+    class Dm21Plugin extends msfsWt21Fmc.WT21FmcAvionicsPlugin {
+        onInstalled() {
             // Required method, nothing to do.
-        }            
+        }
 
         registerFmcExtensions(context) {
+            this._model = SimVar.GetSimVarValue("ATC MODEL", "string");
+            this._keyPrefix = "CJ4_FMC_";
             this._fmcContext = context;
             const instrument = this._fmcContext.pageFactory.baseInstrument.instrument;
-            
+
             const powerOn = instrument.onPowerOn.bind(instrument);
             const shutDown = instrument.onShutDown.bind(instrument);
-            instrument.onPowerOn = ()=> { powerOn(); this.setPower(true);} 
-            instrument.onShutDown = ()=> { shutDown(); this.setPower(false);} 
-  
+            instrument.onPowerOn = () => { powerOn(); this.setPower(true); }
+            instrument.onShutDown = () => { shutDown(); this.setPower(false); }
+
             override(context.renderer, 'renderToDom', after(this.renderToDom.bind(this)));
             this.setPower(instrument.isElectricityAvailable());
-            
+
             this._template = [];
             for (let i = 0; i < 16; i++) {
                 this._template.push([""]);
@@ -62,8 +64,8 @@ var dmPlugin = (function (exports, msfsSdk, msfsWt21Shared, msfsWt21Fmc) {
                 this.sendToSocket("mcduConnected");
             };
             this._socket.addEventListener('message', (event) => {
-                const msg = event.data;                
-                const prefix = `event:cj4:${this._fmcContext.fmcIndex}:`;
+                const msg = event.data;
+                const prefix = `event:wt21:${this._fmcContext.fmcIndex}:`;
                 if (msg.startsWith(prefix)) {
                     this.onEvent(`${msg.substring(prefix.length)}`);
                 } else if (msg == "requestUpdate") {
@@ -71,11 +73,10 @@ var dmPlugin = (function (exports, msfsSdk, msfsWt21Shared, msfsWt21Fmc) {
                 }
             });
         }
-        
+
 
         onEvent(event) {
-            const button = `CJ4_FMC_${this._fmcContext.fmcIndex}_BTN_${event}`;
-            console.log(`BUTTON: ${button}`);
+            const button = `${this._keyPrefix}${this._fmcContext.fmcIndex}_BTN_${event}`;
             const instrument = this._fmcContext.pageFactory.baseInstrument.instrument;
             instrument.onInteractionEvent([button]);
         }
@@ -94,10 +95,9 @@ var dmPlugin = (function (exports, msfsSdk, msfsWt21Shared, msfsWt21Fmc) {
                 power: this._power
             };
 
-            let  json = { aircraft: "cj4" };
+            let json = { aircraft: this._model };
             json[this._fmcContext.fmcIndex == 2 ? 'right' : 'left'] = screen;
-            let msg = "update:cj4:" + JSON.stringify(json);
-            //console.log("MSG==>" + msg);
+            let msg = "update:wt21:" + JSON.stringify(json);
             this.sendToSocket(msg);
         }
 
@@ -118,7 +118,7 @@ var dmPlugin = (function (exports, msfsSdk, msfsWt21Shared, msfsWt21Fmc) {
             if (Array.isArray(templateLine)) {
                 templateLine = [...templateLine];
             }
-            else  {
+            else {
                 templateLine = [templateLine];
             }
             var result = templateLine.map(x => this.fixLine(x, false));
@@ -135,13 +135,12 @@ var dmPlugin = (function (exports, msfsSdk, msfsWt21Shared, msfsWt21Fmc) {
 
         editOutputTemplate(output, rowIndex) {
             const end = Math.min(output.length, this._template.length - rowIndex);
-            for (let i=0; i< end; i++)
-            {
+            for (let i = 0; i < end; i++) {
                 let targetRow = i + rowIndex;
                 var data = output[i];
                 this._template[targetRow] = data;
             }
         }
     }
-    msfssdk.registerPlugin(AnotherPlugin);
+    msfssdk.registerPlugin(Dm21Plugin);
 })({}, msfssdk, wt21_shared, wt21_fmc);

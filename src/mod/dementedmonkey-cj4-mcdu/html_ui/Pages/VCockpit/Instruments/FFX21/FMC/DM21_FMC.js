@@ -1,17 +1,18 @@
 (function (msfssdk) {
-    class DM_FMC_Sender {        
+    class DM_FMC_Sender {
         constructor(fmc) {
             this._fmc = fmc;
+            this._model = SimVar.GetSimVarValue("ATC MODEL", "string") || SimVar.GetSimVarValue("ATC TYPE", "string");
             this._editOutputTemplate = fmc.fmcRenderer.editOutputTemplate.bind(fmc.fmcRenderer);
-            fmc.fmcRenderer.editOutputTemplate = this.editOutputTemplate.bind(this);            
+            fmc.fmcRenderer.editOutputTemplate = this.editOutputTemplate.bind(this);
 
             const powerOn = this._fmc.instrument.onPowerOn.bind(this._fmc.instrument);
             const shutDown = this._fmc.instrument.onShutDown.bind(this._fmc.instrument);
-            this._fmc.instrument.onPowerOn = ()=> { powerOn(); this.setPower(true);} 
-            this._fmc.instrument.onShutDown = ()=> { shutDown(); this.setPower(false);} 
+            this._fmc.instrument.onPowerOn = () => { powerOn(); this.setPower(true); }
+            this._fmc.instrument.onShutDown = () => { shutDown(); this.setPower(false); }
 
             const port = 8088;
-            
+
             this._template = [];
             for (let i = 0; i < 16; i++) {
                 this._template.push([""]);
@@ -29,8 +30,7 @@
         editOutputTemplate(output, rowIndex) {
             this._editOutputTemplate(output, rowIndex);
             const end = Math.min(output.length, this._template.length - rowIndex);
-            for (let i=0; i< end; i++)
-            {
+            for (let i = 0; i < end; i++) {
                 let targetRow = i + rowIndex;
                 var data = output[i];
                 this._template[targetRow] = data;
@@ -55,8 +55,8 @@
                 this.sendToSocket("mcduConnected");
             };
             this._socket.addEventListener('message', (event) => {
-                const msg = event.data;                
-                const prefix = `event:cj4:${this._fmc.instrument.instrumentIndex}:`;
+                const msg = event.data;
+                const prefix = `event:wt21:${this._fmc.instrument.instrumentIndex}:`;
                 if (msg.startsWith(prefix)) {
                     this.onEvent(`${msg.substring(prefix.length)}`);
                 } else if (msg == "requestUpdate") {
@@ -84,9 +84,9 @@
                 power: this._power
             };
 
-            let  json = { aircraft: "cj4" };
+            let json = { aircraft: this._model };
             json[this._fmc.instrument.instrumentIndex == 2 ? 'right' : 'left'] = screen;
-            let msg = "update:cj4:" + JSON.stringify(json);
+            let msg = "update:wt21:" + JSON.stringify(json);
             this.sendToSocket(msg);
         }
 

@@ -2,19 +2,13 @@ import React, { useContext } from 'react';
 
 import '../McduButtons.css';
 
-import { WebsocketContext } from './WebsocketContext';
-import { ButtonGrid, ButtonRow } from './Buttons.jsx';
-import playClick from '../ClickPlayer';
+import { WebsocketContext } from '../WebsocketContext.jsx';
+import { Button } from '../Button.jsx';
+import { ButtonGrid, ButtonRow } from './ButtonsCJ4.jsx';
+import playClick from '../ClickPlayer.jsx';
 
 
-const Button = ({ onClick, name }) => {
-    if (name.length) {
-        return (
-            <div className="button" onClick={() => onClick(name)} />
-        );
-    }
-    return <div className="dummy" />;
-};
+
 
 export const McduButtons = ({ sound, screenId }) => {
     const socket = useContext(WebsocketContext);
@@ -24,7 +18,7 @@ export const McduButtons = ({ sound, screenId }) => {
             await playClick();
         }
         if (screenId) {
-            socket.sendMessage(`event:cj4:${screenId}:${name}`);
+            socket.sendMessage(`event:wt21:${screenId}:${name}`);
         }
     };
 
