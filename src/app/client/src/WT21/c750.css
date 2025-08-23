@@ -1,0 +1,53 @@
+.normal-c750 {
+    --cdu-x: 1300;
+    --cdu-y: 1700;
+}
+
+.fullscreen-c750 {
+    --cdu-x: 890;
+    --cdu-y: 595;
+}
+
+.normal .App-c750 {
+    background-image: url("mcdu-c750.png");
+}
+
+.normal .App-c750 div.screen {
+    left: calc(195 * var(--app-x));
+    top: calc(245 * var(--app-y));
+    width: calc(890 * var(--app-x));
+    height: calc(595 * var(--app-y));
+}
+
+/* Create the cell grid */
+.App-c750 div.screen>.line {
+    /* Height is 1/9 (9 lines) */
+    height: 11.11%;
+}
+
+.App-c750 div.screen>.line>.cell {
+    container-type: size;
+    display: inline-block;
+    height: 100%;
+    /* Width is 1/25 (25 columns)*/
+    width: 4%;
+}
+
+/* Normal text or explicit d-text */
+.App-c750 div.screen>div.line>span.cell.d-text>span,
+.App-c750 div.screen>.line>.cell>span {
+    font-size: 80cqh;
+    transform: scaleY(1.25);
+}
+
+.App-c750 div.screen>.line:nth-child(1)>span.cell>span {
+    transform: scaleY(1.25);
+}
+
+.App-c750 div.screen>.line:nth-child(1)>span.page-number-text>span {
+    transform: scaleY(0.8);
+}
+
+.App-c750 div.screen>.line:nth-child(2n+2)>.cell>span {
+    transform: scaleY(0.9);
+}

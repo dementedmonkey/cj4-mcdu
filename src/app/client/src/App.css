@@ -1,12 +1,14 @@
 .App {
-  --app-width: min(100vw, calc(var(--vh) * var(--aspect-ratio)));
-  --app-height: calc(min(var(--vh), calc(100vw * calc(1 / var(--aspect-ratio)))) - calc(var(--app-width) * var(--top-padding)));
-  height: var(--app-height);
-  padding-top: calc(var(--app-width) * var(--top-padding));
-  left: calc(50vw - calc(var(--app-width) / 2));
-  width: var(--app-width);
-  position: relative;
-  user-select: none;
+    --aspect-ratio: calc(var(--cdu-x)/var(--cdu-y));
+    --app-width: min(100vw, calc(var(--vh) * var(--aspect-ratio)));
+    --app-height: calc(min(var(--vh), calc(100vw * calc(1 / var(--aspect-ratio)))));
+    --app-x: calc(var(--app-width)/ var(--cdu-x));
+    --app-y: calc(var(--app-height)/ var(--cdu-y));
+    height: var(--app-height);
+    left: calc(50vw - calc(var(--app-width) / 2));
+    width: var(--app-width);
+    position: relative;
+    user-select: none;
 }
 
 .normal .App {
@@ -16,8 +18,16 @@
 
 
 .fullscreen {
-  --aspect-ratio: 1.2;
-  --top-padding: 0;
-  --screen-scale: 1;
   cursor: pointer;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+div.fullscreen div.screen {
+    left: 0;
+    top: 0;
+    width: calc(var(--cdu-x) * var(--app-x));
+    height: calc(var(--cdu-y) * var(--app-y));
 }

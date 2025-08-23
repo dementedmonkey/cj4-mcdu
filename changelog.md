@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.0
+* Support FFX C750
+* Use character grid layout in WT21 CDU for better fidelity
+* Rework CSS for more modularity and fewer magic values
+* Update NPM packages
+
 ## 0.8.0
 * Support different CDU hardware styles in the app
 * Add support for Asobo 737 MAX 8

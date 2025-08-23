@@ -12,7 +12,7 @@ that will connect the simulator aircraft to this application.
 ## Supported Aircraft
 
 The "CJ4" name is increasingly inaccurate, as the mod now supports
-4 different aircraft.
+5 different aircraft.
 
 | Aircraft                      | FS2020 | FS2024 |
 | ----------------------------- | :----: | :----: |
@@ -20,6 +20,7 @@ The "CJ4" name is increasingly inaccurate, as the mod now supports
 | King Air C90                  |  N/A   |   ✅    |
 | Asobo 737 Max 8               |  N/A   |   ✅    |
 | FFX P180 1.2.1 (2020 version) |   ✅    |   ✅    |
+| FFX C750 1.3.9                |   ✅    |   ✅    |
 
 ## Installation
 * Remove any previous versions of the this mod

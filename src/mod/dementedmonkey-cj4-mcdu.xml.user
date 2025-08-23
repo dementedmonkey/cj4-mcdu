@@ -2,7 +2,9 @@
 	<CheckedOutPackages>
 		<Package Name="z-dementedmonkey-cj4-mcdu"/>
 	</CheckedOutPackages>
-	<SelectedPackages/>
+	<SelectedPackages>
+		<Package Name="z-dementedmonkey-cj4-mcdu"/>
+	</SelectedPackages>
 	<Filter/>
 	<ShowOnlyEdited>false</ShowOnlyEdited>
 </UserSettings>

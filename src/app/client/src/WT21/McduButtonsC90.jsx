@@ -1,13 +1,8 @@
 import React, { useContext } from 'react';
 
-import '../McduButtons.css';
-
 import { WebsocketContext } from '../WebsocketContext.jsx';
-import { Button } from '../Button.jsx';
-import { ButtonGrid, ButtonRow } from './ButtonsC90.jsx';
+import { Button,  ButtonGrid, ButtonRow } from '../Button.jsx';
 import playClick from '../ClickPlayer.jsx';
-
-
 
 
 export const McduButtons = ({ sound, screenId }) => {

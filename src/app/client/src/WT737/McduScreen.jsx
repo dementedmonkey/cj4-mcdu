@@ -26,7 +26,7 @@ export const McduScreen = ({ content }) => {
     }
     const lines = [];
     let anyValue = false;
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 14; i++) {
         let lineData = i < content.lines.length ? content.lines[i] : { rowStyle: '', cols: [] };
         lines.push(<Line cols={lineData.cols} rowStyle={lineData.rowStyle} key={i} />);
     }

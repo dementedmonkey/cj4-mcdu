@@ -1,0 +1,71 @@
+.normal-c90 {
+    --cdu-x: 1700;
+    --cdu-y: 1800;
+}
+
+.fullscreen-c90 {
+    --cdu-x: 1145;
+    --cdu-y: 780;
+}
+
+/* Adjustment because of how we offset the first line */
+.App-c90 {
+    --cdu-top-pad: calc(25 * var(--app-y));
+}
+
+.fullscreen-c90 div.screen {
+    padding-top: var(--cdu-top-pad);
+}
+
+/*
+This is intentionally different than what's in-sim.
+It lines up poorly on the buttons.
+This squashes the screen a bit more so that
+the text lines up with the LSKs.
+*/
+.App-c90 div.screen {
+    left: calc(285 * var(--app-x));
+    width: calc(1145 * var(--app-x));
+    top: calc(180 * var(--app-y));
+    height: calc(780 * var(--app-y));
+}
+
+.normal .App-c90 {
+    background-image: url("mcdu-c90.png");
+}
+
+/* Create the cell grid */
+.App-c90 div.screen>.line {
+    /* Height is 1/15 (15 lines) */
+    height: 6.66%;
+}
+
+.App-c90 div.screen>.line>.cell {
+    container-type: size;
+    display: inline-block;
+    height: 100%;
+    /* Width is 1/24 (24 columns)*/
+    width: 4.16%;
+}
+
+/* Normal text or explicit d-text */
+.App-c90 div.screen>div.line>span.cell.d-text>span,
+.App-c90 div.screen>.line>.cell>span {
+    font-size: 125cqh;
+    transform: scaleY(0.8);
+}
+
+/* Explicit s-text or on an odd line */
+.App-c90 div.screen>.line:nth-child(2n+2)>.cell>span,
+.App-c90 div.screen>.line>.cell.s-text>span {
+    transform: scaleY(0.6);
+}
+
+/*
+There is a space between the top row and the rest.
+We use a smaller screen rectangle so the cell size maths correctly,
+then just shift the top line up.
+*/
+.App-c90 div.screen>.line:nth-child(1) {
+    top: calc(-1 * var(--cdu-top-pad));
+}

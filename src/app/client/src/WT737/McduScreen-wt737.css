@@ -5,36 +5,39 @@
   font-style: normal;
 }
 
-.App-wt737 .screen {
-  --mcdu-font-size: calc(calc(0.059 * var(--screen-scale)) * var(--app-width));
-
-  font-family: "Boeing", "Harlow Solid Italic", monospace;
-  letter-spacing: calc(var(--app-width) / 150);
-
-  width: calc(100% * var(--screen-scale));
-  left: 19%;
-  height: calc(var(--app-width) * var(--screen-scale) / 1.26);
+.App-wt737 div.screen {
+    font-family: "Boeing", "Harlow Solid Italic", monospace;
+    display: block;
+    position: absolute;
+    left: calc(160 * var(--app-x));
+    width: calc(525 * var(--app-x));
+    top: calc(90 * var(--app-y));
+    height: calc(430 * var(--app-y));
 }
 
-.App-wt737 .line {
-  height: 7%;
-  margin: 0;
-  white-space: pre;
+.App-wt737 div.screen>.line {
+    display: block;
+    container-type: size;
+    color: white;
+    margin: 0px;
+    padding: 0px;
+    white-space: pre;
+    position: relative;
 }
 
-.App-wt737 .line span span {
-  width: 4%;
-  display: inline-block;
+.App-wt737 div.screen>.line {
+    height:7.14%; /* 1/14 */
 }
 
+.App-wt737 span.fmc-row > span  {
+    display:inline-block;
+    width: 4.16%;   /* 1/24 */
+}
 
-
-.line-wt737 .s-text>.d-text,
 .line-wt737 .d-text {
-  font-size: var(--mcdu-font-size);
+    font-size: 100cqh;
 }
 
-.line-wt737 .d-text>.s-text,
-.line-wt737 .s-text {
-  font-size: calc(var(--mcdu-font-size) *.75);
+.line-wt737 .s-text  {
+    font-size: 75cqh;
 }

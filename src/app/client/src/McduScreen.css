@@ -1,38 +1,22 @@
     .screen {
       --mcduWhite: #ffffff;
       --mcduLightGrey: #666666;
+      --mcduGrey: #787878;
       --mcduGreen: #00ff40;
       --mcduAmber: #ffd228;
       --mcduCyan: #00ffff;
+      --mcduYellow: #fff201;
       --mcduRed: #ff0000;
       --mcduMagenta: #ff00ff;
-
-      margin: 0 !important;
-      font-size: var(--mcdu-font-size);
+      --mcduBlue: #4580a7;
       color: white;
-
-      position: relative;
     }
 
-
-    div.fullscreen div.App div.screen {
-      left: 0;
-      width: 100%;
-    }
 
     .label {
       margin: 0;
       white-space: pre;
       position: relative;
-    }
-
-
-    /* Fixes cut-off text in Safari */
-    /* https://stackoverflow.com/questions/36294234/safari-cuts-off-fonts-with-characters-that-go-outside-of-font-file-bounding-box */
-
-    .fmc-block>span {
-      padding: 20px;
-      margin: -20px;
     }
 
 

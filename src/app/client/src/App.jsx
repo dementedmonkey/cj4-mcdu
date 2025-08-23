@@ -53,6 +53,8 @@ function App() {
                 modelName = "cj4";
             } else if (aircraftName.includes("C90") || aircraftName.includes("P180")) {
                 modelName = "c90";
+            } else if (aircraftName.includes("C750")) {
+                modelName = "c750";
             } else {
                 modelName = aircraftName;
             }
@@ -163,7 +165,7 @@ function App() {
 
 
     return (
-        <div className={fullscreen ? `fullscreen fullscreen-${cduType}` : `normal normal-${cduType} normal-${aircraft}`}>
+        <div className={fullscreen ? `fullscreen fullscreen-${cduType} fullscreen-${aircraft}` : `normal normal-${cduType} normal-${aircraft}`}>
             <div className={`App App-${aircraft} App-${cduType}`}>
                 <WebsocketContext.Provider value={{ sendMessage, lastMessage, readyState }}>
                     {getAircraftMcdu()}

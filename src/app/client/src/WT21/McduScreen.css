@@ -1,171 +1,67 @@
 @font-face {
-  font-family: "Collins ProLine";
-  src: url("CollinsProLine-Condensed.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
+    font-family: "WT21 FMC";
+    src: url("wt21-Condensed.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
 }
 
-@font-face {
-  font-family: "Collins ProLine Regular";
-  src: url("CollinsProLine-Regular.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
+.App-wt21 div.screen>.line {
+    display: block;
+    container-type: size;
+    color: white;
+    margin: 0px;
+    padding: 0px;
+    white-space: pre;
+    position: relative;
 }
 
-.App-c90 .screen {
-  --mcdu-font-size: calc(calc(0.052 * var(--screen-scale)) * var(--app-width));
-  --mcdu-line-height: calc(calc(0.03 * var(--screen-scale)) * var(--app-width));
-  letter-spacing: 0.18vw;
-  height: calc(var(--app-width) * var(--screen-scale) / 1.45);
-  left: 15%;
+.App-wt21 div.screen .fmc-block {
+    position: absolute;
+    display: block;
+    height: 100%;
+    width: 100%;
+    left: 0px;
+    top: 0px;
 }
 
-.App-cj4 .screen {
-  --mcdu-font-size: calc(calc(0.052 * var(--screen-scale)) * var(--app-width));
-  --mcdu-line-height: calc(calc(0.034 * var(--screen-scale)) * var(--app-width));
-  letter-spacing: 0.15vw;
-  left: 13.5%;
-  height: calc(var(--app-width) * var(--screen-scale) / 1.26);
+.App-wt21 div.screen {
+    font-family: "WT21 FMC", sans-serif;
+    display: block;
+    position: absolute;
 }
-
-.App-wt21 .screen {
-  --displayBackground: rgba(13, 20, 35, 1);
-  --displaySeparator: #3c3c3c;
-  --displaySeparatorLight: #aaaaaa;
-
-  --displayWhite: #ffffff;
-  --displayGrey: #787878;
-  --displayDarkGrey: #b3b3b3;
-  --displayLightGrey: lightgray;
-  --displayAmber: #e68000;
-  --displayCyan: #00ffff;
-  --displayGreen: #00ff00;
-  --displayMagenta: #ff94ff;
-  --displayRed: #ff0000;
-  --displayYellow: #ffff00;
-
-  --mcduWhite: #ffffff;
-  --mcduLightGrey: #666666;
-  --mcduGrey: #787878;
-  --mcduGreen: #00a54f;
-  --mcduAmber: #ff9a00;
-  --mcduCyan: #00ffff;
-  --mcduYellow: #fff201;
-  --mcduRed: #ff886d;
-  --mcduMagenta: #ff00ff;
-  --mcduBlue: #4580a7;
-
-
-  font-family: "Collins ProLine", monospace;
-
-  margin: 0 !important;
-  font-size: var(--mcdu-font-size);
-  color: var(--displayWhite);
-  line-height: var(--mcdu-line-height);
-
-  position: relative;
-  width: calc(100% * var(--screen-scale));
-}
-
-.App-wt21 .label-left {
-  position: absolute;
-  left: 4.5%;
-  bottom: 0;
-  width: 100%;
-  text-align: left;
-}
-
-.App-wt21 .label-right {
-  position: absolute;
-  right: 4.5%;
-  bottom: 0;
-  width: 100%;
-  text-align: right;
-}
-
-.App-wt21 .label-center {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  text-align: center;
-}
-
-.App-wt21 .line {
-  height: 6%;
-  margin: 0;
-  white-space: pre;
-}
-
-.App-wt21 .screen .line:nth-child(2) {
-  height: 12%;
-}
-
 
 .App-wt21 .line-left {
-  position: absolute;
-  left: 2%;
-  width: 100%;
-  text-align: left;
+    position: absolute;
+    left: 2%;
+    width: 100%;
+    text-align: left;
 }
 
 .App-wt21 .line-right {
-  position: absolute;
-  right: 2%;
-  width: 100%;
-  text-align: right;
+    position: absolute;
+    right: 2%;
+    width: 100%;
+    text-align: right;
 }
 
 .App-wt21 .line-center {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  text-align: center;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    text-align: center;
 }
 
 
-.App-wt21 .small,
-.App-wt21 .label {
-  font-family: "Collins ProLine Regular", "Collins ProLine", monospace;
-  font-size: calc(var(--mcdu-font-size) *.75);
-  letter-spacing: 0.4vw;
+/* Allows us to transform just the character size,
+so that we can invert correctly
+ */
+.App-wt21 div.screen>.line>.cell>span {
+    display: inline-block;
+    /* Need a little extra width to avoid vertical lines in reverse text */
+    width: 105%;
 }
 
-.App-wt21 .blackwhite {
-  position: relative
-}
-
-.App-wt21 .blackwhite>.bg {
-  display: block;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-}
-
-.App-wt21 .blackwhite>.bg>span {
-  display: block;
-  background-color: var(--mcduWhite);
-  height: calc(var(--mcdu-font-size) - 5px);
-  margin: 20px
-}
-
-.App-wt21 .blackwhite>.fg {
-  color: black;
-  position: relative
-}
-
-.App-wt21 .App-wt21 .b-text {
-  font-family: "Collins ProLine", monospace;
-}
-
-.App-wt21 .left {
-  margin-left: 4%;
-  float: left;
-}
-
-.App-wt21 .right {
-  margin-right: 6%;
-  float: right;
+.App-wt21 div.screen>.line>.cell.blackwhite>span {
+    color: black;
+    background-color: var(--mcduWhite);
 }

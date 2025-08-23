@@ -1,7 +1,8 @@
 import React from 'react';
 import { McduScreen } from './McduScreen';
 import { McduButtons } from './McduButtonsC90';
-import { ButtonGrid, ButtonRow } from './ButtonsC90';
+import { ButtonGrid, ButtonRow } from '../Button';
+import './c90.css';
 
 
 export const McduC90 = ({ content, sound, fullscreen, setFullscreen, changeCdu }) => {
@@ -9,11 +10,11 @@ export const McduC90 = ({ content, sound, fullscreen, setFullscreen, changeCdu }
         <>
             <McduScreen content={content} />
             <McduButtons sound={sound} screenId={content.power ? content.id : 0} />
-            <div className="button-grid" style={{ left: `${260 / 17.00}%`, top: `${120 / 18.00}%`, width: `${1200 / 17.00}%`, height: `${80 / 18.00}%` }}>
-                <div className="button-row">
+            <ButtonGrid x={260} y={120} width={1200} height={80} >
+                <ButtonRow>
                     <div className="button" title="Fullscreen" onClick={() => setFullscreen(!fullscreen)} />
-                </div>
-            </div>
+                </ButtonRow>
+            </ButtonGrid>
             <ButtonGrid x={0} y={80} width={115} height={115} >
                 <ButtonRow>
                     <div className="button" title="Left MCDU" onClick={() => changeCdu(1)} />

@@ -2,7 +2,7 @@ import './wt737.css';
 import React from 'react';
 import { McduScreen } from './McduScreen';
 import { McduButtons } from './McduButtons';
-import { ButtonGrid, ButtonRow } from './Buttons';
+import { ButtonGrid, ButtonRow } from '../Button';
 
 function ExecLight({ on }) {
     return on ? <div id="execLight"></div> : null;

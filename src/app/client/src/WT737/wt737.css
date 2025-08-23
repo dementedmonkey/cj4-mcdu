@@ -1,23 +1,25 @@
-.normal-wt737 {
-    --aspect-ratio: calc(835/1280);
-    --top-padding: .116;
-    --screen-scale: .66;
+.normal-wt737
+{
+    --cdu-x: 835;
+    --cdu-y: 1280;
 }
-
+.fullscreen-wt737 {
+    --cdu-x: 525;
+    --cdu-y: 430;
+}
 
 .normal .App-wt737 {
     background-image: url("mcdu-737.png");
 }
 
-
 #execLight {
     position: absolute;
-    left: calc(var(--app-width) * 662 / 835);
-    top: calc(var(--app-height) * 745 / 1280);
-    width: calc(var(--app-width) * 76 / 835);
-    height: calc(var(--app-height) * 20 / 1280);
-    border-radius: calc(var(--app-height) * 10 / 1280);
+    left: calc( 660 * var(--app-x));
+    top: calc(686 * var(--app-y));
+    width: calc( 76 * var(--app-x));
+    height: calc( 20 * var(--app-y));
+    border-radius: calc( 10 * var(--app-y));
     background-color: #00A000;
     opacity: 80%;
-    box-shadow: 0 0 calc(var(--app-width) * 8 / 835) calc(var(--app-width) * 8 / 835) #008000;
+    box-shadow: 0 0 calc(8 * var(--app-x)) calc(8 * var(--app-y)) #008000;
 }

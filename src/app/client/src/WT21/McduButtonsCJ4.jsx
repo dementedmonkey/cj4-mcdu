@@ -1,10 +1,7 @@
 import React, { useContext } from 'react';
 
-import '../McduButtons.css';
-
 import { WebsocketContext } from '../WebsocketContext.jsx';
-import { Button } from '../Button.jsx';
-import { ButtonGrid, ButtonRow } from './ButtonsCJ4.jsx';
+import { Button , ButtonGrid, ButtonRow } from '../Button';
 import playClick from '../ClickPlayer.jsx';
 
 

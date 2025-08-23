@@ -1,0 +1,66 @@
+.normal-cj4 {
+    --cdu-x: 1400;
+    --cdu-y: 1650;
+}
+
+.fullscreen-cj4 {
+    --cdu-x: 945;
+    --cdu-y: 710;
+}
+
+/* Adjustment because of how we offset the first line */
+.App-cj4 {
+    --cdu-top-pad: calc(25 * var(--app-y));
+}
+
+.fullscreen-cj4 div.screen {
+    padding-top: var(--cdu-top-pad);
+}
+
+.App-cj4 div.screen {
+    left: calc(225 * var(--app-x));
+    width: calc(945 * var(--app-x));
+    top: calc(175 * var(--app-y));
+    height: calc(710 * var(--app-y));
+}
+
+.normal .App-cj4 {
+    background-image: url("mcdu-cj4.png");
+}
+
+/* Create the cell grid */
+.App-cj4 div.screen>.line {
+    /* Height is 1/15 (15 lines) */
+    height: 6.66%;
+}
+
+.App-cj4 div.screen>.line>.cell {
+    container-type: size;
+    display: inline-block;
+    height: 100%;
+    /* Width is 1/24 (24 columns)*/
+    width: 4.16%;
+}
+
+
+/* Normal text or explicit d-text */
+.App-cj4 div.screen>div.line>span.cell.d-text>span,
+.App-cj4 div.screen>.line>.cell>span {
+    font-size: 125cqh;
+    transform: scaleY(0.8);
+}
+
+/* Explicit s-text or on an odd line */
+.App-cj4 div.screen>.line:nth-child(2n+2)>.cell>span,
+.App-cj4 div.screen>.line>.cell.s-text>span {
+    transform: scaleY(0.6);
+}
+
+/*
+There is a space between the top row and the rest.
+We use a smaller screen rectangle so the cell size maths correctly,
+then just shift the top line up.
+*/
+.App-cj4 div.screen>.line:nth-child(1) {
+    top: calc(-1 * var(--cdu-top-pad));
+}
