@@ -1,0 +1,31 @@
+<AssetPackage Name="z-dementedmonkey-p180-mcdu" Version="0.10.0">
+	<PackageOrderHint>GENERIC_AIRPORT_PATCH</PackageOrderHint>
+	<ItemSettings>
+		<ContentType>MISC</ContentType>
+		<Title>P180 MCDU</Title>
+		<Manufacturer/>
+		<Creator>Demented Monkey</Creator>
+	</ItemSettings>
+	<Flags>
+		<VisibleInStore>false</VisibleInStore>
+		<CanBeReferenced>false</CanBeReferenced>
+	</Flags>
+	<AssetGroups>
+		<AssetGroup Name="ContentInfo">
+			<Type>ContentInfo</Type>
+			<Flags>
+				<FSXCompatibility>false</FSXCompatibility>
+			</Flags>
+			<AssetDir>PackageDefinitions\ContentInfo</AssetDir>
+			<OutputDir>ContentInfo\dementedmonkey-p180-mcdu</OutputDir>
+		</AssetGroup>
+		<AssetGroup Name="overlay-files">
+			<Type>Copy</Type>
+			<Flags>
+				<FSXCompatibility>false</FSXCompatibility>
+			</Flags>
+			<AssetDir>dementedmonkey-p180-mcdu</AssetDir>
+			<OutputDir>.\</OutputDir>
+		</AssetGroup>
+	</AssetGroups>
+</AssetPackage>

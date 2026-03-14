@@ -19,12 +19,21 @@ The "CJ4" name is increasingly inaccurate, as the mod now supports
 | Citation CJ4                  |   ✅    |   ✅    |
 | King Air C90                  |  N/A   |   ✅    |
 | Asobo 737 Max 8               |  N/A   |   ✅    |
-| FFX P180 1.2.1 (2020 version) |   ✅    |   ✅    |
+| FFX P180 2.0.3 (2020 version) |   ✅    |  ❌   |
+| FFX P180 2.1.9 (2024 version) |  N/A   |   ✅    |
 | FFX C750 1.3.9                |   ✅    |   ✅    |
 
 ## Installation
 * Remove any previous versions of the this mod
-* Copy the `z-dementedmonkey-cj4-mcdu` folder into your MSFS `Community` folder.<br/>
+* Copy the `z-dementedmonkey-cj4-mcdu` folder into your MSFS `Community` folder.
+* Special instructions for the P180 in FS2020:
+  * Copy ths `FS2020\z-dementedmonkey-p180-mcdu` folder into your MSFS `Community` folder.
+  * This is FS2020 only.   If you do this in FS2024 none of your screens will work.
+
+> [!IMPORTANT]
+> Mismatched versions of the MCDU app, the FS plugin, and your
+> aircraft will cause bad things to happen.
+> Be sure to remove all old versions when updating!
 
 ## Using the MCDU
 * Run the `MCDU SERVER\cj4-mcdu-server-x.y.z.exe` application.  <br/>

@@ -1,6 +1,6 @@
 {
   "name": "cj4-mcdu",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "edition": "development",
   "bin": "index.js",
   "scripts": {

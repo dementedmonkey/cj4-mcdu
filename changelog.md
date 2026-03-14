@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.0
+* Support FFX P180 2024 version
+* Added new plugin for the P180 in 2020
+
 ## 0.9.0
 * Support FFX C750
 * Use character grid layout in WT21 CDU for better fidelity

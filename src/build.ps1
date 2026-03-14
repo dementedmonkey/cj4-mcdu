@@ -7,6 +7,10 @@ Push-Location (join-path $PSScriptRoot mod)
 .\build.ps1
 Pop-Location
 
+Push-Location (join-path $PSScriptRoot mod-p180)
+.\build.ps1
+Pop-Location
+
 Push-Location (join-path $PSScriptRoot app)
 npm ci
 npm run build:client

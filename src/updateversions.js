@@ -4,7 +4,8 @@ Update version in XML or JSON files
 
 var files = [
     'src/app/package.json',
-    'src/mod/PackageDefinitions/z-dementedmonkey-cj4-mcdu.xml'
+    'src/mod/PackageDefinitions/z-dementedmonkey-cj4-mcdu.xml',
+    'src/mod-p180/PackageDefinitions/z-dementedmonkey-p180-mcdu.xml',
 ];
 
 const fs = require('fs');

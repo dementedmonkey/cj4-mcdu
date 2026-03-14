@@ -21,7 +21,11 @@ var dmPlugin = (function (exports, msfsSdk, msfsWt21Shared, msfsWt21Fmc) {
         }
 
         registerFmcExtensions(context) {
-            this._model = SimVar.GetSimVarValue("ATC MODEL", "string");
+            let model = SimVar.GetSimVarValue("ATC MODEL", "string");
+            if (model == "") {
+                model = SimVar.GetSimVarValue("ATC TYPE", "string");
+            }
+            this._model = model;
             this._keyPrefix = "CJ4_FMC_";
             this._fmcContext = context;
             const instrument = this._fmcContext.pageFactory.baseInstrument.instrument;
@@ -143,4 +147,4 @@ var dmPlugin = (function (exports, msfsSdk, msfsWt21Shared, msfsWt21Fmc) {
         }
     }
     msfssdk.registerPlugin(Dm21Plugin);
-})({}, msfssdk, wt21_shared, wt21_fmc);
+})({}, msfssdk, typeof(wt21_shared) == "undefined" ? msfswt21shared : wt21_shared , wt21_fmc);
