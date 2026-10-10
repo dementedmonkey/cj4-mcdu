@@ -1,0 +1,5 @@
+<Plugins>
+  <Plugin target="WTUns1">
+    coui://html_ui/Plugins/Uns1Plugin/Uns1CduPlugins.js
+  </Plugin>
+</Plugins>

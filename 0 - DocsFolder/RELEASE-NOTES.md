@@ -10,3 +10,4 @@ Modified fork of dementedmonkey/cj4-mcdu 0.10.0 (GPL-3).
 - **MCDU MENU → WEBSOCKETS>** (737: **MENU → WEBSOCKETS>**) sets export, IP, and port. Export is **OFF** until turned on. Settings are stored per aircraft title.
 - HTML/CSS CDU faces replace the PNG bezels. The page scales with the window. **BOTH** shows the left and right CDUs together.
 - Hawker 800XP (H25B / TITLE containing 800XP) uses the jet WT21 face. Key events stay `CJ4_FMC_{1|2}_BTN_*`, the same H-events the shared WT21 FMC publishes.
+- On branch `lim-747-uns` only: the 747-8 / 747-400 GST / 747-400 LCF CDU override and the UNS-1 plugin are in the same package. Their browser faces use `wt737/wt747` and `wt737/uns1`. The 747 WEBSOCKETS page is export, IP, and port.

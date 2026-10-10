@@ -29,4 +29,6 @@ In the aircraft, open **MCDU MENU** (737: **MENU**) and press **WEBSOCKETS>**. S
 
 `npm run release` writes `dist/` and a zip.
 
-Remove any older `z-dementedmonkey-cj4-mcdu`, `z-dementedmonkey-p180-mcdu`, or `z-lim-ffx-cdu-mod` package before testing. Two hubs cannot share port 8088.
+Remove any older `z-dementedmonkey-cj4-mcdu`, `z-dementedmonkey-p180-mcdu`, `z-lim-ffx-cdu-mod`, `z-LiM-747v2-CDU-v*`, or `z-LiM-UNS1-PLUGIN-v*` package before testing. Two hubs cannot share port 8088.
+
+This branch also loads the 747 CDU (MENU → WEBSOCKETS>, export / IP / port) and the UNS-1 CDU. The page picks the 747 or UNS face from the update header. UNS **4 IN / 5 IN** switches the bezel. A Boeing 707 payload selects the 5-inch face.
