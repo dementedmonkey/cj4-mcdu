@@ -1,5 +1,5 @@
 /**
- * DementedMonkey-LiM-CDU hub. Modified from dementedmonkey/cj4-mcdu (GPL-3), 2026-10-10.
+ * z-DementedMonkey-LiM-CDU hub. Modified from dementedmonkey/cj4-mcdu (GPL-3), 2026-10-10.
  *
  *   HTTP     httpPort   (browser page, default 8126)
  *   WS       simPort    (sim + browser, default 8088)
@@ -152,7 +152,7 @@ function attachMirror(wss, label) {
 function printBanner() {
   const lan = localIpv4s();
   console.log('');
-  console.log('DementedMonkey-LiM-CDU');
+  console.log('z-DementedMonkey-LiM-CDU');
   console.log('');
   console.log('  This PC     ' + href('http://localhost:' + httpPort));
   for (const nic of lan) {

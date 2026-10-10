@@ -4,7 +4,7 @@
 
 Modified fork of dementedmonkey/cj4-mcdu 0.10.0 (GPL-3).
 
-- Versioned Community package `DementedMonkey-LiM-CDU-v{version}` and Node hub (`start-web-cdu.cmd`). The pkg exe is not shipped. The name credits Demented Monkey and LiM together.
+- Versioned Community package `z-DementedMonkey-LiM-CDU-v{version}` and Node hub (`start-web-cdu.cmd`). The pkg exe is not shipped. The name credits Demented Monkey and LiM together.
 - `web-cdu/cdu-server.cfg` sets the browser port, the sim websocket port, and an optional relay port.
 - The relay listens on its own port and forwards every websocket message both ways, so a browser CDU and SPAD can use the same screen.
 - **MCDU MENU → WEBSOCKETS>** (737: **MENU → WEBSOCKETS>**) sets export, IP, and port. Export is **OFF** until turned on. Settings are stored per aircraft title.
