@@ -10,7 +10,7 @@ const path = require('path');
 const { minify: minifyJs } = require('terser');
 const CleanCSS = require('clean-css');
 
-const PRODUCT_LABEL = 'DementedMonkey-LiM-CDU';
+const PRODUCT_LABEL = 'z-DementedMonkey-LiM-CDU';
 const DEFAULT_EXCLUDE_DIRS = new Set(['Libraries']);
 
 function shouldSkipDir(dirName, excludeDirs) {

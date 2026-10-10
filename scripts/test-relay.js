@@ -11,7 +11,7 @@ const WebSocket = require('ws');
 const HTTP = 18126;
 const SIM = 18088;
 const RELAY = 18089;
-const serverPath = path.join(__dirname, '..', '1 - Src', 'DementedMonkey-LiM-CDU', 'web-cdu', 'index.js');
+const serverPath = path.join(__dirname, '..', '1 - Src', 'z-DementedMonkey-LiM-CDU', 'web-cdu', 'index.js');
 
 function waitForOpen(url) {
   return new Promise((resolve, reject) => {
