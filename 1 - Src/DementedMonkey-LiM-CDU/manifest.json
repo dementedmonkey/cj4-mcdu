@@ -1,9 +1,9 @@
 {
   "dependencies": [],
   "content_type": "CUSTOM",
-  "title": "LiM Web CDU",
+  "title": "DementedMonkey-LiM-CDU",
   "manufacturer": "",
-  "creator": "LiM",
+  "creator": "DementedMonkey / LiM",
   "package_version": "1.0.0",
   "minimum_game_version": "1.5.27",
   "minimum_compatibility_version": "5.27.0.112",
