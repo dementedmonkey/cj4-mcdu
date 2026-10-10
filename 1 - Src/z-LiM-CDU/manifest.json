@@ -1,0 +1,20 @@
+{
+  "dependencies": [],
+  "content_type": "CUSTOM",
+  "title": "LiM Web CDU",
+  "manufacturer": "",
+  "creator": "LiM",
+  "package_version": "1.0.0",
+  "minimum_game_version": "1.5.27",
+  "minimum_compatibility_version": "5.27.0.112",
+  "export_type": "Community",
+  "builder": "Microsoft Flight Simulator 2024",
+  "package_order_hint": "INSTRUMENT_PATCH",
+  "total_package_size": "00000000000000000000",
+  "release_notes": {
+    "neutral": {
+      "LastUpdate": "",
+      "OlderHistory": ""
+    }
+  }
+}

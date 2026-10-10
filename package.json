@@ -1,0 +1,26 @@
+{
+  "name": "lim-cdu",
+  "version": "1.0.0",
+  "description": "LiM CDU websocket hub — modified fork of dementedmonkey/cj4-mcdu (GPL-3). npm run build = build/ only; npm run release = dist + zip",
+  "private": true,
+  "scripts": {
+    "sync:version": "node scripts/sync-package-version.js",
+    "build": "node scripts/stage-build.js",
+    "build:stage": "node scripts/stage-build.js",
+    "release": "node scripts/stage-build.js && node scripts/deliver.js",
+    "build:release": "node scripts/stage-build.js && node scripts/deliver.js",
+    "build:deliver": "node scripts/stage-build.js && node scripts/deliver.js",
+    "deliver": "node scripts/deliver.js",
+    "build:clean": "node scripts/clean.js",
+    "minify": "node scripts/minify.js",
+    "server": "node \"./1 - Src/z-LiM-CDU/web-cdu/index.js\"",
+    "test:relay": "node scripts/test-relay.js"
+  },
+  "devDependencies": {
+    "clean-css": "^5.3",
+    "terser": "^5.27.0"
+  },
+  "dependencies": {
+    "ws": "^8.21.3"
+  }
+}

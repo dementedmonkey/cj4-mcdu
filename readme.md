@@ -1,5 +1,9 @@
 # MCDU Web application for Microsoft Flight Simulator
 
+Modified 2026-10-10 by LiM (lesoreilly/MSFS24-WebCDUs). This work stays under GPL-3. See `LICENSE` and `0 - DocsFolder/RELEASE-NOTES.md`.
+
+The Community package is `z-LiM-CDU-v{version}`. The hub is Node plus `web-cdu/start-web-cdu.cmd` (no packaged exe). Ports live in `web-cdu/cdu-server.cfg`. The browser CDU is HTML/CSS. **MCDU MENU → WEBSOCKETS>** turns export on. Hawker 800XP uses the jet WT21 face.
+
 ## About
 This project contains an application that will allow you to access
 the MCDU of the CJ4 from a web browser on a tablet

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LiM Web CDU</title>
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <link rel="stylesheet" href="cdu.css?v=20261010-1" />
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="toolbar">
+      <div class="plate" id="plate">CDU</div>
+      <span id="status" class="status">NO LINK</span>
+      <div class="side" role="group" aria-label="CDU side">
+        <button type="button" id="side-1" data-side="1">LEFT</button>
+        <button type="button" id="side-2" data-side="2">RIGHT</button>
+        <button type="button" id="side-both" data-side="both">BOTH</button>
+      </div>
+    </header>
+    <div class="stage" id="stage"></div>
+  </div>
+  <script>window.LIM_WS_PORT = __LIM_WS_PORT__;</script>
+  <script src="cdu.js?v=20261010-1"></script>
+</body>
+</html>

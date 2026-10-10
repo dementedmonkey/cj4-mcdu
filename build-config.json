@@ -1,0 +1,17 @@
+{
+  "communityDir": "D:\\zzMSFS2024\\Community",
+  "packages": [
+    {
+      "packageFolderName": "z-LiM-CDU",
+      "sourceSubdir": "1 - Src",
+      "docsDir": "0 - DocsFolder",
+      "releaseNotesFile": "RELEASE-NOTES.md",
+      "userManualFile": "USER-MANUAL.md",
+      "thumbnailFile": "thumbnail.jpg",
+      "dependencyPackageNamesForVersionPatch": [],
+      "minify": {
+        "relativeDir": "html_ui"
+      }
+    }
+  ]
+}
