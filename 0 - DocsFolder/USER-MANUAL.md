@@ -1,6 +1,6 @@
-# LiM Web CDU
+# DementedMonkey-LiM-CDU
 
-Modified 2026-10-10 from [dementedmonkey/cj4-mcdu](https://github.com/dementedmonkey/cj4-mcdu), GPL-3. This fork keeps that license. See `LICENSE`.
+Modified 2026-10-10 from [dementedmonkey/cj4-mcdu](https://github.com/dementedmonkey/cj4-mcdu), GPL-3. This fork keeps that license. See `LICENSE`. The Community name credits Demented Monkey and LiM together.
 
 One Community package and one Node hub export CDU screens for the Working Title WT21 aircraft (CJ4, King Air C90, Citation X / C750, Piaggio P180), the 737 MAX, and the FlightFX Hawker 800XP.
 
@@ -13,7 +13,7 @@ npm install
 npm run server
 ```
 
-Open the URL the hub prints. Defaults are in `1 - Src/z-LiM-CDU/web-cdu/cdu-server.cfg`:
+Open the URL the hub prints. Defaults are in `1 - Src/DementedMonkey-LiM-CDU/web-cdu/cdu-server.cfg`:
 
 - `httpPort` — browser page (8126)
 - `simPort` — sim and browser websocket (8088)
@@ -25,7 +25,7 @@ In the aircraft, open **MCDU MENU** (737: **MENU**) and press **WEBSOCKETS>**. S
 
 ## Build
 
-`npm run build` writes `build/z-LiM-CDU-v{version}/` and copies it to the Community folder in `build-config.json`.
+`npm run build` writes `build/DementedMonkey-LiM-CDU-v{version}/` and copies it to the Community folder in `build-config.json`.
 
 `npm run release` writes `dist/` and a zip.
 
