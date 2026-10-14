@@ -39,7 +39,7 @@ function onceMessage(ws) {
   });
 }
 
-async function main() {
+async function testListen() {
   const child = spawn(process.execPath, [
     serverPath,
     '--http-port=' + HTTP,
@@ -78,6 +78,62 @@ async function main() {
   } finally {
     child.kill();
   }
+}
+
+async function testOutbound() {
+  const outHttp = 18127;
+  const outSim = 18091;
+  const outRelay = 18090;
+  const remote = new WebSocket.Server({ host: '127.0.0.2', port: outRelay });
+  const child = spawn(process.execPath, [
+    serverPath,
+    '--http-port=' + outHttp,
+    '--sim-port=' + outSim,
+    '--relay-port=' + outRelay,
+    '--relay-ip=127.0.0.2',
+  ], { stdio: ['ignore', 'pipe', 'pipe'] });
+  let stderr = '';
+  child.stderr.on('data', (buf) => { stderr += buf.toString(); });
+
+  const incoming = new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('Hub did not connect out to the relay')), 8000);
+    remote.on('connection', (ws) => {
+      clearTimeout(timer);
+      resolve(ws);
+    });
+  });
+
+  try {
+    const peer = await incoming;
+    const sim = await waitForOpen('ws://127.0.0.1:' + outSim);
+    const fromPeer = onceMessage(peer);
+    sim.send('update:wt21:{"aircraft":"C25C","left":{"power":true,"lines":[]}}');
+    const peerSaw = await fromPeer;
+    if (peerSaw.indexOf('update:wt21:') !== 0) {
+      throw new Error('Outbound relay did not receive the sim update: ' + peerSaw);
+    }
+    const fromSim = onceMessage(sim);
+    peer.send('event:wt21:1:L1');
+    const simSaw = await fromSim;
+    if (simSaw !== 'event:wt21:1:L1') {
+      throw new Error('Sim socket did not receive the outbound relay key: ' + simSaw);
+    }
+    sim.close();
+    peer.close();
+    console.log('Relay outbound OK (hub dialed 127.0.0.2:' + outRelay + ').');
+  } catch (err) {
+    console.error(err.message || err);
+    if (stderr) console.error(stderr);
+    process.exitCode = 1;
+  } finally {
+    child.kill();
+    remote.close();
+  }
+}
+
+async function main() {
+  await testListen();
+  if (!process.exitCode) await testOutbound();
 }
 
 main();

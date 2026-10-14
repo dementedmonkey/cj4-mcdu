@@ -10,7 +10,7 @@ The browser faces are HTML and CSS. Install, the WEBSOCKETS pages, and the relay
 
 | Aircraft | Browser face | WEBSOCKETS |
 | --- | --- | --- |
-| Citation CJ4, and CJ3 titles C25A / C25B / C25C | CJ4. Other WT21 titles use this face with the plate "WT21 Default" | IDX, page 2, RSK 5 |
+| Citation CJ4 | CJ4. Other WT21 titles use this face with the plate "WT21 Default" | IDX, page 2, RSK 5 |
 | King Air C90 | C90, one CDU | IDX, page 2, RSK 5 |
 | Piaggio P180 (2024) | P180, one CDU | IDX, page 2, RSK 5 |
 | FlightFX Hawker 800XP | 800XP | IDX, page 2, RSK 5 |
@@ -19,7 +19,7 @@ The browser faces are HTML and CSS. Install, the WEBSOCKETS pages, and the relay
 | 747-8, 747-400 GST, 747-400 LCF | 747 | MENU, RSK 5 |
 | UNS-1, including the 707 and Saab 340 installs | 4 in and 5 in. A 707 payload opens the 5 in face | DATA page 1, RSK 5 MAINT, then RSK 1 |
 
-WT21 aircraft and the UNS-1 start with export on when nothing has been saved for that title. The 737 and 747 start off. A saved off stays off.
+Every aircraft starts with export on when nothing has been saved for that title. A saved off stays off.
 
 Dual CDUs have CPT, FO, and BOTH. The C90 and the P180 are a single CDU, so that switch stays hidden.
 
@@ -27,15 +27,13 @@ Charts and Navigraph login are not in this package.
 
 ## FS2020
 
-This package requires MSFS 2024 (`minimum_game_version` 1.5.27). FS2020 will not load it.
-
-The FS2020 aircraft installed here were checked against the plugin:
+The MSFS 2024 package keeps `minimum_game_version` 1.5.27. The copy written to the FS2020 Community folder sets that field to `1.39.6` so FS2020 mounts the package.
 
 | Aircraft | What it ships | Result |
 | --- | --- | --- |
-| FlightFX P180 2.0.6 | `FFX21/FMC/WT21_FMC.html` and its own `FMC.js`. That script has no avionics plugin class. | The `LiMCdu.xml` plugin does not attach. It still needs the HTML page that loads `FFX21/FMC/FMC.js` and then a small hook. This package does not include that page. |
-| CJ4 with Working Title WT21 2.0.4 | `WT21/FMC/WT21_FMC.html`. `FMC.js` exports `WT21FmcAvionicsPlugin`. | The plugin target `WT21_FMC` is the right attachment. FS2020 still will not load this package until a 2020 build exists. |
-| FlightFX Citation X 1.3.8 | `VTX21/FMC/WT21_FMC.html`, template id `HP2000_FMC`. `FMC.js` has no plugin class. | The plugin does not run. The short HTML override in this package matches that page and is the attachment that works. The same 2024 version floor blocks FS2020. |
+| CJ4 with Working Title WT21 2.0.4 | `WT21/FMC/WT21_FMC.html`. `FMC.js` exports `WT21FmcAvionicsPlugin`. | Confirmed in FS2020. The plugin attaches, and the WEBSOCKETS menu is on IDX, page 2, RSK 5. |
+| FlightFX P180 2.0.6 | `FFX21/FMC/WT21_FMC.html` and its own `FMC.js`. That script has no avionics plugin class. | The HTML override loads that `FMC.js` and then `lim_p180_fmc.js`, the same attachment 0.10.0 used. Export stays on. That FMC has no page that can turn it off. |
+| FlightFX Citation X 1.3.8 | `VTX21/FMC/WT21_FMC.html`, template id `HP2000_FMC`. `FMC.js` has no plugin class. | The HTML override sends the CDU screen to the browser. That FMC has no SETTINGS page, so export stays on. Citation X version 2 is in beta with the newer avionics, and the WEBSOCKETS page comes back with that FMC. |
 
 The 2024 CJ4, C750, and P180 are the ones this package is built for. The 2024 P180 uses the plugin. The 2024 C750 uses the HTML override. The 2024 CJ4 uses the plugin.
 
@@ -58,7 +56,7 @@ The sim and the browser connect in to `simPort`. SPAD listens on `relayPort`. Th
 
 ## How the sim side attaches
 
-CJ4, King Air, P180, and Hawker attach with the avionics plugin `html_ui/Plugins/LiMCdu.xml`. The sim keeps its own Working Title FMC. This package does not ship a CJ4 or WT21 FMC script.
+CJ4, King Air, P180, and Hawker attach with the avionics plugin `html_ui/Plugins/DM_LiM_CDU.xml`. The sim keeps its own Working Title FMC. This package does not ship a CJ4 or WT21 FMC script.
 
 Citation X, the 737, and the 747 use a short HTML override of the sim's CDU page. That page imports the sim's own avionics script, then a small LiM hook.
 
@@ -66,6 +64,8 @@ The UNS-1 is the exception that ships avionics code. `WTUns1.js` is a patched co
 
 ## Acknowledgements
 
+Demented Monkey's 0.10.0 project is the base of the WT21 plugin and the Node hub. That project supplies the CDU WEBSOCKETS page, where each aircraft sets export on or off and the destination IP and port, and the hub server configuration in `cdu-server.cfg`: the browser port and the sim websocket port.
+
 The websocket message names (`mcduConnected`, `requestUpdate`, `event`, `update`) come from Demented Monkey's server. That server followed the shape used by the FlyByWire A32NX MCDU. This repository does not contain FlyByWire source, and the browser faces are not that MCDU application.
 
-Demented Monkey's 0.10.0 project is the base of the WT21 plugin and the Node hub. Later aircraft, the HTML faces, and the relay were added here.
+Later aircraft and the HTML faces were added in this fork. The SPAD relay is an extra dial-out on that same server configuration: `relayIp` and `relayPort` in `cdu-server.cfg`.

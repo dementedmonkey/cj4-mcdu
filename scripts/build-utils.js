@@ -113,6 +113,15 @@ function toWindowsFiletime(mtimeMs) {
   return Math.floor(mtimeMs * 10000 + 116444736000000000);
 }
 
+/** Windows can only store one casing of Instruments/Airliners. Layout paths must match the sim. */
+function msfsLayoutPath(rel) {
+  return String(rel)
+    .replace(
+      /^html_ui\/Pages\/VCockpit\/Instruments\/airliners\/(WTB747|WTB707)/i,
+      'html_ui/Pages/VCockpit/Instruments/Airliners/$1'
+    );
+}
+
 function scanPackageLayout(packageRoot) {
   const entries = [];
 
@@ -128,7 +137,7 @@ function scanPackageLayout(packageRoot) {
         if (ent.name === '.gitkeep') continue;
         const st = fs.statSync(full);
         entries.push({
-          path: rel,
+          path: msfsLayoutPath(rel),
           size: st.size,
           date: toWindowsFiletime(st.mtimeMs)
         });

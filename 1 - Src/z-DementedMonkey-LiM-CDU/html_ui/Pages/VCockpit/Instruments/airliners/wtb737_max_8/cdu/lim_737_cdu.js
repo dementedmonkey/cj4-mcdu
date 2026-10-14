@@ -54,7 +54,7 @@
     function readConfig() {
         var port = parseInt(readStore('ws_port', DEFAULT_PORT), 10);
         return {
-            enabled: readStore('ws_enabled', '0') === '1',
+            enabled: readStore('ws_enabled', '1') === '1',
             ip: readStore('ws_ip', DEFAULT_IP) || DEFAULT_IP,
             port: port >= 1 && port <= 65535 ? port : 8088
         };
@@ -66,9 +66,11 @@
             try { this._model = SimVar.GetSimVarValue('ATC MODEL', 'string'); } catch (e) { /* ignore */ }
             this._cdu = cdu;
             override(cdu, 'onAfterRender', after(this.onAfterRender.bind(this)));
-            var instrument = document.getElementsByTagName('wtb38m-cdu')[0].fsInstrument;
-            this._instrument = instrument;
-            override(instrument, 'onPowerOn', after(this.sendData.bind(this)));
+            var element = document.getElementsByTagName('wtb38m-cdu')[0];
+            this._instrument = element && element.fsInstrument;
+            if (this._instrument && typeof this._instrument.onPowerOn === 'function') {
+                override(this._instrument, 'onPowerOn', after(this.sendData.bind(this)));
+            }
             var self = this;
             setInterval(function () { self.maintainSocket(); }, 2000);
         }
@@ -77,12 +79,28 @@
             var cfg = readConfig();
             var url = 'ws://' + cfg.ip + ':' + cfg.port;
             if (!cfg.enabled) {
+                this._nextConnect = 0;
                 this.closeSocket();
                 return;
             }
-            if (this._url !== url) this.closeSocket();
-            this._url = url;
-            if (!this._socket || this._socket.readyState !== 1) this.connect(url);
+            if (this._url !== url) {
+                this._url = url;
+                this._nextConnect = 0;
+                this.closeSocket();
+            }
+            var socket = this._socket;
+            var now = Date.now();
+            // A refused websocket blocks Coherent GT for about two seconds. Leave a
+            // connecting socket alone, and wait before opening another.
+            if (socket && socket.readyState === 0) {
+                if (!this._connectStarted || now - this._connectStarted < 8000) return;
+                this.closeSocket();
+                this._nextConnect = now + 30000;
+                return;
+            }
+            if (socket && socket.readyState !== 3) return;
+            if (this._nextConnect && now < this._nextConnect) return;
+            this.connect(url);
         }
 
         closeSocket() {
@@ -93,14 +111,22 @@
         }
 
         connect(url) {
-            this.closeSocket();
             var self = this;
-            var socket = new WebSocket(url);
+            this._connectStarted = Date.now();
+            this._nextConnect = this._connectStarted + 30000;
+            var socket;
+            try { socket = new WebSocket(url); } catch (e) { this._socket = null; return; }
             this._socket = socket;
             socket.onopen = function () {
+                self._nextConnect = 0;
                 console.log(LOG, '737 connected', url);
                 self.sendRaw('mcduConnected');
                 self.sendData();
+            };
+            socket.onclose = function () {
+                if (self._socket === socket) self._socket = null;
+                var wait = Date.now() + 30000;
+                if (!self._nextConnect || self._nextConnect < wait) self._nextConnect = wait;
             };
             socket.addEventListener('message', function (event) {
                 var msg = String(event.data || '');
@@ -132,10 +158,12 @@
                     cols: renderer.columnData[row]
                 });
             }
+            var execActive = false;
+            try { execActive = SimVar.GetSimVarValue('L:FMC_EXEC_ACTIVE', 'number') === 1; } catch (e) { /* ignore */ }
             var screen = {
                 lines: lines,
-                exec: !!(fmcScreen.fms && fmcScreen.fms.planInMod && fmcScreen.fms.planInMod.value),
-                power: this._instrument.isPowered
+                exec: execActive,
+                power: !!(this._instrument && this._instrument.isPowered)
             };
             var json = { aircraft: this._model };
             json[this._cdu.cduSideIndex == 2 ? 'right' : 'left'] = screen;
@@ -159,22 +187,34 @@
         }
     }
 
+    function cellText(cell) {
+        if (typeof cell === 'string') return cell;
+        if (!cell || typeof cell !== 'object') return '';
+        if (typeof cell.value === 'string') return cell.value;
+        if (typeof cell.text === 'string') return cell.text;
+        if (typeof cell.label === 'string') return cell.label;
+        return '';
+    }
+
     function patchMenu(template) {
         var pages = template;
         if (!pages || !pages.length || !pages[0]) return template;
-        var rows = pages[0];
+        var rows = Array.isArray(pages[0][0]) ? pages[0] : pages;
         var link = this.__limWsLink || (this.__limWsLink = PageLinkField.createLink(this, 'WEBSOCKETS>', '/websockets'));
-        for (var i = 0; i < rows.length; i++) {
-            var left = rows[i] && rows[i][0];
-            if (typeof left === 'string' && left.indexOf('ACMS') !== -1) {
-                rows[i] = [left, link, rows[i][2] || ''];
-                return pages;
-            }
+        var settingsRow = -1;
+        var i;
+        var row;
+        var text;
+        for (i = 0; i < rows.length; i++) {
+            row = rows[i] || [];
+            text = cellText(row[0]) + ' ' + cellText(row[1]) + ' ' + cellText(row[2]);
+            if (text.indexOf('WEBSOCKETS') !== -1) return pages;
+            if (text.indexOf('SETTINGS') !== -1) settingsRow = i;
         }
-        if (rows.length > 10) {
-            var row = rows[10] || ['', ''];
-            rows[10] = [row[0] || '', link, row[2] || ''];
-        }
+        // SETTINGS is RSK 6. RSK 5 is the right cell two rows above it.
+        var target = settingsRow >= 2 ? settingsRow - 2 : 10;
+        row = rows[target] || ['', ''];
+        if (!row[1]) rows[target] = [row[0] || '', link, row[2] || ''];
         return pages;
     }
 
@@ -230,7 +270,7 @@
                         }
                     }
                 }).bind(this.portSubject);
-                this.menuLink = PageLinkField.createLink(this, '<MENU', '/menu');
+                this.menuLink = PageLinkField.createLink(this, 'MENU>', '/menu');
                 this.enabledSubject.sub(function (value) { writeStore('ws_enabled', value === 1 ? '1' : '0'); });
                 this.ipSubject.sub(function (value) { if (value) writeStore('ws_ip', value); });
                 this.portSubject.sub(function (value) { if (value) writeStore('ws_port', value); });
@@ -246,9 +286,12 @@
                     [' PORT'],
                     [this.portField],
                     ['', ''],
-                    [' MATCH cdu-server.cfg simPort', ''],
                     ['', ''],
-                    [this.menuLink, '']
+                    ['', ''],
+                    ['', ''],
+                    ['', ''],
+                    ['', ''],
+                    ['', this.menuLink, '']
                 ]];
             }
         }
@@ -263,10 +306,13 @@
         onComponentCreating() { return undefined; }
         onComponentRendered() { }
         onComponentCreated(instance) {
-            if (instance.constructor && instance.constructor.name === 'B38MCdu') {
-                new Lim737Hook(instance);
-                console.log(LOG, 'Attached 737 CDU hook');
-            }
+            if (!instance || instance.__lim737) return;
+            var name = instance.constructor && instance.constructor.name;
+            var isCdu = name === 'B38MCdu' || (instance.fmcScreen && instance.cduSideIndex != null && typeof instance.handleCduHEvent === 'function' && typeof instance.onAfterRender === 'function');
+            if (!isCdu) return;
+            instance.__lim737 = true;
+            new Lim737Hook(instance);
+            console.log(LOG, 'Attached 737 CDU hook', name || 'cdu');
         }
         onAfterRender() { }
     }

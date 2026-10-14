@@ -14,12 +14,38 @@
     ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'],
     ['N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'SP', 'DEL', 'DIV', 'CLR']
   ];
+  const B747_KEYS = [
+    ['INIT', 'RTE', 'DEPARR', 'ATC', 'VNAV', 'FIX', 'LEGS', 'HOLD', 'FMCCOMM', 'PROG', 'EXEC'],
+    ['MENU', 'NAVRAD', 'PREVPAGE', 'NEXTPAGE'],
+    ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'DOT', '0', 'PLUSMINUS'],
+    ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'],
+    ['N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'SP', 'DEL', 'DIV', 'CLR']
+  ];
+  const UNS_4_KEYS = [
+    ['MSG', 'DATA', 'FUEL', 'TUNE', 'PREVPAGE', 'NEXTPAGE', 'PWR_DIM'],
+    ['A', 'B', 'C', 'D', 'E', 'F', 'G', '1', '2', '3'],
+    ['H', 'I', 'J', 'K', 'L', 'M', 'N', '4', '5', '6'],
+    ['O', 'P', 'Q', 'R', 'S', 'T', 'U', '7', '8', '9'],
+    ['V', 'W', 'X', 'Y', 'Z', 'ENTER', 'BACK', '0', 'PLUSMINUS']
+  ];
+  const UNS_5_KEYS = [
+    ['DATA', 'NAV', 'VNAV', 'DTO', 'LIST', 'FUEL', 'FPL', 'PERF', 'TUNE', 'MENU'],
+    ['PREVPAGE', 'NEXTPAGE', 'MSG', 'PWR_DIM', 'ENTER', 'BACK'],
+    ['A', 'B', 'C', 'D', 'E', 'F', 'G', '1', '2', '3'],
+    ['H', 'I', 'J', 'K', 'L', 'M', 'N', '4', '5', '6'],
+    ['O', 'P', 'Q', 'R', 'S', 'T', 'U', '7', '8', '9'],
+    ['V', 'W', 'X', 'Y', 'Z', '0', 'PLUSMINUS']
+  ];
   const FACES = {
     cj4: { plate: 'CJ4', protocol: 'wt21', screen: 'wt21', keys: JET_KEYS },
     hawker: { plate: 'HAWKER', protocol: 'wt21', screen: 'wt21', keys: JET_KEYS },
-    c750: { plate: 'C750', protocol: 'wt21', screen: 'wt21', keys: JET_KEYS },
-    c90: { plate: 'C90 / P180', protocol: 'wt21', screen: 'wt21', keys: JET_KEYS },
-    wt737: { plate: '737', protocol: 'wt737', screen: 'wt737', keys: BOEING_KEYS }
+    c750: { plate: 'CITATION X', protocol: 'wt21', screen: 'wt21', keys: JET_KEYS },
+    c90: { plate: 'KING AIR', protocol: 'wt21', screen: 'wt21', keys: JET_KEYS },
+    p180: { plate: 'P180', protocol: 'wt21', screen: 'wt21', keys: JET_KEYS },
+    wt737: { plate: '737', protocol: 'wt737', screen: 'wt737', keys: BOEING_KEYS },
+    wt747: { plate: '747', protocol: 'wt737/wt747', screen: 'grid', rows: 14, cols: 24, keys: B747_KEYS },
+    uns4: { plate: 'UNS 4 IN', protocol: 'wt737/uns1', screen: 'grid', rows: 11, cols: 24, lsks: 5, keys: UNS_4_KEYS },
+    uns5: { plate: 'UNS 5 IN', protocol: 'wt737/uns1', screen: 'grid', rows: 11, cols: 24, lsks: 5, keys: UNS_5_KEYS }
   };
 
   const app = document.getElementById('app');
@@ -35,8 +61,12 @@
   let both = false;
   let side = 1;
   let activeSide = 1;
-  let faceId = 'cj4';
+  const faceQuery = /(?:\?|&)face=(\w+)/.exec(window.location.search);
+  let faceId = faceQuery && FACES[faceQuery[1]] ? faceQuery[1] : 'cj4';
   let protocol = 'wt21';
+  let unsFace = '4in';
+  let unsFaceLock = false;
+  const faceToggle = document.getElementById('face-toggle');
   let socket = null;
   let backoff = 500;
   const screens = { left: null, right: null };
@@ -47,15 +77,28 @@
     if (query[1] === 'both') both = true;
   }
 
-  function faceFor(fmcType, aircraft) {
+  function faceFor(fmcType, aircraft, payload) {
     const name = String(aircraft || '').toUpperCase();
+    if (fmcType === 'wt737/wt747') return 'wt747';
+    if (fmcType === 'wt737/uns1') {
+      if (!unsFaceLock) {
+        const hinted = payload && (payload.face === '5in' || payload.face === '4in') ? payload.face : null;
+        if (hinted) unsFace = hinted;
+        else if (/B707|BOEING\s*B?707|707/.test(name)) unsFace = '5in';
+        else unsFace = '4in';
+      }
+      return unsFace === '5in' ? 'uns5' : 'uns4';
+    }
     if (fmcType === 'wt737') return 'wt737';
-    if (name.includes('H25') || name.includes('800XP') || name.includes('HAWKER') || name.includes('H800')) return 'hawker';
-    if (name.includes('C750')) return 'c750';
-    if (name.includes('C90') || name.includes('P180')) return 'c90';
-    if (name.includes('C25') || name.includes('CJ4')) return 'cj4';
-    if (fmcType === 'wt21') return 'cj4';
-    return faceId;
+    if (fmcType === 'wt21') {
+      // These four keep their own faces. Their screens are edited separately.
+      if (/H25B|H25|HAWKER|800XP/.test(name)) return 'hawker';
+      if (/C750/.test(name)) return 'c750';
+      if (/P180|PIAGGIO/.test(name)) return 'p180';
+      if (/C90|KINGAIR|KING AIR/.test(name)) return 'c90';
+    }
+    // CJ4, and any connection that is not a known aircraft, uses the CJ4 CDU.
+    return 'cj4';
   }
 
   function el(tag, className, text) {
@@ -72,7 +115,8 @@
     const faceRow = el('div', 'face');
     const left = el('div', 'lsks');
     const right = el('div', 'lsks');
-    for (let i = 1; i <= 6; i++) {
+    const lskCount = face.lsks || 6;
+    for (let i = 1; i <= lskCount; i++) {
       left.appendChild(keyButton('L' + i, 'lsk', ''));
       right.appendChild(keyButton('R' + i, 'lsk', ''));
     }
@@ -150,6 +194,7 @@
 
   function fillWt21(screenEl, screen) {
     screenEl.textContent = '';
+    screenEl.classList.remove('grid');
     if (!screen || screen.power === false) return;
     const lines = screen.lines || [];
     for (let i = 0; i < 14; i++) {
@@ -167,8 +212,33 @@
     }
   }
 
+  function cellChar(col) {
+    const text = col && col.content != null ? String(col.content) : ' ';
+    const ch = text.length ? text[0] : ' ';
+    if (/[-|+]/.test(ch) && /\bline-/.test(col.styles || '')) return ' ';
+    return ch;
+  }
+
+  function fillGrid(screenEl, screen, rows, cols) {
+    screenEl.textContent = '';
+    screenEl.classList.add('grid');
+    if (!screen || screen.power === false) return;
+    const lines = screen.lines || [];
+    for (let r = 0; r < rows; r++) {
+      const line = lines[r] || { cols: [] };
+      const row = el('div', 'grow ' + (line.rowStyle || ''));
+      const cells = line.cols || [];
+      for (let c = 0; c < cols; c++) {
+        const src = cells[c] || { content: ' ', styles: '' };
+        row.appendChild(el('span', 'gl ' + (src.styles || ''), cellChar(src)));
+      }
+      screenEl.appendChild(row);
+    }
+  }
+
   function fillWt737(screenEl, screen) {
     screenEl.textContent = '';
+    screenEl.classList.remove('grid');
     if (!screen || screen.power === false) return;
     const lines = screen.lines || [];
     for (let i = 0; i < 14; i++) {
@@ -185,11 +255,15 @@
   function paint() {
     const face = FACES[faceId] || FACES.cj4;
     plate.textContent = both ? face.plate + '  BOTH' : face.plate;
+    const uns = face.protocol === 'wt737/uns1';
+    faceToggle.hidden = !uns;
+    faceToggle.textContent = unsFace === '5in' ? '5 IN' : '4 IN';
     stage.querySelectorAll('.unit').forEach(function (unit) {
       const panel = unit.getAttribute('data-panel') === '2' ? 'right' : 'left';
       const screen = screens[panel];
       const screenEl = unit.querySelector('[data-screen]');
-      if (face.screen === 'wt737') fillWt737(screenEl, screen);
+      if (face.screen === 'grid') fillGrid(screenEl, screen, face.rows || 14, face.cols || 24);
+      else if (face.screen === 'wt737') fillWt737(screenEl, screen);
       else fillWt21(screenEl, screen);
       const exec = unit.querySelector('[data-key="EXEC"]');
       if (exec) exec.classList.toggle('exec-on', !!(screen && screen.exec));
@@ -218,9 +292,62 @@
   }
 
   function applyPayload(fmcType, json) {
+    if (fmcType === 'wt737/wt747') {
+      const screen = both ? 'both' : String(side);
+      const params = new URLSearchParams(window.location.search);
+      params.set('screen', screen);
+      window.location.replace('747.html?' + params.toString());
+      return;
+    }
+    if (fmcType === 'wt737') {
+      const screen = both ? 'both' : String(side);
+      const params = new URLSearchParams(window.location.search);
+      params.set('screen', screen);
+      window.location.replace('737.html?' + params.toString());
+      return;
+    }
+    if (fmcType && fmcType !== '*' && faceFor(fmcType, json.aircraft, json) === 'cj4') {
+      const screen = both ? 'both' : String(side);
+      const params = new URLSearchParams(window.location.search);
+      params.set('screen', screen);
+      window.location.replace('wt21.html?' + params.toString());
+      return;
+    }
+    if (fmcType && fmcType !== '*' && faceFor(fmcType, json.aircraft, json) === 'c90') {
+      const screen = both ? 'both' : String(side);
+      const params = new URLSearchParams(window.location.search);
+      params.set('screen', screen);
+      window.location.replace('c90.html?' + params.toString());
+      return;
+    }
+    if (fmcType && fmcType !== '*' && faceFor(fmcType, json.aircraft, json) === 'p180') {
+      const screen = both ? 'both' : String(side);
+      const params = new URLSearchParams(window.location.search);
+      params.set('screen', screen);
+      window.location.replace('p180.html?' + params.toString());
+      return;
+    }
+    if (fmcType && fmcType !== '*' && faceFor(fmcType, json.aircraft, json) === 'hawker') {
+      const screen = both ? 'both' : String(side);
+      const params = new URLSearchParams(window.location.search);
+      params.set('screen', screen);
+      window.location.replace('hawker.html?' + params.toString());
+      return;
+    }
+    if (fmcType && fmcType !== '*' && faceFor(fmcType, json.aircraft, json) === 'c750') {
+      const screen = both ? 'both' : String(side);
+      const params = new URLSearchParams(window.location.search);
+      params.set('screen', screen);
+      window.location.replace('c750.html?' + params.toString());
+      return;
+    }
+    if (fmcType === 'wt737/uns1') {
+      window.location.replace('uns.html');
+      return;
+    }
     if (fmcType && fmcType !== '*') {
       protocol = fmcType;
-      faceId = faceFor(fmcType, json.aircraft);
+      faceId = faceFor(fmcType, json.aircraft, json);
     }
     if (json.left) screens.left = json.left;
     if (json.right) screens.right = json.right;
@@ -279,6 +406,12 @@
   sideButtons[1].addEventListener('click', function () { setSide(1); });
   sideButtons[2].addEventListener('click', function () { setSide(2); });
   sideButtons.both.addEventListener('click', function () { setSide('both'); });
+  faceToggle.addEventListener('click', function () {
+    unsFaceLock = true;
+    unsFace = unsFace === '5in' ? '4in' : '5in';
+    if (protocol === 'wt737/uns1') faceId = unsFace === '5in' ? 'uns5' : 'uns4';
+    renderStage();
+  });
   setSide(both ? 'both' : side);
   connect();
 })();

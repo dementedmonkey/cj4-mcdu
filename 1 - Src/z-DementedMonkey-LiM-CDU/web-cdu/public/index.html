@@ -2,16 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <style>html { visibility: hidden; }</style>
+  <script>
+    (function () {
+      var face = '';
+      try { face = new URLSearchParams(location.search).get('face') || ''; } catch (e) {}
+      if (face === 'p180') {
+        location.replace('p180.html' + (location.search || ''));
+        return;
+      }
+      if (face === 'hawker') {
+        location.replace('hawker.html' + (location.search || ''));
+        return;
+      }
+      if (face === 'c750') {
+        location.replace('c750.html' + (location.search || ''));
+        return;
+      }
+      location.replace('wt21.html' + (location.search || ''));
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>z-DementedMonkey-LiM-CDU</title>
   <meta http-equiv="Cache-Control" content="no-store" />
-  <link rel="stylesheet" href="cdu.css?v=20261010-1" />
+  <link rel="stylesheet" href="cdu.css?v=20261010-3" />
 </head>
 <body>
   <div class="app" id="app">
     <header class="toolbar">
       <div class="plate" id="plate">CDU</div>
       <span id="status" class="status">NO LINK</span>
+      <button type="button" id="face-toggle" hidden>4 IN</button>
       <div class="side" role="group" aria-label="CDU side">
         <button type="button" id="side-1" data-side="1">LEFT</button>
         <button type="button" id="side-2" data-side="2">RIGHT</button>
@@ -21,6 +42,6 @@
     <div class="stage" id="stage"></div>
   </div>
   <script>window.LIM_WS_PORT = __LIM_WS_PORT__;</script>
-  <script src="cdu.js?v=20261010-1"></script>
+  <script src="cdu.js?v=20261011-77"></script>
 </body>
 </html>

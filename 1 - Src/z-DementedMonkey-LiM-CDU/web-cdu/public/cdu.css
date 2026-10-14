@@ -83,6 +83,10 @@ button { font: inherit; color: inherit; }
 .row .c { text-align: center; }
 .row .r { text-align: right; }
 .row737 { white-space: pre; min-height: 1.15em; }
+.screen.grid { display: flex; flex-direction: column; }
+.grow { display: grid; grid-template-columns: repeat(24, 1fr); min-height: 1.05em; }
+.gl { text-align: center; overflow: hidden; }
+#face-toggle { min-width: 52px; }
 .green, .d-text { color: var(--green); }
 .amber, .yellow { color: var(--amber); }
 .cyan { color: var(--cyan); }

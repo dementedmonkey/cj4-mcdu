@@ -51,21 +51,15 @@ function vendorWebCduRuntime(destPkg) {
   console.log('  Vendored web-cdu/node_modules/ws');
 }
 
-function copyStagedPackageToCommunity(pkg, version, buildDir) {
-  const configPath = path.join(ROOT, 'build-config.json');
-  const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-  const communityDir = config.communityDir;
-  if (!communityDir) {
-    return;
-  }
+function installCommunityPackage(communityDir, src, folderName, pkg, fs2020) {
+  if (!communityDir) return;
   if (!fs.existsSync(communityDir)) {
     throw new Error(`Community folder not found: ${communityDir}`);
   }
 
-  const folderName = versionedPackageFolderName(pkg, version);
-  const src = path.join(buildDir, folderName);
   const dest = path.join(communityDir, folderName);
   const prefix = `${pkg.packageFolderName}-v`;
+  const unversioned = path.join(communityDir, pkg.packageFolderName);
 
   for (const name of fs.readdirSync(communityDir)) {
     if (name.startsWith(prefix) && name !== folderName) {
@@ -73,10 +67,34 @@ function copyStagedPackageToCommunity(pkg, version, buildDir) {
       console.log(`  Removed older Community package ${name}`);
     }
   }
+  if (fs.existsSync(unversioned) && path.resolve(unversioned) !== path.resolve(dest)) {
+    fs.rmSync(unversioned, { recursive: true, force: true });
+    console.log(`  Removed unversioned Community package ${pkg.packageFolderName}`);
+  }
 
   fs.rmSync(dest, { recursive: true, force: true });
   fs.cpSync(src, dest, { recursive: true });
+  if (fs2020) {
+    const manifestPath = path.join(dest, 'manifest.json');
+    const manifest = fs.readFileSync(manifestPath, 'utf8');
+    const patched = manifest.replace('"minimum_game_version": "1.5.27"', '"minimum_game_version": "1.39.6"');
+    if (patched === manifest) {
+      throw new Error('FS2020 copy: minimum_game_version 1.5.27 was not in manifest.json');
+    }
+    fs.writeFileSync(manifestPath, patched);
+    console.log('  FS2020 copy: minimum_game_version 1.39.6 so that sim will load the package');
+  }
   console.log(`  Copied to ${dest}`);
+}
+
+function copyStagedPackageToCommunity(pkg, version, buildDir) {
+  const configPath = path.join(ROOT, 'build-config.json');
+  const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  const folderName = versionedPackageFolderName(pkg, version);
+  const src = path.join(buildDir, folderName);
+  if (!config.communityDir && !config.fs2020CommunityDir) return;
+  installCommunityPackage(config.communityDir, src, folderName, pkg, false);
+  installCommunityPackage(config.fs2020CommunityDir, src, folderName, pkg, true);
 }
 
 function stageOnePackage(pkg, version, BUILD_DIR) {
