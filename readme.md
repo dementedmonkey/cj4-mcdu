@@ -1,65 +1,71 @@
-# MCDU Web application for Microsoft Flight Simulator
+# z-DementedMonkey-LiM-CDU
 
-Modified 2026-10-10 by LiM (lesoreilly/MSFS24-WebCDUs) from Demented Monkey’s cj4-mcdu. This work stays under GPL-3. See `LICENSE` and `0 - DocsFolder/RELEASE-NOTES.md`. The package name is shared: Demented Monkey’s project, with LiM’s changes.
+Web CDU for Microsoft Flight Simulator 2024. Modified from [dementedmonkey/cj4-mcdu](https://github.com/dementedmonkey/cj4-mcdu) 0.10.0. This fork stays under GPL-3. See `LICENSE`. The package name credits Demented Monkey and LiM together.
 
-The Community package is `z-DementedMonkey-LiM-CDU-v{version}`. The hub is Node plus `web-cdu/start-web-cdu.cmd` (no packaged exe). Ports live in `web-cdu/cdu-server.cfg`. The browser CDU is HTML/CSS. **MCDU MENU → WEBSOCKETS>** turns export on. Hawker 800XP uses the jet WT21 face.
+The sim package is `z-DementedMonkey-LiM-CDU-v{version}`. The browser hub is Node, started with `web-cdu/start-web-cdu.cmd`. There is no packaged exe. Ports live in `web-cdu/cdu-server.cfg`.
 
-## About
-This project contains an application that will allow you to access
-the MCDU of the CJ4 from a web browser on a tablet
-or another PC.
+The browser faces are HTML and CSS. Install, the WEBSOCKETS pages, and the relay are in `0 - DocsFolder/USER-MANUAL.md`. Build steps are in `0 - DocsFolder/BUILD-PIPELINE.md`.
 
-It includes 2 pieces - a web server application that your browser
-connects to, and a community mod for Flight Simulator
-that will connect the simulator aircraft to this application.   
+## Supported aircraft
 
-## Supported Aircraft
+| Aircraft | Browser face | WEBSOCKETS |
+| --- | --- | --- |
+| Citation CJ4, and CJ3 titles C25A / C25B / C25C | CJ4. Other WT21 titles use this face with the plate "WT21 Default" | IDX, page 2, RSK 5 |
+| King Air C90 | C90, one CDU | IDX, page 2, RSK 5 |
+| Piaggio P180 (2024) | P180, one CDU | IDX, page 2, RSK 5 |
+| FlightFX Hawker 800XP | 800XP | IDX, page 2, RSK 5 |
+| FlightFX Citation X / C750 | Honeywell C750 | NAV, SETTINGS, RSK 1 |
+| 737 MAX | 737 | MENU, RSK 5 |
+| 747-8, 747-400 GST, 747-400 LCF | 747 | MENU, RSK 5 |
+| UNS-1, including the 707 and Saab 340 installs | 4 in and 5 in. A 707 payload opens the 5 in face | DATA page 1, RSK 5 MAINT, then RSK 1 |
 
-The "CJ4" name is increasingly inaccurate, as the mod now supports
-5 different aircraft.
+WT21 aircraft and the UNS-1 start with export on when nothing has been saved for that title. The 737 and 747 start off. A saved off stays off.
 
-| Aircraft                      | FS2020 | FS2024 |
-| ----------------------------- | :----: | :----: |
-| Citation CJ4                  |   ✅    |   ✅    |
-| King Air C90                  |  N/A   |   ✅    |
-| Asobo 737 Max 8               |  N/A   |   ✅    |
-| FFX P180 2.0.3 (2020 version) |   ✅    |  ❌   |
-| FFX P180 2.1.9 (2024 version) |  N/A   |   ✅    |
-| FFX C750 1.3.9                |   ✅    |   ✅    |
+Dual CDUs have CPT, FO, and BOTH. The C90 and the P180 are a single CDU, so that switch stays hidden.
 
-## Installation
-* Remove any previous versions of the this mod
-* Copy the `z-dementedmonkey-cj4-mcdu` folder into your MSFS `Community` folder.
-* Special instructions for the P180 in FS2020:
-  * Copy ths `FS2020\z-dementedmonkey-p180-mcdu` folder into your MSFS `Community` folder.
-  * This is FS2020 only.   If you do this in FS2024 none of your screens will work.
+Charts and Navigraph login are not in this package.
 
-> [!IMPORTANT]
-> Mismatched versions of the MCDU app, the FS plugin, and your
-> aircraft will cause bad things to happen.
-> Be sure to remove all old versions when updating!
+## FS2020
 
-## Using the MCDU
-* Run the `MCDU SERVER\cj4-mcdu-server-x.y.z.exe` application.  <br/>
-_Note:_ It is important that the mod and the MCDU server are the same version.
-* Start a flight with the CJ4
-* The screen from the MCDU server will change to show that
-the sim has connected, and will give you an address to enter
-into your browser.   Typically it will be something like http://192.168.1.x:8126/
-* Open your web browser, pointed to the address supplied.   You should see the MCDU immediately.   The screen will be
-blank until it's powered up in the plane.   The CDU will default to the CJ4 type, but will switch
-to the appropriate hardware for the aircraft once the sim loads.
+This package requires MSFS 2024 (`minimum_game_version` 1.5.27). FS2020 will not load it.
 
-## Multiple screens
-You can control both the left and right MCDUs, if the aircraft is so equipped.  There are two ways of selecting which
-MCDU you are controlling:
-1. Click the top-left or top-right screw to control the left or right MCDU
-2. Add `?screen=1` or `?screen=2` to the end of your URL to select the left or right screen.  This will
-disable switching by the screws.
+The FS2020 aircraft installed here were checked against the plugin:
 
-## Acknowlegements
-The MCDU application is based on code from the FlyByWire a32nx https://github.com/flybywiresim/a32nx 
+| Aircraft | What it ships | Result |
+| --- | --- | --- |
+| FlightFX P180 2.0.6 | `FFX21/FMC/WT21_FMC.html` and its own `FMC.js`. That script has no avionics plugin class. | The `LiMCdu.xml` plugin does not attach. It still needs the HTML page that loads `FFX21/FMC/FMC.js` and then a small hook. This package does not include that page. |
+| CJ4 with Working Title WT21 2.0.4 | `WT21/FMC/WT21_FMC.html`. `FMC.js` exports `WT21FmcAvionicsPlugin`. | The plugin target `WT21_FMC` is the right attachment. FS2020 still will not load this package until a 2020 build exists. |
+| FlightFX Citation X 1.3.8 | `VTX21/FMC/WT21_FMC.html`, template id `HP2000_FMC`. `FMC.js` has no plugin class. | The plugin does not run. The short HTML override in this package matches that page and is the attachment that works. The same 2024 version floor blocks FS2020. |
 
-The mod contains modified files from the Working Title CJ4.
+The 2024 CJ4, C750, and P180 are the ones this package is built for. The 2024 P180 uses the plugin. The 2024 C750 uses the HTML override. The 2024 CJ4 uses the plugin.
 
-I'm not affiliated with either of those teams, just a fan of their work.
+## Run
+
+Install Node.js. From the Community package folder, run `web-cdu/start-web-cdu.cmd`. From a git checkout:
+
+```bash
+npm install
+npm run server
+```
+
+Open the URL the hub prints. Defaults in `cdu-server.cfg`:
+
+- `httpPort` 8126, the browser page
+- `simPort` 8088, the sim and the browser websocket
+- `relayIp` and `relayPort` 8089, the SPAD relay
+
+The sim and the browser connect in to `simPort`. SPAD listens on `relayPort`. The hub dials out to `relayIp:relayPort` and sends the same messages the plane sends. Set `relayPort` to `0` to turn that off.
+
+## How the sim side attaches
+
+CJ4, King Air, P180, and Hawker attach with the avionics plugin `html_ui/Plugins/LiMCdu.xml`. The sim keeps its own Working Title FMC. This package does not ship a CJ4 or WT21 FMC script.
+
+Citation X, the 737, and the 747 use a short HTML override of the sim's CDU page. That page imports the sim's own avionics script, then a small LiM hook.
+
+The UNS-1 is the exception that ships avionics code. `WTUns1.js` is a patched copy of the Working Title UNS-1 instrument, loaded by an HTML override, with `Uns1Plugin.xml` and `LimUns1Inject.js` beside it.
+
+## Acknowledgements
+
+The websocket message names (`mcduConnected`, `requestUpdate`, `event`, `update`) come from Demented Monkey's server. That server followed the shape used by the FlyByWire A32NX MCDU. This repository does not contain FlyByWire source, and the browser faces are not that MCDU application.
+
+Demented Monkey's 0.10.0 project is the base of the WT21 plugin and the Node hub. Later aircraft, the HTML faces, and the relay were added here.
