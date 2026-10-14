@@ -44,11 +44,11 @@ function zipDirectory(sourceDir, zipFile) {
   }
 }
 
-async function deliverOnePackage(pkg, version, distRoot) {
+async function deliverOneVariant(pkg, version, distRoot, sim) {
   const folderName = versionedPackageFolderName(pkg, version);
-  const srcPkg = path.join(ROOT, 'build', folderName);
-  const dstPkg = path.join(distRoot, folderName);
-  const zipPath = path.join(distRoot, `${folderName}.zip`);
+  const srcPkg = path.join(ROOT, 'build', sim, folderName);
+  const dstPkg = path.join(distRoot, sim, folderName);
+  const zipPath = path.join(distRoot, `${folderName}-${sim}.zip`);
 
   if (!fs.existsSync(srcPkg)) {
     throw new Error(
@@ -57,7 +57,7 @@ async function deliverOnePackage(pkg, version, distRoot) {
     );
   }
 
-  console.log(`Release ${folderName} → dist/\n`);
+  console.log(`Release ${folderName} (${sim}) → dist/\n`);
   console.log(`  Copy ${srcPkg} → ${dstPkg}`);
 
   fs.rmSync(dstPkg, { recursive: true, force: true });
@@ -69,7 +69,6 @@ async function deliverOnePackage(pkg, version, distRoot) {
       try {
         await minifyAuthoredTree(minifyDir, version);
       } catch (e) {
-        // Phase 1: html_ui may be empty — skip minify rather than fail release
         if (String(e.message || e).includes('No authored assets to minify')) {
           console.log(`  (minify skipped — no .js/.css under ${pkg.minify.relativeDir})`);
         } else {
@@ -90,6 +89,15 @@ async function deliverOnePackage(pkg, version, distRoot) {
   console.log(`\n  Zipping → ${zipPath}`);
   zipDirectory(dstPkg, zipPath);
   console.log('');
+}
+
+async function deliverOnePackage(pkg, version, distRoot) {
+  const legacyZip = path.join(distRoot, `${versionedPackageFolderName(pkg, version)}.zip`);
+  if (fs.existsSync(legacyZip)) {
+    fs.unlinkSync(legacyZip);
+  }
+  await deliverOneVariant(pkg, version, distRoot, 'msfs2024');
+  await deliverOneVariant(pkg, version, distRoot, 'msfs2020');
 }
 
 async function main() {

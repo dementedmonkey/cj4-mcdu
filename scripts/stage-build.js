@@ -12,7 +12,8 @@ const {
   thumbnailFilename,
   remapContentInfoToVersionedFolder,
   copyCustomerDocumentation,
-  applyManifestAndLayout
+  applyManifestAndLayout,
+  writeSimPackages
 } = require('./build-utils');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -51,7 +52,7 @@ function vendorWebCduRuntime(destPkg) {
   console.log('  Vendored web-cdu/node_modules/ws');
 }
 
-function installCommunityPackage(communityDir, src, folderName, pkg, fs2020) {
+function installCommunityPackage(communityDir, src, folderName, pkg) {
   if (!communityDir) return;
   if (!fs.existsSync(communityDir)) {
     throw new Error(`Community folder not found: ${communityDir}`);
@@ -74,27 +75,16 @@ function installCommunityPackage(communityDir, src, folderName, pkg, fs2020) {
 
   fs.rmSync(dest, { recursive: true, force: true });
   fs.cpSync(src, dest, { recursive: true });
-  if (fs2020) {
-    const manifestPath = path.join(dest, 'manifest.json');
-    const manifest = fs.readFileSync(manifestPath, 'utf8');
-    const patched = manifest.replace('"minimum_game_version": "1.5.27"', '"minimum_game_version": "1.39.6"');
-    if (patched === manifest) {
-      throw new Error('FS2020 copy: minimum_game_version 1.5.27 was not in manifest.json');
-    }
-    fs.writeFileSync(manifestPath, patched);
-    console.log('  FS2020 copy: minimum_game_version 1.39.6 so that sim will load the package');
-  }
   console.log(`  Copied to ${dest}`);
 }
 
-function copyStagedPackageToCommunity(pkg, version, buildDir) {
+function copyStagedPackageToCommunity(pkg, version, variants) {
   const configPath = path.join(ROOT, 'build-config.json');
   const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
   const folderName = versionedPackageFolderName(pkg, version);
-  const src = path.join(buildDir, folderName);
   if (!config.communityDir && !config.fs2020CommunityDir) return;
-  installCommunityPackage(config.communityDir, src, folderName, pkg, false);
-  installCommunityPackage(config.fs2020CommunityDir, src, folderName, pkg, true);
+  installCommunityPackage(config.communityDir, variants.msfs2024, folderName, pkg);
+  installCommunityPackage(config.fs2020CommunityDir, variants.msfs2020, folderName, pkg);
 }
 
 function stageOnePackage(pkg, version, BUILD_DIR) {
@@ -109,8 +99,10 @@ function stageOnePackage(pkg, version, BUILD_DIR) {
 
   const depPatch = pkg.dependencyPackageNamesForVersionPatch || [];
   applyManifestAndLayout(destPkg, version, depPatch);
+  const variants = writeSimPackages(destPkg, version, depPatch);
+  fs.rmSync(destPkg, { recursive: true, force: true });
   console.log(`  Manifest + layout: ${folderName}`);
-  copyStagedPackageToCommunity(pkg, version, BUILD_DIR);
+  copyStagedPackageToCommunity(pkg, version, variants);
 }
 
 function main() {

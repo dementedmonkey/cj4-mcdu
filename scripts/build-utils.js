@@ -167,6 +167,61 @@ function patchManifestVersions(manifest, version, dependencyNames) {
   }
 }
 
+const FS2020_MINIMUM_GAME_VERSION = '1.39.6';
+const FS2020_P180_OVERRIDE = 'html_ui/Pages/VCockpit/Instruments/FFX21/FMC/WT21_FMC.html';
+
+/** 2024 P180 uses the plugin. The FFX21 page is only for the 2020 P180 2.0.6 FMC. */
+function stripFs2020P180Override(packageRoot) {
+  fs.rmSync(
+    path.join(packageRoot, 'html_ui', 'Pages', 'VCockpit', 'Instruments', 'FFX21'),
+    { recursive: true, force: true }
+  );
+  const manifestPath = path.join(packageRoot, 'manifest.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  const overrides = Array.isArray(manifest.globally_overriden_base_sim_files)
+    ? manifest.globally_overriden_base_sim_files
+    : [];
+  const next = overrides.filter((entry) => String(entry).replace(/\\/g, '/') !== FS2020_P180_OVERRIDE);
+  if (next.length !== overrides.length - 1) {
+    throw new Error('2024 package: FFX21 P180 override was not listed in manifest.json');
+  }
+  manifest.globally_overriden_base_sim_files = next;
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n', 'utf8');
+}
+
+function setMinimumGameVersion(packageRoot, gameVersion) {
+  const manifestPath = path.join(packageRoot, 'manifest.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  manifest.minimum_game_version = gameVersion;
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n', 'utf8');
+}
+
+/**
+ * Source ships both sims in one tree. The 2024 output drops the 2020 P180 page.
+ * The 2020 output keeps that page and sets minimum_game_version to 1.39.6.
+ * The folder inside each tree stays the Community folder name.
+ */
+function writeSimPackages(fullPackageRoot, version, dependencyPackageNamesForVersionPatch) {
+  const folderName = path.basename(fullPackageRoot);
+  const buildRoot = path.dirname(fullPackageRoot);
+  const variants = {
+    msfs2024: path.join(buildRoot, 'msfs2024', folderName),
+    msfs2020: path.join(buildRoot, 'msfs2020', folderName)
+  };
+  for (const dest of Object.values(variants)) {
+    fs.rmSync(dest, { recursive: true, force: true });
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.cpSync(fullPackageRoot, dest, { recursive: true });
+  }
+  stripFs2020P180Override(variants.msfs2024);
+  applyManifestAndLayout(variants.msfs2024, version, dependencyPackageNamesForVersionPatch);
+  setMinimumGameVersion(variants.msfs2020, FS2020_MINIMUM_GAME_VERSION);
+  applyManifestAndLayout(variants.msfs2020, version, dependencyPackageNamesForVersionPatch);
+  console.log('  MSFS 2024 package: FFX21 P180 override removed');
+  console.log(`  MSFS 2020 package: minimum_game_version ${FS2020_MINIMUM_GAME_VERSION}`);
+  return variants;
+}
+
 function applyManifestAndLayout(packageRoot, version, dependencyPackageNamesForVersionPatch) {
   const depNames = dependencyPackageNamesForVersionPatch || [];
   const manifestPath = path.join(packageRoot, 'manifest.json');
@@ -248,6 +303,7 @@ module.exports = {
   scanPackageLayout,
   patchManifestVersions,
   applyManifestAndLayout,
+  writeSimPackages,
   remapContentInfoToVersionedFolder,
   copyCustomerDocumentation
 };

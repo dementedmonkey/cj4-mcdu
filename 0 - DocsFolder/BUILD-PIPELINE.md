@@ -2,9 +2,9 @@
 
 `release-version.json` is the version. The package that ships is `1 - Src/z-DementedMonkey-LiM-CDU/`.
 
-`npm run build` writes `build/z-DementedMonkey-LiM-CDU-v{version}/`, vendors `node_modules/ws` into `web-cdu/` so `start-web-cdu.cmd` can run from Community without a second install, copies `USER-MANUAL.md` and `RELEASE-NOTES.md` into `documentation/`, and copies the package to both Community folders in `build-config.json`: `communityDir` (MSFS 2024) and `fs2020CommunityDir` (MSFS 2020). The 2020 copy sets `minimum_game_version` to `1.39.6` so that sim will mount it. An older unversioned `z-DementedMonkey-LiM-CDU` folder in either Community directory is removed so only the versioned package loads.
+`npm run build` writes `build/msfs2024/z-DementedMonkey-LiM-CDU-v{version}/` and `build/msfs2020/z-DementedMonkey-LiM-CDU-v{version}/`. Both use the Community folder name `z-DementedMonkey-LiM-CDU-v{version}`. The 2024 tree drops the `FFX21` P180 override. The 2020 tree keeps it and sets `minimum_game_version` to `1.39.6`. The build vendors `node_modules/ws` into `web-cdu/` so `start-web-cdu.cmd` can run from Community without a second install, and copies `USER-MANUAL.md` and `RELEASE-NOTES.md` into `documentation/`. When `build-config.json` has `communityDir` and `fs2020CommunityDir`, those trees are copied into the matching sim. An older unversioned `z-DementedMonkey-LiM-CDU` folder in either Community directory is removed so only the versioned package loads.
 
-`npm run release` does that and then writes `dist/` plus a zip. `npm run server` runs the hub from source. `npm run test:relay` checks the SPAD dial-out.
+`npm run release` does that and then writes `dist/z-DementedMonkey-LiM-CDU-v{version}-msfs2024.zip` and `dist/z-DementedMonkey-LiM-CDU-v{version}-msfs2020.zip`. `npm run server` runs the hub from source. `npm run test:relay` checks the SPAD dial-out.
 
 There is no pkg exe and no `MCDU SERVER` folder. The hub is `web-cdu/index.js`. The old React client, the PNG CDU faces, and the Project Editor packages are not in this repository. Edit `1 - Src/z-DementedMonkey-LiM-CDU` only.
 
@@ -24,4 +24,4 @@ UNS-1: `WTUns1.js` in this package is a patched Working Title UNS-1 instrument. 
 
 In-sim script changes need a full sim exit before they load. HTML and CSS in `web-cdu/public` load on a browser refresh. `index.js` and `cdu-server.cfg` load when the hub process starts again.
 
-A GitHub release runs `.github/workflows/release.yml`, which runs `npm run release` and uploads the zip from `dist/`. It clears `communityDir` and `fs2020CommunityDir` for that run so the action does not need a local Community folder.
+A GitHub release runs `.github/workflows/release.yml`, which runs `npm run release` and uploads both zips from `dist/`. It clears `communityDir` and `fs2020CommunityDir` for that run so the action does not need a local Community folder.
