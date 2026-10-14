@@ -1,4 +1,4 @@
-# z-DementedMonkey-LiM-CDU
+# WebCDU Plugin for MSFS 2024
 
 Web CDU for Microsoft Flight Simulator 2024. Modified from [dementedmonkey/cj4-mcdu](https://github.com/dementedmonkey/cj4-mcdu) 0.10.0. This fork stays under GPL-3. See `LICENSE`. The package name credits Demented Monkey and LiM together.
 
