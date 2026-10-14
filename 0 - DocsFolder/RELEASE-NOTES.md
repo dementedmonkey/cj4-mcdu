@@ -10,11 +10,12 @@ Browser faces are HTML and CSS, one page per CDU family. CPT, FO, and BOTH selec
 
 Supported aircraft and the WEBSOCKETS key:
 
-- CJ4, King Air C90, P180, Hawker 800XP: IDX, page 2, RSK 5. An unrecognised WT21 title uses the CJ4 face, plate "WT21 Default".
+- CJ4, King Air C90, FlightFX Piaggio P180, Hawker 800XP: IDX, page 2, RSK 5. An unrecognised WT21 title uses the CJ4 face, plate "WT21 Default".
 - Citation X: NAV, SETTINGS, RSK 1.
 - 737 MAX: MENU, RSK 5.
 - 747-8, 747-400 GST, 747-400 LCF: MENU, RSK 5.
-- UNS-1, including the 707 and Saab 340 installs: DATA page 1, RSK 5 MAINT, then RSK 1. The 4 IN / 5 IN switch selects the bezel. A 707 payload opens the 5 in face.
+- 707: DATA page 1, RSK 5 MAINT, then RSK 1. A 707 payload opens the 5 in face.
+- Saab 340: DATA page 1, RSK 5 MAINT, then RSK 1. A Saab 340 payload opens the 4 in face.
 
 Every aircraft starts with export on when that title has no saved setting. A saved off stays off. Settings are stored per title.
 

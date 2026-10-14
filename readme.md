@@ -12,12 +12,13 @@ The browser faces are HTML and CSS. Install, the WEBSOCKETS pages, and the relay
 | --- | --- | --- |
 | Citation CJ4 | CJ4. Other WT21 titles use this face with the plate "WT21 Default" | IDX, page 2, RSK 5 |
 | King Air C90 | C90, one CDU | IDX, page 2, RSK 5 |
-| Piaggio P180 (2024) | P180, one CDU | IDX, page 2, RSK 5 |
+| FlightFX Piaggio P180 (2024) | P180, one CDU | IDX, page 2, RSK 5 |
 | FlightFX Hawker 800XP | 800XP | IDX, page 2, RSK 5 |
 | FlightFX Citation X / C750 | Honeywell C750 | NAV, SETTINGS, RSK 1 |
 | 737 MAX | 737 | MENU, RSK 5 |
 | 747-8, 747-400 GST, 747-400 LCF | 747 | MENU, RSK 5 |
-| UNS-1, including the 707 and Saab 340 installs | 4 in and 5 in. A 707 payload opens the 5 in face | DATA page 1, RSK 5 MAINT, then RSK 1 |
+| 707 | 5 in | DATA page 1, RSK 5 MAINT, then RSK 1 |
+| Saab 340 | 4 in | DATA page 1, RSK 5 MAINT, then RSK 1 |
 
 Every aircraft starts with export on when nothing has been saved for that title. A saved off stays off.
 
