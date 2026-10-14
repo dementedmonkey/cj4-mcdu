@@ -11,6 +11,9 @@ on:
         required: true
         default: "9999.0.0"
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-2022
@@ -63,6 +66,13 @@ jobs:
         with:
           name: release_files
           path: dist/*.zip
+
+      - name: Attach the zip to the existing release
+        if: startsWith(github.ref, 'refs/tags/') == false
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "v$env:version" dist/*.zip --clobber --repo ${{ github.repository }}
 
       - name: Release
         uses: softprops/action-gh-release@v2
