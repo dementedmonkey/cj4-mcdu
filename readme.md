@@ -2,7 +2,7 @@
 
 Web CDU for Microsoft Flight Simulator 2024. Modified from [dementedmonkey/cj4-mcdu](https://github.com/dementedmonkey/cj4-mcdu) 0.10.0. This fork stays under GPL-3. See `LICENSE`. The package name credits Demented Monkey and LiM together.
 
-The sim package is `z-DementedMonkey-LiM-CDU-v{version}`. The browser hub is Node, started with `web-cdu/start-web-cdu.cmd`. There is no packaged exe. Ports live in `web-cdu/cdu-server.cfg`.
+The sim package is `z-DementedMonkey-LiM-CDU-v{version}`. MSFS 2024 and MSFS 2020 each have their own zip. The browser hub is Node, started with `web-cdu/start-web-cdu.cmd`. There is no packaged exe. Ports live in `web-cdu/cdu-server.cfg`.
 
 The browser faces are HTML and CSS. Install, the WEBSOCKETS pages, and the relay are in `0 - DocsFolder/USER-MANUAL.md`. Build steps are in `0 - DocsFolder/BUILD-PIPELINE.md`.
 
@@ -27,26 +27,19 @@ Charts and Navigraph login are not in this package.
 
 ## FS2020
 
-The MSFS 2024 package keeps `minimum_game_version` 1.5.27. The copy written to the FS2020 Community folder sets that field to `1.39.6` so FS2020 mounts the package.
+The MSFS 2020 zip is for the 2020 CJ4, the 2020 P180, and the 2020 Citation X.
 
-| Aircraft | What it ships | Result |
-| --- | --- | --- |
-| CJ4 with Working Title WT21 2.0.4 | `WT21/FMC/WT21_FMC.html`. `FMC.js` exports `WT21FmcAvionicsPlugin`. | Confirmed in FS2020. The plugin attaches, and the WEBSOCKETS menu is on IDX, page 2, RSK 5. |
-| FlightFX P180 2.0.6 | `FFX21/FMC/WT21_FMC.html` and its own `FMC.js`. That script has no avionics plugin class. | The HTML override loads that `FMC.js` and then `lim_p180_fmc.js`, the same attachment 0.10.0 used. Export stays on. That FMC has no page that can turn it off. |
-| FlightFX Citation X 1.3.8 | `VTX21/FMC/WT21_FMC.html`, template id `HP2000_FMC`. `FMC.js` has no plugin class. | The HTML override sends the CDU screen to the browser. That FMC has no SETTINGS page, so export stays on. Citation X version 2 is in beta with the newer avionics, and the WEBSOCKETS page comes back with that FMC. |
-
-The 2024 CJ4, C750, and P180 are the ones this package is built for. The 2024 P180 uses the plugin. The 2024 C750 uses the HTML override. The 2024 CJ4 uses the plugin.
+| Aircraft | Result |
+| --- | --- |
+| CJ4 with Working Title WT21 2.0.4 | The plugin attaches. WEBSOCKETS is on IDX, page 2, RSK 5. |
+| FlightFX P180 2.0.6 | That FMC has no plugin. The zip loads the sim's `FFX21/FMC/WT21_FMC.html` and then `lim_p180_fmc.js`. Export stays on. That FMC has no page that can turn it off. |
+| FlightFX Citation X 1.3.8 | That FMC has no SETTINGS page. The zip sends the CDU screen through the HTML override of `VTX21/FMC/WT21_FMC.html`. Export stays on. Citation X version 2 is in beta with the newer avionics, and the WEBSOCKETS page comes back with that FMC. |
 
 ## Run
 
-Install Node.js. From the Community package folder, run `web-cdu/start-web-cdu.cmd`. From a git checkout:
+Run `web-cdu/start-web-cdu.cmd` from the package and leave the window open. It prints the browser URL. Node.js has to be installed on the PC. The script starts the hub.
 
-```bash
-npm install
-npm run server
-```
-
-Open the URL the hub prints. Defaults in `cdu-server.cfg`:
+Defaults in `cdu-server.cfg`:
 
 - `httpPort` 8126, the browser page
 - `simPort` 8088, the sim and the browser websocket
@@ -56,7 +49,7 @@ The sim and the browser connect in to `simPort`. SPAD listens on `relayPort`. Th
 
 ## How the sim side attaches
 
-CJ4, King Air, P180, and Hawker attach with the avionics plugin `html_ui/Plugins/DM_LiM_CDU.xml`. The sim keeps its own Working Title FMC. This package does not ship a CJ4 or WT21 FMC script.
+CJ4, King Air, Hawker, and the 2024 P180 attach with the avionics plugin `html_ui/Plugins/DM_LiM_CDU.xml`. The sim keeps its own Working Title FMC. This package does not ship a CJ4 or WT21 FMC script. The 2020 P180 is covered by the 2020 zip, in the table above.
 
 Citation X, the 737, and the 747 use a short HTML override of the sim's CDU page. That page imports the sim's own avionics script, then a small LiM hook.
 
