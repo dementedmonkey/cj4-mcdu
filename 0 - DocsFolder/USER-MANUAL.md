@@ -73,4 +73,4 @@ npm install
 npm run server
 ```
 
-`npm run build` writes `build/z-DementedMonkey-LiM-CDU-v{version}/` and copies it to the Community folder in `build-config.json`. `npm run release` also writes `dist/` and a zip. See `BUILD-PIPELINE.md`.
+`npm run build` writes the MSFS 2024 and MSFS 2020 packages under `build/`. `npm run release` also writes `dist/` and the two zips. See `BUILD-PIPELINE.md`.
