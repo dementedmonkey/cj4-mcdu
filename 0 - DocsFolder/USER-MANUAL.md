@@ -46,11 +46,12 @@ The page stores export, IP, and port for that aircraft title. Every aircraft sta
 
 | Aircraft | Where |
 | --- | --- |
-| CJ4, King Air C90, P180, Hawker 800XP | IDX, page 2, RSK 5 |
+| CJ4, King Air C90, FlightFX Piaggio P180, Hawker 800XP | IDX, page 2, RSK 5 |
 | Citation X | NAV, SETTINGS, RSK 1 |
 | 737 MAX | MENU, RSK 5 |
 | 747-8, 747-400 GST, 747-400 LCF | MENU, RSK 5 |
-| UNS-1 | DATA page 1, RSK 5 MAINT, then RSK 1 |
+| 707 | DATA page 1, RSK 5 MAINT, then RSK 1 |
+| Saab 340 | DATA page 1, RSK 5 MAINT, then RSK 1 |
 
 A WT21 title this package does not recognise still uses the CJ4 face. The plate reads "WT21 Default".
 
@@ -58,7 +59,7 @@ A WT21 title this package does not recognise still uses the CJ4 face. The plate 
 
 `?screen=1` is the left CDU, `?screen=2` is the right CDU, and `?screen=both` shows them side by side. Dual CDUs also have CPT, FO, and BOTH on the face. The King Air C90 and the P180 are a single CDU, so that switch is hidden.
 
-The UNS page has a 4 IN / 5 IN switch. A Boeing 707 payload selects the 5 in face. The Saab 340 and 707 panel hooks in this package point those aircraft at the UNS-1.
+The UNS page has a 4 IN / 5 IN switch. A 707 payload opens the 5 in face. A Saab 340 payload opens the 4 in face.
 
 Key clicks play a short click. The first click may be silent until the browser allows audio.
 
