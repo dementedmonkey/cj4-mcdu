@@ -6,9 +6,7 @@
 
 `npm run release` does that and then writes `dist/` plus a zip. `npm run server` runs the hub from source. `npm run test:relay` checks the SPAD dial-out.
 
-There is no pkg exe and no `MCDU SERVER` folder. The hub is `web-cdu/index.js`.
-
-`src/` is the old Demented Monkey tree (the exe server, the Project Editor package, and the FS2020 P180 package). `npm run build` does not read it. `1 - Src/z-LiM-CDU` and `1 - Src/DementedMonkey-LiM-CDU` are old copies. Edit `1 - Src/z-DementedMonkey-LiM-CDU` only.
+There is no pkg exe and no `MCDU SERVER` folder. The hub is `web-cdu/index.js`. The old React client, the PNG CDU faces, and the Project Editor packages are not in this repository. Edit `1 - Src/z-DementedMonkey-LiM-CDU` only.
 
 ## What the package contains
 

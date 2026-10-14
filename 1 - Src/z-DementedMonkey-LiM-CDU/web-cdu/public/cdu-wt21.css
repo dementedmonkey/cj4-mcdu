@@ -6,7 +6,7 @@
   font-display: block;
 }
 
-/* Proportions taken from mcdu-cj4.png (bezel 1372x1627, glass 1017x819). 1 unit = 10px of that art. */
+/* Bezel 1372x1627, glass 1017x819. 1 unit = 10px of that art. */
 :root {
   --white: #f4f7fb;
   --blue: #3c9be8;
