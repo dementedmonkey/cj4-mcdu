@@ -1,34 +1,74 @@
 # z-DementedMonkey-LiM-CDU
 
-Modified 2026-10-10 from [dementedmonkey/cj4-mcdu](https://github.com/dementedmonkey/cj4-mcdu), GPL-3. This fork keeps that license. See `LICENSE`. The Community name credits Demented Monkey and LiM together.
+Web CDU for Microsoft Flight Simulator 2024. Modified from [dementedmonkey/cj4-mcdu](https://github.com/dementedmonkey/cj4-mcdu), GPL-3. See `LICENSE`. The Community folder name credits Demented Monkey and LiM together.
 
-One Community package and one Node hub export CDU screens for the Working Title WT21 aircraft (CJ4, King Air C90, Citation X / C750, Piaggio P180), the 737 MAX, and the FlightFX Hawker 800XP.
+One Community package, `z-DementedMonkey-LiM-CDU-v{version}`, exports the CDU screen to a browser. The hub is Node. Start it with `web-cdu/start-web-cdu.cmd` inside the package. There is no exe server.
 
-Navigraph login and SimLink are not part of this repository.
+Charts and Navigraph login are not part of this package.
 
-## Run
+The FS2020 Community copy sets `minimum_game_version` to `1.39.6` so that sim mounts the package. The FS2020 CJ4 with Working Title WT21 loads the plugin, and the WEBSOCKETS menu is on IDX, page 2, RSK 5. The FS2020 P180 2.0.6 uses its own `FFX21` FMC. This package overrides `FFX21/FMC/WT21_FMC.html` so the sim FMC loads and then `lim_p180_fmc.js` exports the screen. Export stays on. That FMC has no page that can turn it off. The FS2020 Citation X 1.3.8 sends its screen through the HTML override of `VTX21/FMC/WT21_FMC.html`. That FMC has no SETTINGS page, so export stays on. Citation X version 2 is in beta with the newer avionics, and the WEBSOCKETS page comes back with that FMC.
+
+## Install
+
+Remove any older copy before copying this one in:
+
+- `z-DementedMonkey-LiM-CDU-v*`
+- `z-dementedmonkey-cj4-mcdu`
+- `z-dementedmonkey-p180-mcdu`
+- `z-lim-ffx-cdu-mod`
+- `z-LiM-747v2-CDU-v*`
+- `z-LiM-UNS1-PLUGIN-v*`
+
+Copy `z-DementedMonkey-LiM-CDU-v1.0.0` into the MSFS 2024 Community folder. Install Node.js, then run `web-cdu/start-web-cdu.cmd`. Leave that window open while you fly.
+
+The hub prints a local URL and a LAN URL. Open one of them in a browser on this PC or on a tablet on the same network. The screen stays dark until the CDU in the aircraft has power.
+
+After you replace the Community package, leave the flight and start it again so the sim loads the new scripts. A browser refresh is enough for a face change that is only HTML or CSS. Restart `start-web-cdu.cmd` after you edit `cdu-server.cfg`. Two hubs cannot share port 8088.
+
+## Ports
+
+Defaults are in `web-cdu/cdu-server.cfg`:
+
+| Setting | Default | Role |
+| --- | --- | --- |
+| `httpPort` | 8126 | Browser page |
+| `simPort` | 8088 | Sim and browser websocket |
+| `relayIp` | 127.0.0.1 | PC where SPAD is listening |
+| `relayPort` | 8089 | SPAD websocket. `0` turns the relay off |
+
+The sim and the browser connect in to `simPort`. On the aircraft WEBSOCKETS page, set the IP to `127.0.0.1` and the port to `simPort` when the sim and the hub are on the same PC.
+
+SPAD listens on `relayPort`. The hub connects out to `relayIp:relayPort` and speaks as the plane: `mcduConnected`, then the same screen updates. Set `relayIp` to the other PC's address when SPAD is not on this machine. SPAD has to be listening before the hub can connect. The hub retries every couple of seconds.
+
+## WEBSOCKETS page
+
+The page stores export, IP, and port for that aircraft title. Every aircraft starts with export on when that title has no saved value. Turning it off is remembered.
+
+| Aircraft | Where |
+| --- | --- |
+| CJ4, King Air C90, P180, Hawker 800XP | IDX, page 2, RSK 5 |
+| Citation X | NAV, SETTINGS, RSK 1 |
+| 737 MAX | MENU, RSK 5 |
+| 747-8, 747-400 GST, 747-400 LCF | MENU, RSK 5 |
+| UNS-1 | DATA page 1, RSK 5 MAINT, then RSK 1 |
+
+A WT21 title this package does not recognise still uses the CJ4 face. The plate reads "WT21 Default".
+
+## Browser
+
+`?screen=1` is the left CDU, `?screen=2` is the right CDU, and `?screen=both` shows them side by side. Dual CDUs also have CPT, FO, and BOTH on the face. The King Air C90 and the P180 are a single CDU, so that switch is hidden.
+
+The UNS page has a 4 IN / 5 IN switch. A Boeing 707 payload selects the 5 in face. The Saab 340 and 707 panel hooks in this package point those aircraft at the UNS-1.
+
+Key clicks play a short click. The first click may be silent until the browser allows audio.
+
+## Develop
+
+From a checkout of this repository:
 
 ```bash
 npm install
 npm run server
 ```
 
-Open the URL the hub prints. Defaults are in `1 - Src/z-DementedMonkey-LiM-CDU/web-cdu/cdu-server.cfg`:
-
-- `httpPort` — browser page (8126)
-- `simPort` — sim and browser websocket (8088)
-- `relayPort` — second websocket for SPAD or a hardware CDU (8089). Set `0` to turn it off.
-
-In the aircraft, open **MCDU MENU** (737: **MENU**) and press **WEBSOCKETS>**. Set **EXPORT** to **ON**, and set the IP and port to the hub `simPort`.
-
-`?screen=1`, `?screen=2`, and `?screen=both` select the left CDU, the right CDU, or both side by side.
-
-## Build
-
-`npm run build` writes `build/z-DementedMonkey-LiM-CDU-v{version}/` and copies it to the Community folder in `build-config.json`.
-
-`npm run release` writes `dist/` and a zip.
-
-Remove any older `z-dementedmonkey-cj4-mcdu`, `z-dementedmonkey-p180-mcdu`, `z-lim-ffx-cdu-mod`, `z-LiM-747v2-CDU-v*`, or `z-LiM-UNS1-PLUGIN-v*` package before testing. Two hubs cannot share port 8088.
-
-This branch also loads the 747 CDU (MENU → WEBSOCKETS>, export / IP / port) and the UNS-1 CDU. The page picks the 747 or UNS face from the update header. UNS **4 IN / 5 IN** switches the bezel. A Boeing 707 payload selects the 5-inch face.
+`npm run build` writes `build/z-DementedMonkey-LiM-CDU-v{version}/` and copies it to the Community folder in `build-config.json`. `npm run release` also writes `dist/` and a zip. See `BUILD-PIPELINE.md`.

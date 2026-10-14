@@ -1,0 +1,11 @@
+<Plugins>
+    <Plugin target="WT21_FMC">
+        coui://html_ui/Pages/VCockpit/Instruments/LiMCdu/lim_wt21_fmc.js
+    </Plugin>
+    <Plugin target="HP2000_FMC">
+        coui://html_ui/Pages/VCockpit/Instruments/LiMCdu/lim_wt21_fmc.js
+    </Plugin>
+    <Plugin target="VTX21_FMC">
+        coui://html_ui/Pages/VCockpit/Instruments/LiMCdu/lim_wt21_fmc.js
+    </Plugin>
+</Plugins>

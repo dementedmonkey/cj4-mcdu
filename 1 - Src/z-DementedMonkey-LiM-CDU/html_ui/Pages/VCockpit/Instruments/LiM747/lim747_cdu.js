@@ -11,7 +11,7 @@
     var STORE_PREFIX = 'lim-cdu';
     var DEFAULT_IP = '127.0.0.1';
     var DEFAULT_PORT = '8088';
-    var DEFAULT_ENABLED = '0';
+    var DEFAULT_ENABLED = '1';
 
     var CDU_TYPES = {
         B748Cdu: { tag: 'wtb748-cdu' },
@@ -173,6 +173,8 @@
     var _hooksBySide = { 1: null, 2: null };
     var _sharedSocket = undefined;
     var _sharedConfig = limGetConfig();
+    var _sharedNextConnect = 0;
+    var _sharedConnectStarted = 0;
 
     function limUrlIndex() {
         try {
@@ -225,34 +227,54 @@
     function limSharedEnsureSocket() {
         _sharedConfig = limGetConfig();
         if (!_sharedConfig.enabled) {
+            _sharedNextConnect = 0;
             if (_sharedSocket) {
                 try { _sharedSocket.close(); } catch (_) { /* ignore */ }
                 _sharedSocket = undefined;
             }
             return;
         }
-        if (!limSharedConnected()) limSharedConnect(_sharedConfig.ip, _sharedConfig.port);
+        var socket = _sharedSocket;
+        var now = Date.now();
+        // A refused websocket blocks Coherent GT for about two seconds. Leave a
+        // connecting socket alone, and wait before opening another.
+        if (socket && socket.readyState === 0) {
+            if (!_sharedConnectStarted || now - _sharedConnectStarted < 8000) return;
+            try { socket.close(); } catch (_) { /* ignore */ }
+            _sharedSocket = undefined;
+            _sharedNextConnect = now + 30000;
+            return;
+        }
+        if (socket && socket.readyState !== 3) return;
+        if (_sharedNextConnect && now < _sharedNextConnect) return;
+        limSharedConnect(_sharedConfig.ip, _sharedConfig.port);
     }
 
     function limSharedConnect(ip, port) {
-        if (_sharedSocket) {
-            try { _sharedSocket.close(); } catch (_) { /* ignore */ }
-            _sharedSocket = undefined;
-        }
         var host = ip || DEFAULT_IP;
         var p = port || 8088;
+        _sharedConnectStarted = Date.now();
+        _sharedNextConnect = _sharedConnectStarted + 30000;
+        var socket;
         try {
-            _sharedSocket = new WebSocket('ws://' + host + ':' + p);
+            socket = new WebSocket('ws://' + host + ':' + p);
         } catch (e) {
             console.warn(LOG, 'WebSocket connect failed', e);
             _sharedSocket = undefined;
             return;
         }
-        _sharedSocket.onopen = function () {
+        _sharedSocket = socket;
+        socket.onopen = function () {
+            _sharedNextConnect = 0;
             console.log(LOG, 'Connected to ws://' + host + ':' + p);
             limSharedSend('mcduConnected');
             if (_hooksBySide[1]) limBroadcastScreens(_hooksBySide[1]);
             if (_hooksBySide[2]) limBroadcastScreens(_hooksBySide[2]);
+        };
+        socket.onclose = function () {
+            if (_sharedSocket === socket) _sharedSocket = undefined;
+            var wait = Date.now() + 30000;
+            if (!_sharedNextConnect || _sharedNextConnect < wait) _sharedNextConnect = wait;
         };
         _sharedSocket.addEventListener('message', function (event) {
             var msg = event.data;
@@ -286,6 +308,7 @@
 
     limOnSettingsChanged(function (cfg) {
         _sharedConfig = cfg;
+        _sharedNextConnect = 0;
         if (_sharedSocket) {
             try { _sharedSocket.close(); } catch (_) { /* ignore */ }
             _sharedSocket = undefined;
@@ -342,11 +365,7 @@
             }
             var exec = false;
             try {
-                if (fmcScreen.fms && fmcScreen.fms.planInMod && typeof fmcScreen.fms.planInMod.get === 'function') {
-                    exec = !!fmcScreen.fms.planInMod.get();
-                } else if (fmcScreen.fms && fmcScreen.fms.planInMod && typeof fmcScreen.fms.planInMod.value !== 'undefined') {
-                    exec = !!fmcScreen.fms.planInMod.value;
-                }
+                exec = SimVar.GetSimVarValue('L:FMC_EXEC_ACTIVE', 'number') === 1;
             } catch (_) { /* ignore */ }
             var screen = { lines: lines, exec: exec, power: powered };
             if (this._side === 2) _screenCache.right = screen;

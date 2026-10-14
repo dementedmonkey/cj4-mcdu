@@ -3,13 +3,16 @@
  *
  *   HTTP     httpPort   (browser page, default 8126)
  *   WS       simPort    (sim + browser, default 8088)
- *   WS       relayPort  (hardware / SPAD client, default 8089; 0 = off)
+ *   WS       relayPort  (hardware / SPAD, default 8089; 0 = off)
+ *   host     relayIp    (the PC where SPAD is listening)
  *
- * Every message received on either socket is sent to every client on both
- * sockets, so a hardware CDU and the browser see the same screen and keys.
+ * The sim connects in on simPort. This hub then connects out to
+ * relayIp:relayPort and speaks as the plane: mcduConnected, then the
+ * same update and key messages. SPAD listens. The hub dials.
  *
  * Ports: cdu-server.cfg, then environment (LIM_HTTP_PORT / LIM_WS_PORT /
- * LIM_RELAY_PORT), then --http-port= --sim-port= --relay-port=.
+ * LIM_RELAY_PORT / LIM_RELAY_IP), then --http-port= --sim-port=
+ * --relay-port= --relay-ip=.
  */
 'use strict';
 
@@ -18,13 +21,13 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const net = require('net');
-const { WebSocketServer, OPEN } = require('ws');
+const { WebSocketServer, WebSocket, OPEN } = require('ws');
 
 const publicDir = path.join(__dirname, 'public');
 const cfgPath = path.join(__dirname, 'cdu-server.cfg');
 
 function readCfg(file) {
-  const cfg = { httpPort: 8126, simPort: 8088, relayPort: 8089 };
+  const cfg = { httpPort: 8126, simPort: 8088, relayPort: 8089, relayIp: '127.0.0.1' };
   if (!fs.existsSync(file)) {
     return cfg;
   }
@@ -39,8 +42,20 @@ function readCfg(file) {
     if (key === 'httpPort') cfg.httpPort = Number(value);
     if (key === 'simPort' || key === 'websocketPort') cfg.simPort = Number(value);
     if (key === 'relayPort') cfg.relayPort = Number(value);
+    if (key === 'relayIp' || key === 'relayHost') cfg.relayIp = value;
   }
   return cfg;
+}
+
+function relayHostOr(value, fallback) {
+  const host = String(value == null ? '' : value).trim();
+  if (!host || !/^[A-Za-z0-9._:-]+$/.test(host)) return fallback;
+  return host;
+}
+
+function relayIsLocal(host) {
+  const h = String(host || '').trim().toLowerCase();
+  return h === '' || h === '127.0.0.1' || h === 'localhost' || h === '::1' || h === '0.0.0.0' || h === '*';
 }
 
 function portOr(value, fallback) {
@@ -53,14 +68,17 @@ const cfg = readCfg(cfgPath);
 let httpPort = portOr(process.env.LIM_HTTP_PORT, cfg.httpPort);
 let simPort = portOr(process.env.LIM_WS_PORT, cfg.simPort);
 let relayPort = portOr(process.env.LIM_RELAY_PORT, cfg.relayPort);
+let relayIp = relayHostOr(process.env.LIM_RELAY_IP, cfg.relayIp || '127.0.0.1');
 
 for (const arg of process.argv.slice(2)) {
   if (arg.startsWith('--http-port=')) httpPort = portOr(arg.split('=')[1], httpPort);
   else if (arg.startsWith('--sim-port=') || arg.startsWith('--websocket-port=')) simPort = portOr(arg.split('=')[1], simPort);
   else if (arg.startsWith('--relay-port=')) relayPort = portOr(arg.split('=')[1], relayPort);
+  else if (arg.startsWith('--relay-ip=')) relayIp = relayHostOr(arg.split('=').slice(1).join('='), relayIp);
   else if (arg === '--help' || arg === '-h') {
-    console.log('node index.js [--http-port=N] [--sim-port=N] [--relay-port=N]');
+    console.log('node index.js [--http-port=N] [--sim-port=N] [--relay-port=N] [--relay-ip=ADDR]');
     console.log('relay-port=0 disables the hardware relay.');
+    console.log('SPAD listens on relay-ip:relay-port. This hub connects out and speaks as the plane.');
     process.exit(0);
   } else {
     console.error('Unknown argument: ' + arg);
@@ -125,26 +143,91 @@ const blankScreen = { lines: [], scratchpad: '', message: '', title: '', titleLe
 const powerOffMessage = 'update:*:' + JSON.stringify({ left: blankScreen, right: blankScreen });
 
 const servers = [];
+const extraClients = new Set();
 
-function fanout(message) {
+function fanout(message, skip) {
   const text = Buffer.isBuffer(message) ? message.toString() : String(message);
   for (const wss of servers) {
     for (const client of wss.clients) {
-      if (client.readyState === OPEN) client.send(text);
+      if (client !== skip && client.readyState === OPEN) client.send(text);
     }
   }
+  for (const client of extraClients) {
+    if (client !== skip && client.readyState === OPEN) client.send(text);
+  }
+}
+
+let simClients = 0;
+let lastFromSim = '';
+
+function roleOf(text) {
+  if (text === 'mcduConnected' || text.indexOf('update:') === 0) return 'sim';
+  if (text === 'requestUpdate' || text.indexOf('event:') === 0) return 'browser';
+  return null;
+}
+
+function planeFromUpdate(text) {
+  if (text.indexOf('update:') !== 0) return null;
+  const colon = text.indexOf(':', 7);
+  if (colon < 0) return null;
+  const protocol = text.slice(7, colon);
+  if (!protocol || protocol === '*') return null;
+  let aircraft = '';
+  let face = '';
+  try {
+    const json = JSON.parse(text.slice(colon + 1));
+    aircraft = String(json.aircraft || '').trim();
+    if (json.face === '4in' || json.face === '5in') face = json.face;
+  } catch (e) {
+    return null;
+  }
+  const kind = protocol === 'wt737/wt747' ? '747'
+    : protocol === 'wt737/uns1' ? 'UNS-1'
+    : protocol === 'wt737' ? '737'
+    : protocol === 'wt21' ? 'WT21'
+    : protocol;
+  const family = kind + (face ? ' ' + face : '');
+  const label = aircraft && family ? aircraft + ' — ' + family : (aircraft || family);
+  return label || null;
 }
 
 function attachMirror(wss, label) {
   wss.on('connection', (ws) => {
-    let isMcdu = false;
+    let role = label === 'relay' ? 'relay' : null;
+    let plane = '';
+    if (role === 'relay') console.log('Relay connected');
     ws.on('message', (message) => {
       const text = message.toString();
-      if (text === 'mcduConnected') isMcdu = true;
+      if (!role) {
+        role = roleOf(text);
+        if (role === 'sim') {
+          simClients += 1;
+          console.log('Sim connected');
+        } else if (role === 'browser') {
+          console.log('Browser connected');
+        }
+      }
+      if (role === 'sim' && text.indexOf('update:') === 0) {
+        lastFromSim = text;
+        const next = planeFromUpdate(text);
+        if (next && next !== plane) {
+          plane = next;
+          console.log('Aircraft: ' + plane);
+        }
+      }
       fanout(text);
     });
     ws.on('close', () => {
-      if (isMcdu && label === 'sim') fanout(powerOffMessage);
+      if (role === 'sim') {
+        simClients = Math.max(0, simClients - 1);
+        console.log(plane ? 'Sim disconnected: ' + plane : 'Sim disconnected');
+        if (simClients === 0) console.log('Waiting for simulator...');
+        fanout(powerOffMessage);
+      } else if (role === 'browser') {
+        console.log('Browser disconnected');
+      } else if (role === 'relay') {
+        console.log('Relay disconnected');
+      }
     });
   });
 }
@@ -159,23 +242,61 @@ function printBanner() {
     console.log('  LAN         ' + href('http://' + nic.address + ':' + httpPort) + '   (' + nic.name + ')');
   }
   console.log('  Sim socket  ws://127.0.0.1:' + simPort);
-  if (relayPort) console.log('  Relay       ws://127.0.0.1:' + relayPort + '   (SPAD / hardware)');
-  else console.log('  Relay       off');
+  if (!relayPort) {
+    console.log('  Relay       off');
+  } else {
+    console.log('  Relay out   ws://' + relayIp + ':' + relayPort + '   (SPAD listens, this hub connects like the plane)');
+  }
   console.log('');
-  console.log('  In the sim: MCDU MENU → WEBSOCKETS> → EXPORT ON.');
-  console.log('  Set that page to 127.0.0.1 and port ' + simPort + '.');
+  console.log('  Turn export on in the sim the first time. IP 127.0.0.1, port ' + simPort + '.');
+  console.log('');
+  console.log('  WT21       CJ4, King Air, P180, Hawker');
+  console.log('             IDX, page 2, RSK 5    WEBSOCKETS>');
+  console.log('  Honeywell  Citation X (C750)');
+  console.log('             NAV, SETTINGS, RSK 1  WEBSOCKETS>');
+  console.log('  737        MENU, RSK 5           WEBSOCKETS>');
+  console.log('  747        MENU, RSK 5           WEBSOCKETS>');
+  console.log('  UNS-1      DATA page 1, RSK 5 MAINT, then RSK 1 WEBSOCKETS');
+  console.log('             Export on the UNS-1 starts ON.');
+  console.log('');
   console.log('  Edit web-cdu/cdu-server.cfg to change these ports, then restart.');
+  console.log('  SPAD listens on relayPort. This hub connects out and sends the plane\'s messages.');
   console.log('');
+  console.log('Waiting for simulator...');
+  console.log('');
+}
+
+let relayOutTimer = null;
+
+function connectRelayOut() {
+  const url = 'ws://' + relayIp + ':' + relayPort;
+  const ws = new WebSocket(url);
+  extraClients.add(ws);
+  ws.on('open', () => {
+    console.log('Relay connected ' + url);
+    try { ws.send('mcduConnected'); } catch (e) { /* ignore */ }
+    if (lastFromSim) {
+      try { ws.send(lastFromSim); } catch (e2) { /* ignore */ }
+    }
+  });
+  ws.on('message', (message) => fanout(message.toString(), ws));
+  ws.on('close', () => {
+    extraClients.delete(ws);
+    console.log('Relay disconnected');
+    relayOutTimer = setTimeout(connectRelayOut, 2000);
+  });
+  ws.on('error', (err) => {
+    console.log('Relay ' + url + ' — ' + (err && err.message ? err.message : err));
+  });
 }
 
 async function main() {
   await checkFree(simPort);
   await checkFree(httpPort);
-  if (relayPort) await checkFree(relayPort);
 
   const httpServer = http.createServer((req, res) => {
     const urlPath = decodeURIComponent((req.url || '/').split('?')[0]);
-    let rel = urlPath === '/' ? '/index.html' : urlPath;
+    let rel = urlPath === '/' ? '/wt21.html' : urlPath;
     if (rel.includes('..')) {
       res.writeHead(400);
       res.end('Bad request');
@@ -209,11 +330,7 @@ async function main() {
   servers.push(simWss);
   attachMirror(simWss, 'sim');
 
-  if (relayPort) {
-    const relayWss = new WebSocketServer({ port: relayPort });
-    servers.push(relayWss);
-    attachMirror(relayWss, 'relay');
-  }
+  if (relayPort) connectRelayOut();
 
   httpServer.listen(httpPort, '0.0.0.0', printBanner);
 }

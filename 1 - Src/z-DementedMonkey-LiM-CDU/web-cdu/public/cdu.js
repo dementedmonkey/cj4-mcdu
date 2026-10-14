@@ -39,8 +39,9 @@
   const FACES = {
     cj4: { plate: 'CJ4', protocol: 'wt21', screen: 'wt21', keys: JET_KEYS },
     hawker: { plate: 'HAWKER', protocol: 'wt21', screen: 'wt21', keys: JET_KEYS },
-    c750: { plate: 'C750', protocol: 'wt21', screen: 'wt21', keys: JET_KEYS },
-    c90: { plate: 'C90 / P180', protocol: 'wt21', screen: 'wt21', keys: JET_KEYS },
+    c750: { plate: 'CITATION X', protocol: 'wt21', screen: 'wt21', keys: JET_KEYS },
+    c90: { plate: 'KING AIR', protocol: 'wt21', screen: 'wt21', keys: JET_KEYS },
+    p180: { plate: 'P180', protocol: 'wt21', screen: 'wt21', keys: JET_KEYS },
     wt737: { plate: '737', protocol: 'wt737', screen: 'wt737', keys: BOEING_KEYS },
     wt747: { plate: '747', protocol: 'wt737/wt747', screen: 'grid', rows: 14, cols: 24, keys: B747_KEYS },
     uns4: { plate: 'UNS 4 IN', protocol: 'wt737/uns1', screen: 'grid', rows: 11, cols: 24, lsks: 5, keys: UNS_4_KEYS },
@@ -60,7 +61,8 @@
   let both = false;
   let side = 1;
   let activeSide = 1;
-  let faceId = 'cj4';
+  const faceQuery = /(?:\?|&)face=(\w+)/.exec(window.location.search);
+  let faceId = faceQuery && FACES[faceQuery[1]] ? faceQuery[1] : 'cj4';
   let protocol = 'wt21';
   let unsFace = '4in';
   let unsFaceLock = false;
@@ -88,12 +90,15 @@
       return unsFace === '5in' ? 'uns5' : 'uns4';
     }
     if (fmcType === 'wt737') return 'wt737';
-    if (name.includes('H25') || name.includes('800XP') || name.includes('HAWKER') || name.includes('H800')) return 'hawker';
-    if (name.includes('C750')) return 'c750';
-    if (name.includes('C90') || name.includes('P180')) return 'c90';
-    if (name.includes('C25') || name.includes('CJ4')) return 'cj4';
-    if (fmcType === 'wt21') return 'cj4';
-    return faceId;
+    if (fmcType === 'wt21') {
+      // These four keep their own faces. Their screens are edited separately.
+      if (/H25B|H25|HAWKER|800XP/.test(name)) return 'hawker';
+      if (/C750/.test(name)) return 'c750';
+      if (/P180|PIAGGIO/.test(name)) return 'p180';
+      if (/C90|KINGAIR|KING AIR/.test(name)) return 'c90';
+    }
+    // CJ4, and any connection that is not a known aircraft, uses the CJ4 CDU.
+    return 'cj4';
   }
 
   function el(tag, className, text) {
@@ -287,6 +292,59 @@
   }
 
   function applyPayload(fmcType, json) {
+    if (fmcType === 'wt737/wt747') {
+      const screen = both ? 'both' : String(side);
+      const params = new URLSearchParams(window.location.search);
+      params.set('screen', screen);
+      window.location.replace('747.html?' + params.toString());
+      return;
+    }
+    if (fmcType === 'wt737') {
+      const screen = both ? 'both' : String(side);
+      const params = new URLSearchParams(window.location.search);
+      params.set('screen', screen);
+      window.location.replace('737.html?' + params.toString());
+      return;
+    }
+    if (fmcType && fmcType !== '*' && faceFor(fmcType, json.aircraft, json) === 'cj4') {
+      const screen = both ? 'both' : String(side);
+      const params = new URLSearchParams(window.location.search);
+      params.set('screen', screen);
+      window.location.replace('wt21.html?' + params.toString());
+      return;
+    }
+    if (fmcType && fmcType !== '*' && faceFor(fmcType, json.aircraft, json) === 'c90') {
+      const screen = both ? 'both' : String(side);
+      const params = new URLSearchParams(window.location.search);
+      params.set('screen', screen);
+      window.location.replace('c90.html?' + params.toString());
+      return;
+    }
+    if (fmcType && fmcType !== '*' && faceFor(fmcType, json.aircraft, json) === 'p180') {
+      const screen = both ? 'both' : String(side);
+      const params = new URLSearchParams(window.location.search);
+      params.set('screen', screen);
+      window.location.replace('p180.html?' + params.toString());
+      return;
+    }
+    if (fmcType && fmcType !== '*' && faceFor(fmcType, json.aircraft, json) === 'hawker') {
+      const screen = both ? 'both' : String(side);
+      const params = new URLSearchParams(window.location.search);
+      params.set('screen', screen);
+      window.location.replace('hawker.html?' + params.toString());
+      return;
+    }
+    if (fmcType && fmcType !== '*' && faceFor(fmcType, json.aircraft, json) === 'c750') {
+      const screen = both ? 'both' : String(side);
+      const params = new URLSearchParams(window.location.search);
+      params.set('screen', screen);
+      window.location.replace('c750.html?' + params.toString());
+      return;
+    }
+    if (fmcType === 'wt737/uns1') {
+      window.location.replace('uns.html');
+      return;
+    }
     if (fmcType && fmcType !== '*') {
       protocol = fmcType;
       faceId = faceFor(fmcType, json.aircraft, json);

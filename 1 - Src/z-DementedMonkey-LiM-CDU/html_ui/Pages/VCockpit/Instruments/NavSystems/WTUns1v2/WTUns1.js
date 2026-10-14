@@ -7723,7 +7723,7 @@ var mfd = (function (exports, msfsSdk) {
             super(...arguments);
             this.pageTitle = 'MAINT LiM';
             this.SoftwareVersionLink = msfsSdk.PageLinkField.createLink(this, '←S/W VERS', '/data/version');
-            this.WebCduLink = msfsSdk.PageLinkField.createLink(this, `WEB CDU${UnsChars.ArrowRight}`, '/data/maint/web-cdu');
+            this.WebCduLink = msfsSdk.PageLinkField.createLink(this, `WEBSOCKETS${UnsChars.ArrowRight}`, '/data/maint/web-cdu');
             this.ReturnPrompt = new msfsSdk.DisplayField(this, {
                 formatter: () => `RETURN${UnsChars.ArrowRight}`,
                 onSelected: async () => {
@@ -16166,7 +16166,7 @@ var mfd = (function (exports, msfsSdk) {
     class UnsWebCduSettingsPage extends UnsFmcPage {
         constructor() {
             super(...arguments);
-            this.pageTitle = ' WEB CDU';
+            this.pageTitle = ' WEBSOCKETS';
             this.doShowSubpage = false;
             this.enabled = msfsSdk.Subject.create(LimUns1WebCduSettings.getConfig().enabled);
             this.ip = msfsSdk.Subject.create(LimUns1WebCduSettings.getConfig().ip);

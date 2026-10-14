@@ -1,0 +1,41 @@
+@import url("cdu-wt21.css?v=20261011-76");
+
+/* P180 uses the King Air keypad and line-select keys, in the CJ4 colors. One CDU. */
+body.face-p180 .side {
+  display: none;
+}
+
+body.face-p180 .lsk {
+  transform: translateY(calc(2.55 * var(--px)));
+}
+
+body.face-p180 button.lsk:active {
+  transform: translateY(calc(2.55 * var(--px) + 1px));
+}
+
+body.face-p180 .lsk::after {
+  width: calc(2.15 * var(--px));
+  height: calc(2.15 * var(--px));
+  border-radius: 50%;
+  background: #f2f5f8;
+}
+
+body.face-p180 .lsk::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  height: calc(0.85 * var(--px));
+  background: #f2f5f8;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+body.face-p180 .lsks.left .lsk::before {
+  left: calc(100% + 1.15 * var(--px) + 1px);
+  width: calc(4 * var(--px));
+}
+
+body.face-p180 .lsks.right .lsk::before {
+  right: calc(100% + 1.15 * var(--px) + 1px);
+  width: calc(4.8 * var(--px));
+}
