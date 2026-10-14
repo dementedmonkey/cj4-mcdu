@@ -10,16 +10,17 @@ The MSFS 2020 zip is for the 2020 CJ4, the 2020 P180, and the 2020 Citation X. T
 
 ## Install
 
-Remove any older copy before copying this one in:
+This package replaces the older Demented Monkey CDU mods and the separate LiM 747 and LiM UNS-1 mods. Remove these folders from the Community folder before you copy this one in:
 
-- `z-DementedMonkey-LiM-CDU-v*`
-- `z-dementedmonkey-cj4-mcdu`
-- `z-dementedmonkey-p180-mcdu`
+- Older Demented Monkey CDU mods, including `z-dementedmonkey-cj4-mcdu` and `z-dementedmonkey-p180-mcdu`
 - `z-lim-ffx-cdu-mod`
-- `z-LiM-747v2-CDU-v*`
-- `z-LiM-UNS1-PLUGIN-v*`
+- LiM 747 mods named `z-LiM-747v2-CDU-v*`
+- LiM UNS-1 mods named `z-LiM-UNS1-PLUGIN-v*`
+- An older copy of this package, `z-DementedMonkey-LiM-CDU-v*`
 
-Copy `z-DementedMonkey-LiM-CDU-v1.0.0` into the MSFS 2024 Community folder. Install Node.js, then run `web-cdu/start-web-cdu.cmd`. Leave that window open while you fly.
+The LiM Charts plugin stays. It installs beside this package and the two run together.
+
+Use the MSFS 2024 zip in the MSFS 2024 Community folder. Use the MSFS 2020 zip in the MSFS 2020 Community folder. The folder inside either zip is `z-DementedMonkey-LiM-CDU-v1.0.0`. Install Node.js, then run `web-cdu/start-web-cdu.cmd`. Leave that window open while you fly.
 
 The hub prints a local URL and a LAN URL. Open one of them in a browser on this PC or on a tablet on the same network. The screen stays dark until the CDU in the aircraft has power.
 

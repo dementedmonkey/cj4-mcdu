@@ -71,4 +71,4 @@ jobs:
           files: dist/*.zip
           draft: true
           name: "Release ${{ env.version }}"
-          generate_release_notes: true
+          body_path: "0 - DocsFolder/RELEASE-NOTES.md"
