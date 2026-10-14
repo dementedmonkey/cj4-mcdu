@@ -6,7 +6,7 @@ One Community package, `z-DementedMonkey-LiM-CDU-v{version}`, exports the CDU sc
 
 Charts and Navigraph login are not part of this package.
 
-The FS2020 Community copy sets `minimum_game_version` to `1.39.6` so that sim mounts the package. The FS2020 CJ4 with Working Title WT21 loads the plugin, and the WEBSOCKETS menu is on IDX, page 2, RSK 5. The FS2020 P180 2.0.6 uses its own `FFX21` FMC. This package overrides `FFX21/FMC/WT21_FMC.html` so the sim FMC loads and then `lim_p180_fmc.js` exports the screen. Export stays on. That FMC has no page that can turn it off. The FS2020 Citation X 1.3.8 sends its screen through the HTML override of `VTX21/FMC/WT21_FMC.html`. That FMC has no SETTINGS page, so export stays on. Citation X version 2 is in beta with the newer avionics, and the WEBSOCKETS page comes back with that FMC.
+The MSFS 2020 zip is for the 2020 CJ4, the 2020 P180, and the 2020 Citation X. The CJ4 plugin attaches, and WEBSOCKETS is on IDX, page 2, RSK 5. The P180 2.0.6 FMC has no plugin. That zip loads `FFX21/FMC/WT21_FMC.html` and then `lim_p180_fmc.js`. Export stays on. That FMC has no page that can turn it off. The Citation X 1.3.8 has no SETTINGS page. That zip sends the screen through the HTML override of `VTX21/FMC/WT21_FMC.html`. Export stays on. Citation X version 2 is in beta with the newer avionics, and the WEBSOCKETS page comes back with that FMC.
 
 ## Install
 
