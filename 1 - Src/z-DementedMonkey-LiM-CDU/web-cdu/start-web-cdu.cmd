@@ -38,7 +38,7 @@ echo Downloading a portable Node.js into web-cdu\runtime\ for this package.
 echo This only needs to happen once, and it does not change your system PATH.
 echo.
 
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0install-node.ps1"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0node_modules\.lim-cdu\install-node.ps1"
 if errorlevel 1 (
   echo.
   echo Portable Node.js could not be installed.
