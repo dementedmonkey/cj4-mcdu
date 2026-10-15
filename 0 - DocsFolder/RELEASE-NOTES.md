@@ -1,8 +1,11 @@
-# Release 1.0.0
+# Release 1.0.1
 
-Web CDU for Microsoft Flight Simulator. Modified from [dementedmonkey/cj4-mcdu](https://github.com/dementedmonkey/cj4-mcdu) 0.10.0, GPL-3. The Community package is `z-DementedMonkey-LiM-CDU-v1.0.0`.
+Web CDU for Microsoft Flight Simulator. Modified from [dementedmonkey/cj4-mcdu](https://github.com/dementedmonkey/cj4-mcdu) 0.10.0, GPL-3. The Community package is `z-DementedMonkey-LiM-CDU-v1.0.1`.
 
-This package replaces the older Demented Monkey CDU mods and the separate LiM 747 and LiM UNS-1 mods.
+## What is new in 1.0.1
+
+- `web-cdu/start-web-cdu.cmd` downloads a portable Node.js into `web-cdu/runtime/` when Node is not already on the PC, then starts the hub. No separate Node install steps.
+- Separate MSFS 2024 and MSFS 2020 zips. Use the zip that matches your sim.
 
 ## Remove the old CDU mods
 
@@ -18,7 +21,7 @@ The LiM Charts plugin stays. It installs beside this package and the two run tog
 
 ## Install
 
-Use the MSFS 2024 zip in the MSFS 2024 Community folder. Use the MSFS 2020 zip in the MSFS 2020 Community folder. The folder inside either zip is `z-DementedMonkey-LiM-CDU-v1.0.0`.
+Download the MSFS 2024 zip or the MSFS 2020 zip from this release. Use the MSFS 2024 zip in the MSFS 2024 Community folder. Use the MSFS 2020 zip in the MSFS 2020 Community folder. The folder inside either zip is `z-DementedMonkey-LiM-CDU-v1.0.1`.
 
 Double-click `web-cdu/start-web-cdu.cmd` and leave that window open. Open the URL it prints. The CDU screen stays dark until the unit in the aircraft has power. If Node.js is not already on the PC, that script downloads a portable copy into `web-cdu/runtime/` the first time and then starts the hub.
 
@@ -64,7 +67,7 @@ The sim and the browser connect in to `simPort`. On the aircraft WEBSOCKETS page
 
 SPAD listens on `relayPort`. The hub dials out to `relayIp:relayPort` and sends the same messages the plane sends. Set `relayPort` to `0` to turn that off.
 
-## What this release adds
+## What 1.0.0 added
 
 - One Community package for the CJ4, King Air C90, FlightFX Piaggio P180, FlightFX Hawker 800XP, FlightFX Citation X, 737 MAX, 747, 707, and Saab 340.
 - HTML CDU faces. The old PNG bezels are gone.

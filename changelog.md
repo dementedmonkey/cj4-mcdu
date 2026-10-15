@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 — 2026-10-15
+
+- `start-web-cdu.cmd` downloads a portable Node.js into `web-cdu/runtime/` when Node is not already on the PC.
+- Separate MSFS 2024 and MSFS 2020 release zips.
+
 ## 1.0.0 — 2026-10-14
 
 LiM fork of dementedmonkey/cj4-mcdu 0.10.0. The entries below 1.0.0 are that project's history.
