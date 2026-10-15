@@ -20,7 +20,7 @@ The LiM Charts plugin stays. It installs beside this package and the two run tog
 
 Use the MSFS 2024 zip in the MSFS 2024 Community folder. Use the MSFS 2020 zip in the MSFS 2020 Community folder. The folder inside either zip is `z-DementedMonkey-LiM-CDU-v1.0.0`.
 
-Install Node.js once. Run `web-cdu/start-web-cdu.cmd` and leave that window open. Open the URL it prints. The CDU screen stays dark until the unit in the aircraft has power.
+Double-click `web-cdu/start-web-cdu.cmd` and leave that window open. Open the URL it prints. The CDU screen stays dark until the unit in the aircraft has power. If Node.js is not already on the PC, that script downloads a portable copy into `web-cdu/runtime/` the first time and then starts the hub.
 
 Leave the flight and start it again after you install, so the sim loads the new scripts.
 

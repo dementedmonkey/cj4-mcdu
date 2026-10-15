@@ -38,7 +38,7 @@ The MSFS 2020 zip is for the 2020 CJ4, the 2020 P180, and the 2020 Citation X.
 
 ## Run
 
-Run `web-cdu/start-web-cdu.cmd` from the package and leave the window open. It prints the browser URL. Node.js has to be installed on the PC. The script starts the hub.
+Double-click `web-cdu/start-web-cdu.cmd` from the package and leave the window open. It prints the browser URL. If Node.js is not already on the PC, the script downloads a portable copy into `web-cdu/runtime/` the first time and then starts the hub.
 
 Defaults in `cdu-server.cfg`:
 

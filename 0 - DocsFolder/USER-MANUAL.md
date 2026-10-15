@@ -20,7 +20,7 @@ This package replaces the older Demented Monkey CDU mods and the separate LiM 74
 
 The LiM Charts plugin stays. It installs beside this package and the two run together.
 
-Use the MSFS 2024 zip in the MSFS 2024 Community folder. Use the MSFS 2020 zip in the MSFS 2020 Community folder. The folder inside either zip is `z-DementedMonkey-LiM-CDU-v1.0.0`. Install Node.js, then run `web-cdu/start-web-cdu.cmd`. Leave that window open while you fly.
+Use the MSFS 2024 zip in the MSFS 2024 Community folder. Use the MSFS 2020 zip in the MSFS 2020 Community folder. The folder inside either zip is `z-DementedMonkey-LiM-CDU-v1.0.0`. Double-click `web-cdu/start-web-cdu.cmd` and leave that window open while you fly. If Node.js is not already on the PC, that script downloads a portable copy into `web-cdu/runtime/` the first time and then starts the hub.
 
 The hub prints a local URL and a LAN URL. Open one of them in a browser on this PC or on a tablet on the same network. The screen stays dark until the CDU in the aircraft has power.
 
