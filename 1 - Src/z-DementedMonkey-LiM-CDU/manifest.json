@@ -1,0 +1,27 @@
+{
+  "dependencies": [],
+  "content_type": "CUSTOM",
+  "title": "z-DementedMonkey-LiM-CDU",
+  "manufacturer": "",
+  "creator": "DementedMonkey / LiM",
+  "package_version": "1.0.2",
+  "minimum_game_version": "1.5.27",
+  "minimum_compatibility_version": "5.27.0.112",
+  "export_type": "Community",
+  "builder": "Microsoft Flight Simulator 2024",
+  "package_order_hint": "GENERIC_AIRPORT_PATCH",
+  "globally_overriden_base_sim_files": [
+    "html_ui/Pages/VCockpit/Instruments/NavSystems/WTUns1v2/WTUns1.html",
+    "html_ui/Pages/VCockpit/Instruments/Airliners/WTB707/WTUns1v2/WTUns1.html",
+    "html_ui/Pages/VCockpit/Instruments/airliners/wtb737_max_8/cdu/wtb38m_cdu.html",
+    "html_ui/Pages/VCockpit/Instruments/VTX21/FMC/WT21_FMC.html",
+    "html_ui/Pages/VCockpit/Instruments/FFX21/FMC/WT21_FMC.html"
+  ],
+  "total_package_size": "00000000000000000000",
+  "release_notes": {
+    "neutral": {
+      "LastUpdate": "",
+      "OlderHistory": ""
+    }
+  }
+}

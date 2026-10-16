@@ -1,3 +1,6 @@
 /build/
+/dist/
 /release/
 /version
+/node_modules/
+**/web-cdu/runtime/

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <script>
+    (function () {
+      var face = '';
+      try { face = new URLSearchParams(location.search).get('face') || ''; } catch (e) {}
+      var map = {
+        p180: 'p180.html',
+        hawker: 'hawker.html',
+        c750: 'c750.html',
+        c90: 'c90.html',
+        cj4: 'wt21.html',
+        wt21: 'wt21.html',
+        '747': '747.html',
+        wt747: '747.html',
+        '748': '747.html',
+        '744': '747-400.html',
+        '747-400': '747-400.html',
+        wt744: '747-400.html',
+        '737': '737.html',
+        wt737: '737.html',
+        uns: 'uns.html'
+      };
+      if (map[face]) {
+        document.documentElement.style.visibility = 'hidden';
+        location.replace(map[face] + (location.search || ''));
+      }
+      // No face= query: stay on index so cdu.js can route from the first sim update
+      // (747 / 737 / UNS / WT21 faces).
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>z-DementedMonkey-LiM-CDU</title>
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <link rel="stylesheet" href="cdu.css?v=20261010-3" />
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="toolbar">
+      <div class="plate" id="plate">CDU</div>
+      <span id="status" class="status">NO LINK</span>
+      <button type="button" id="face-toggle" hidden>4 IN</button>
+      <div class="side" role="group" aria-label="CDU side">
+        <button type="button" id="side-1" data-side="1">LEFT</button>
+        <button type="button" id="side-2" data-side="2">RIGHT</button>
+        <button type="button" id="side-both" data-side="both">BOTH</button>
+      </div>
+    </header>
+    <div class="stage" id="stage"></div>
+  </div>
+  <script>window.LIM_WS_PORT = __LIM_WS_PORT__;</script>
+  <script src="lim-route.js?v=20261015-3"></script>
+  <script src="cdu.js?v=20261015-3"></script>
+</body>
+</html>

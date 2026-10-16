@@ -1,0 +1,170 @@
+/* 747-400 GST / LCF CRT face — dark brown case, green phosphor, rounder tube bezel.
+   Loaded after cdu-747.css. Keys and layout stay the same as the -8 face. */
+
+body.face-744 {
+  --b747-white: #3dff2a;
+  --b747-green: #5cff3a;
+  --b747-cyan: #4af06a;
+  --b747-amber: #6aff40;
+  --b747-magenta: #58f050;
+  --b747-blue: #45e858;
+  --b747-red: #7dff55;
+  --legend: #e2a14a;
+  --crt-green: #3dff2a;
+  --crt-dim: #2ab01c;
+}
+
+body.face-744 .unit {
+  border: 1px solid #2a1c12;
+  background:
+    linear-gradient(180deg, #5a4030 0%, #4a3224 28%, #3a281c 72%, #322218 100%);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 220, 180, 0.12),
+    inset 0 -10px 18px rgba(0, 0, 0, 0.35);
+}
+
+body.face-744 .plate {
+  color: #c8b090;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55);
+}
+
+body.face-744 .side button {
+  border: 1px solid #1a120c;
+  background: #3a2a1e;
+  color: #e8d4b8;
+}
+
+body.face-744 .side button.on {
+  background: #121010;
+  color: #fff;
+}
+
+body.face-744 .status.disconnected {
+  color: #c45a3a;
+}
+
+body.face-744 .fastener {
+  box-shadow:
+    0 0 0 2px #1a120c,
+    0 0 0 3px #5a4838,
+    inset 0 1px 1px rgba(255, 255, 255, 0.55),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.5);
+}
+
+body.face-744 .lsk {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 1px 0 #4a3828;
+}
+
+/* No LSK ticks across the bezel — in-sim -400 only has the mark on the key itself. */
+body.face-744 .lsk::before {
+  display: none !important;
+  content: none !important;
+}
+
+body.face-744 .face {
+  column-gap: calc(0.5 * var(--px));
+}
+
+/* CRT tube: rounder corners, thin rim (less slope from LSKs into the glass). */
+body.face-744 .screen-bezel {
+  padding: calc(3.8 * var(--px)) calc(2.6 * var(--px));
+  border-radius: calc(8.5 * var(--px));
+  background:
+    radial-gradient(120% 90% at 50% 35%, #6a5040 0%, #4a3428 42%, #3a281c 100%);
+  box-shadow:
+    inset 0 calc(0.5 * var(--px)) calc(1.0 * var(--px)) rgba(255, 210, 160, 0.07),
+    inset 0 calc(-0.8 * var(--px)) calc(1.6 * var(--px)) rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(20, 12, 8, 0.55);
+}
+
+body.face-744 .screen {
+  border-radius: calc(5.5 * var(--px));
+  box-shadow:
+    inset 0 0 28px rgba(0, 80, 0, 0.35),
+    inset 0 0 2px rgba(80, 255, 60, 0.12);
+}
+
+/* Default phosphor + map every style class to green CRT tones. */
+body.face-744 .fmc-letter {
+  color: var(--crt-green);
+  text-shadow: 0 0 0.06em rgba(60, 255, 40, 0.35);
+  -webkit-text-stroke: 0.03em rgba(0, 0, 0, 0.85);
+}
+
+body.face-744 .white { color: var(--crt-green); }
+body.face-744 .green { color: var(--b747-green); }
+body.face-744 .cyan { color: var(--b747-cyan); }
+body.face-744 .amber,
+body.face-744 .yellow { color: var(--b747-amber); }
+body.face-744 .magenta { color: var(--b747-magenta); }
+body.face-744 .blue { color: var(--b747-blue); }
+body.face-744 .red { color: var(--b747-red); }
+body.face-744 .disabled,
+body.face-744 .inop { color: var(--crt-dim); }
+
+/* Inverse video stays readable on a CRT (dark glyph on green bar). */
+body.face-744 .fmc-letter.r-white,
+body.face-744 .fmc-letter.blackwhite,
+body.face-744 .r-white,
+body.face-744 .blackwhite {
+  background-image: linear-gradient(var(--crt-green), var(--crt-green)) !important;
+  color: #041204 !important;
+  -webkit-text-fill-color: #041204 !important;
+  -webkit-text-stroke: 0.02em rgba(0, 40, 0, 0.35) !important;
+  text-shadow: none;
+}
+
+body.face-744 .fmc-letter.bluebg {
+  background-image: linear-gradient(var(--b747-green), var(--b747-green)) !important;
+  color: #041204 !important;
+  -webkit-text-fill-color: #041204 !important;
+}
+
+body.face-744 .fn button,
+body.face-744 .menu-pair button,
+body.face-744 .alpha button,
+body.face-744 .numpad button,
+body.face-744 .brt {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 0 #2a1c14;
+}
+
+body.face-744 .ann {
+  color: #6a5848;
+}
+
+body.face-744 .ann.lit {
+  color: #f0ebe0;
+  text-shadow: 0 0 6px rgba(255, 255, 240, 0.75), 0 0 2px #fff;
+}
+
+body.face-744 .brt input {
+  accent-color: #c8a060;
+}
+
+/*
+ * -400 EXEC matches GST/LCF cockpit: EXEC legend on top, light bar under it
+ * (the -8 face is the other way around).
+ */
+body.face-744 [data-key="EXEC"] {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 3px 2px 4px !important;
+}
+
+body.face-744 [data-key="EXEC"] > span:not(.lamp) {
+  order: 1 !important;
+  line-height: 1;
+}
+
+body.face-744 [data-key="EXEC"] .lamp {
+  order: 2 !important;
+  margin: 0 !important;
+  width: 68%;
+  /* GST/LCF EXEC light is a short block, not a hairline. */
+  height: calc(0.11 * var(--inch));
+  border-radius: 1px;
+  flex: 0 0 auto;
+}
