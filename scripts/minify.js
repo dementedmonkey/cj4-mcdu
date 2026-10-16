@@ -45,30 +45,54 @@ function listAuthoredAssets(rootDir, { extensions, excludeDirs }) {
   return files.sort();
 }
 
+/** Coherent GT misparses `if(cond)this.` as still inside the if condition. */
+const COHERENT_UNSAFE_BASENAMES = new Set(['WTUns1.js']);
+
 async function minifyOneJs(jsPath, versionLabel) {
+  const base = path.basename(jsPath);
+  if (COHERENT_UNSAFE_BASENAMES.has(base)) {
+    console.log(`  skip ${base} (Coherent GT cannot parse terser output for this file)`);
+    return;
+  }
+
   const jsSource = fs.readFileSync(jsPath, 'utf8');
   const jsResult = await minifyJs(jsSource, {
     compress: {
       drop_console: false,
-      passes: 1
+      passes: 1,
+      // Prefer braced if/else bodies; reduces `if(x)this.y` forms Coherent rejects.
+      conditionals: false,
+      negate_iife: false
     },
     mangle: {
-      toplevel: true,
+      toplevel: false,
       properties: false
     },
     format: {
       comments: false,
-      preamble: `/* ${PRODUCT_LABEL} v${versionLabel} - minified */`
-    }
+      preamble: `/* ${PRODUCT_LABEL} v${versionLabel} - minified */`,
+      // Force braces around single-statement if/for/while bodies.
+      braces: true,
+      safari10: true
+    },
+    safari10: true
   });
 
   if (jsResult.error) {
     throw new Error(`JS minification failed (${path.basename(jsPath)}): ${jsResult.error}`);
   }
-  fs.writeFileSync(jsPath, jsResult.code, 'utf8');
-  const savings = ((1 - jsResult.code.length / jsSource.length) * 100).toFixed(1);
+
+  const code = jsResult.code;
+  // Last-resort: keep the authored file if output still has Coherent-unsafe forms.
+  if (/if\([^)]*\)this\b/.test(code)) {
+    console.log(`  skip ${base} (terser still emitted if()this — kept unminified)`);
+    return;
+  }
+
+  fs.writeFileSync(jsPath, code, 'utf8');
+  const savings = ((1 - code.length / jsSource.length) * 100).toFixed(1);
   console.log(
-    `  ✓ ${path.basename(jsPath)}: ${(jsSource.length / 1024).toFixed(1)} KB → ${(jsResult.code.length / 1024).toFixed(1)} KB (${savings}% smaller)`
+    `  ✓ ${base}: ${(jsSource.length / 1024).toFixed(1)} KB → ${(code.length / 1024).toFixed(1)} KB (${savings}% smaller)`
   );
 }
 

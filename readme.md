@@ -6,19 +6,21 @@ The sim package is `z-DementedMonkey-LiM-CDU-v{version}`. MSFS 2024 and MSFS 202
 
 The browser faces are HTML and CSS. Install, the WEBSOCKETS pages, and the relay are in `0 - DocsFolder/USER-MANUAL.md`. Build steps are in `0 - DocsFolder/BUILD-PIPELINE.md`.
 
-## Supported aircraft
+## MSFS 2024
 
-| Aircraft | Browser face | WEBSOCKETS |
-| --- | --- | --- |
-| Citation CJ4 | CJ4. Other WT21 titles use this face with the plate "WT21 Default" | IDX, page 2, RSK 5 |
-| King Air C90 | C90, one CDU | IDX, page 2, RSK 5 |
-| FlightFX Piaggio P180 (2024) | P180, one CDU | IDX, page 2, RSK 5 |
-| FlightFX Hawker 800XP | 800XP | IDX, page 2, RSK 5 |
-| FlightFX Citation X / C750 | Honeywell C750 | NAV, SETTINGS, RSK 1 |
-| 737 MAX | 737 | MENU, RSK 5 |
-| 747-8, 747-400 GST, 747-400 LCF | 747 | MENU, RSK 5 |
-| 707 | 5 in | DATA page 1, RSK 5 MAINT, then RSK 1 |
-| Saab 340 | 4 in | DATA page 1, RSK 5 MAINT, then RSK 1 |
+| Aircraft | Version | Browser face | WEBSOCKETS |
+| --- | --- | --- | --- |
+| Citation CJ4 | 2.1.10 | CJ4. Other WT21 titles use this face with the plate "WT21 Default" | IDX, page 2, RSK 5 |
+| King Air C90 | 1.1.2 | C90, one CDU | IDX, page 2, RSK 5 |
+| FlightFX Piaggio P180 | 2.2.7 | P180, one CDU | IDX, page 2, RSK 5 |
+| FlightFX Hawker 800XP | 1.6 | 800XP | IDX, page 2, RSK 5 |
+| FlightFX Citation X / C750 | 2.3 | Honeywell C750 | NAV, SETTINGS, RSK 1 |
+| 737 MAX 8 | 9.11.0 | 737 | MENU, RSK 5 |
+| 747-8 | 2.1.7 | 747 | MENU, RSK 5 |
+| 747-400 LCF | 2.1.7 | 747 | MENU, RSK 5 |
+| 747-400 GST | 2.1.6 | 747 | MENU, RSK 5 |
+| 707-320C | 1.0.0 | 5 in | DATA page 1, RSK 5 MAINT, then RSK 1 |
+| Saab 340 | 1.1.3 | 4 in | DATA page 1, RSK 5 MAINT, then RSK 1 |
 
 Every aircraft starts with export on when nothing has been saved for that title. A saved off stays off.
 
@@ -26,15 +28,15 @@ Dual CDUs have CPT, FO, and BOTH. The C90 and the P180 are a single CDU, so that
 
 Charts and Navigraph login are not in this package.
 
-## FS2020
+## MSFS 2020
 
-The MSFS 2020 zip is for the 2020 CJ4, the 2020 P180, and the 2020 Citation X.
+Use the MSFS 2020 zip for these aircraft.
 
-| Aircraft | Result |
-| --- | --- |
-| CJ4 with Working Title WT21 2.0.4 | The plugin attaches. WEBSOCKETS is on IDX, page 2, RSK 5. |
-| FlightFX P180 2.0.6 | That FMC has no plugin. The zip loads the sim's `FFX21/FMC/WT21_FMC.html` and then `lim_p180_fmc.js`. Export stays on. That FMC has no page that can turn it off. |
-| FlightFX Citation X 1.3.8 | That FMC has no SETTINGS page. The zip sends the CDU screen through the HTML override of `VTX21/FMC/WT21_FMC.html`. Export stays on. Citation X version 2 is in beta with the newer avionics, and the WEBSOCKETS page comes back with that FMC. |
+| Aircraft | Version | Result |
+| --- | --- | --- |
+| Citation CJ4 with Working Title WT21 | 2.0.4 | The plugin attaches. WEBSOCKETS is on IDX, page 2, RSK 5. |
+| FlightFX Piaggio P180 | 2.0.6 | That FMC has no plugin. The zip loads the sim's `FFX21/FMC/WT21_FMC.html` and then `lim_p180_fmc.js`. Export stays on. That FMC has no page that can turn it off. |
+| FlightFX Citation X | 1.3.8 | That FMC has no SETTINGS page. The zip sends the CDU screen through the HTML override of `VTX21/FMC/WT21_FMC.html`. Export stays on. |
 
 ## Run
 

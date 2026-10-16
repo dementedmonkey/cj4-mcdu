@@ -1,6 +1,6 @@
 {
   "name": "lim-cdu",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "z-DementedMonkey-LiM-CDU websocket hub — modified fork of dementedmonkey/cj4-mcdu (GPL-3). npm run build = build/ only; npm run release = dist + zip",
   "private": true,
   "scripts": {

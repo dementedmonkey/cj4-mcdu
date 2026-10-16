@@ -38,6 +38,8 @@
   }
   activeSide = side;
 
+  const pageFace = document.body.getAttribute('data-face') || '748';
+  const homePlate = pageFace === '744' ? '747-400 CDU' : '747 CDU';
   const byCdu = Object.create(null);
   const seenCdu = Object.create(null);
   const legacy = { left: null, right: null };
@@ -177,7 +179,7 @@
     bothBtn.classList.toggle('on', both);
     app.classList.toggle('both', both);
     foUnit.hidden = !both;
-    if (captPlate) captPlate.textContent = both ? 'CAPT' : '747 CDU';
+    if (captPlate) captPlate.textContent = both ? 'CAPT' : homePlate;
     try { localStorage.setItem('lim747-cdu-side', both ? 'both' : String(side)); } catch (_) { /* ignore */ }
     repaint();
   }
@@ -245,6 +247,10 @@
 
     socket.onmessage = function (ev) {
       const raw = String(ev.data || '');
+      if (typeof LIM_maybeRedirect === 'function' &&
+          LIM_maybeRedirect(raw, { screen: both ? 'both' : String(side) })) {
+        return;
+      }
       const prefix = 'update:' + PROTOCOL + ':';
       if (raw.indexOf(prefix) !== 0) return;
       try {

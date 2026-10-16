@@ -77,9 +77,15 @@
     if (query[1] === 'both') both = true;
   }
 
+  function is747Classic(aircraft) {
+    const name = String(aircraft || '').toUpperCase();
+    if (/B748|AC_MODEL_B748|\b748\b/.test(name)) return false;
+    return /B744|AC_MODEL_B744|\b744\b|LCF|GST|BLCF|WTBLCF|WTB744/.test(name);
+  }
+
   function faceFor(fmcType, aircraft, payload) {
     const name = String(aircraft || '').toUpperCase();
-    if (fmcType === 'wt737/wt747') return 'wt747';
+    if (fmcType === 'wt737/wt747') return is747Classic(aircraft) ? 'wt744' : 'wt747';
     if (fmcType === 'wt737/uns1') {
       if (!unsFaceLock) {
         const hinted = payload && (payload.face === '5in' || payload.face === '4in') ? payload.face : null;
@@ -296,7 +302,8 @@
       const screen = both ? 'both' : String(side);
       const params = new URLSearchParams(window.location.search);
       params.set('screen', screen);
-      window.location.replace('747.html?' + params.toString());
+      const page = is747Classic(json.aircraft) ? '747-400.html' : '747.html';
+      window.location.replace(page + '?' + params.toString());
       return;
     }
     if (fmcType === 'wt737') {

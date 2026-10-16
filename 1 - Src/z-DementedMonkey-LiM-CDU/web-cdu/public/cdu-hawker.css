@@ -25,14 +25,20 @@ body.face-hawker .plate {
   text-shadow: none;
 }
 
+/* Screen label rows are slightly tighter than the shared 15-row LSK grid.
+   Shorten the LSK column so the pitch matches, then nudge as a set. */
+body.face-hawker .lsks {
+  height: 98.28%;
+}
+
 body.face-hawker .lsk {
   background: #121418;
   box-shadow: none;
-  transform: translateY(calc(2.55 * var(--px)));
+  transform: translateY(calc(0.9 * var(--px) - 2px));
 }
 
 body.face-hawker button.lsk:active {
-  transform: translateY(calc(2.55 * var(--px) + 1px));
+  transform: translateY(calc(0.9 * var(--px) - 1px));
 }
 
 body.face-hawker .lsk::after {

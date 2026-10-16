@@ -1,11 +1,13 @@
-# Release 1.0.1
+# Release 1.0.2
 
-Web CDU for Microsoft Flight Simulator. Modified from [dementedmonkey/cj4-mcdu](https://github.com/dementedmonkey/cj4-mcdu) 0.10.0, GPL-3. The Community package is `z-DementedMonkey-LiM-CDU-v1.0.1`.
+Web CDU for Microsoft Flight Simulator. Modified from [dementedmonkey/cj4-mcdu](https://github.com/dementedmonkey/cj4-mcdu) 0.10.0, GPL-3. The Community package is `z-DementedMonkey-LiM-CDU-v1.0.2`.
 
-## What is new in 1.0.1
+## What is new in 1.0.2
 
-- `web-cdu/start-web-cdu.cmd` downloads a portable Node.js into `web-cdu/runtime/` when Node is not already on the PC, then starts the hub. No separate Node install steps.
-- Separate MSFS 2024 and MSFS 2020 zips. Use the zip that matches your sim.
+- Browser face routing fixes so the 747, 737, and UNS pages open from the hub URL instead of staying on a blank WT21 face.
+- Separate 747-400 CRT face (dark brown bezel, green phosphor, rounder screen) for the LCF and GST. The 747-8 keeps the tan multi-color face. Routing uses ATC MODEL (`744` vs `748`).
+- Hawker and CJ4 LSK pitch tweaks.
+- Release minify no longer breaks the UNS instrument in Coherent GT (`WTUns1.js` stays unminified).
 
 ## Remove the old CDU mods
 
@@ -21,39 +23,41 @@ The LiM Charts plugin stays. It installs beside this package and the two run tog
 
 ## Install
 
-Download the MSFS 2024 zip or the MSFS 2020 zip from this release. Use the MSFS 2024 zip in the MSFS 2024 Community folder. Use the MSFS 2020 zip in the MSFS 2020 Community folder. The folder inside either zip is `z-DementedMonkey-LiM-CDU-v1.0.1`.
+Download the MSFS 2024 zip or the MSFS 2020 zip from this release. Use the MSFS 2024 zip in the MSFS 2024 Community folder. Use the MSFS 2020 zip in the MSFS 2020 Community folder. The folder inside either zip is `z-DementedMonkey-LiM-CDU-v1.0.2`.
 
 Double-click `web-cdu/start-web-cdu.cmd` and leave that window open. Open the URL it prints. The CDU screen stays dark until the unit in the aircraft has power. If Node.js is not already on the PC, that script downloads a portable copy into `web-cdu/runtime/` the first time and then starts the hub.
 
 Leave the flight and start it again after you install, so the sim loads the new scripts.
 
-## Aircraft
+## MSFS 2024 aircraft
 
-| Aircraft | Browser face | WEBSOCKETS |
-| --- | --- | --- |
-| Citation CJ4 | CJ4. Other WT21 titles use this face with the plate "WT21 Default" | IDX, page 2, RSK 5 |
-| King Air C90 | C90, one CDU | IDX, page 2, RSK 5 |
-| FlightFX Piaggio P180 (2024) | P180, one CDU | IDX, page 2, RSK 5 |
-| FlightFX Hawker 800XP | 800XP | IDX, page 2, RSK 5 |
-| FlightFX Citation X / C750 | Honeywell C750 | NAV, SETTINGS, RSK 1 |
-| 737 MAX | 737 | MENU, RSK 5 |
-| 747-8, 747-400 GST, 747-400 LCF | 747 | MENU, RSK 5 |
-| 707 | 5 in | DATA page 1, RSK 5 MAINT, then RSK 1 |
-| Saab 340 | 4 in | DATA page 1, RSK 5 MAINT, then RSK 1 |
+| Aircraft | Version | Browser face | WEBSOCKETS |
+| --- | --- | --- | --- |
+| Citation CJ4 | 2.1.10 | CJ4. Other WT21 titles use this face with the plate "WT21 Default" | IDX, page 2, RSK 5 |
+| King Air C90 | 1.1.2 | C90, one CDU | IDX, page 2, RSK 5 |
+| FlightFX Piaggio P180 | 2.2.7 | P180, one CDU | IDX, page 2, RSK 5 |
+| FlightFX Hawker 800XP | 1.6 | 800XP | IDX, page 2, RSK 5 |
+| FlightFX Citation X / C750 | 2.3 | Honeywell C750 | NAV, SETTINGS, RSK 1 |
+| 737 MAX 8 | 9.11.0 | 737 | MENU, RSK 5 |
+| 747-8 | 2.1.7 | 747 | MENU, RSK 5 |
+| 747-400 LCF | 2.1.7 | 747-400 CRT | MENU, RSK 5 |
+| 747-400 GST | 2.1.6 | 747-400 CRT | MENU, RSK 5 |
+| 707-320C | 1.0.0 | 5 in | DATA page 1, RSK 5 MAINT, then RSK 1 |
+| Saab 340 | 1.1.3 | 4 in | DATA page 1, RSK 5 MAINT, then RSK 1 |
 
 Export starts on for every aircraft. A saved off stays off. That choice is stored per aircraft title.
 
-The MSFS 2020 P180 2.0.6 and the MSFS 2020 Citation X 1.3.8 have no page that can turn export off, so those two stay on. Citation X version 2 is in beta with the newer avionics, and the WEBSOCKETS page comes back with that FMC.
+The MSFS 2020 P180 2.0.6 and the MSFS 2020 Citation X 1.3.8 have no page that can turn export off, so those two stay on.
 
 Dual CDUs have CPT, FO, and BOTH. The King Air C90 and the FlightFX Piaggio P180 are a single CDU.
 
-## MSFS 2020
+## MSFS 2020 aircraft
 
-The 2020 zip is for the 2020 CJ4, the 2020 FlightFX Piaggio P180, and the 2020 FlightFX Citation X.
-
-- CJ4 with Working Title WT21 2.0.4: the plugin attaches. WEBSOCKETS is on IDX, page 2, RSK 5.
-- FlightFX P180 2.0.6: that FMC has no plugin. Export stays on.
-- FlightFX Citation X 1.3.8: that FMC has no SETTINGS page. Export stays on.
+| Aircraft | Version | Result |
+| --- | --- | --- |
+| Citation CJ4 with Working Title WT21 | 2.0.4 | The plugin attaches. WEBSOCKETS is on IDX, page 2, RSK 5. |
+| FlightFX Piaggio P180 | 2.0.6 | That FMC has no plugin. Export stays on. |
+| FlightFX Citation X | 1.3.8 | That FMC has no SETTINGS page. Export stays on. |
 
 ## Server
 
@@ -66,6 +70,11 @@ The 2020 zip is for the 2020 CJ4, the 2020 FlightFX Piaggio P180, and the 2020 F
 The sim and the browser connect in to `simPort`. On the aircraft WEBSOCKETS page, set the IP to `127.0.0.1` and the port to `8088` when the sim and the hub are on the same PC.
 
 SPAD listens on `relayPort`. The hub dials out to `relayIp:relayPort` and sends the same messages the plane sends. Set `relayPort` to `0` to turn that off.
+
+## What 1.0.1 added
+
+- `web-cdu/start-web-cdu.cmd` downloads a portable Node.js into `web-cdu/runtime/` when Node is not already on the PC, then starts the hub. No separate Node install steps.
+- Separate MSFS 2024 and MSFS 2020 zips. Use the zip that matches your sim.
 
 ## What 1.0.0 added
 

@@ -540,3 +540,16 @@ button[data-key]:active,
 button.lsk:active {
   transform: translateY(calc(0.7 * var(--px) + 1px));
 }
+
+/* CJ4 / default WT21: same LSK pitch fix as Hawker (label rows tighter than the 15-row grid). */
+body.face-cj4 .lsks {
+  height: 98.28%;
+}
+
+body.face-cj4 .lsk {
+  transform: translateY(calc(0.9 * var(--px) - 2px));
+}
+
+body.face-cj4 button.lsk:active {
+  transform: translateY(calc(0.9 * var(--px) - 1px));
+}

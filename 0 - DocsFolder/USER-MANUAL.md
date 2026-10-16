@@ -6,7 +6,7 @@ One Community package, `z-DementedMonkey-LiM-CDU-v{version}`, exports the CDU sc
 
 Charts and Navigraph login are not part of this package.
 
-The MSFS 2020 zip is for the 2020 CJ4, the 2020 P180, and the 2020 Citation X. The CJ4 plugin attaches, and WEBSOCKETS is on IDX, page 2, RSK 5. The P180 2.0.6 FMC has no plugin. That zip loads `FFX21/FMC/WT21_FMC.html` and then `lim_p180_fmc.js`. Export stays on. That FMC has no page that can turn it off. The Citation X 1.3.8 has no SETTINGS page. That zip sends the screen through the HTML override of `VTX21/FMC/WT21_FMC.html`. Export stays on. Citation X version 2 is in beta with the newer avionics, and the WEBSOCKETS page comes back with that FMC.
+The MSFS 2020 zip is for the 2020 CJ4 (Working Title WT21 2.0.4), the 2020 FlightFX Piaggio P180 2.0.6, and the 2020 FlightFX Citation X 1.3.8. The CJ4 plugin attaches, and WEBSOCKETS is on IDX, page 2, RSK 5. The P180 2.0.6 FMC has no plugin. That zip loads `FFX21/FMC/WT21_FMC.html` and then `lim_p180_fmc.js`. Export stays on. That FMC has no page that can turn it off. The Citation X 1.3.8 has no SETTINGS page. That zip sends the screen through the HTML override of `VTX21/FMC/WT21_FMC.html`. Export stays on.
 
 ## Install
 
@@ -20,7 +20,7 @@ This package replaces the older Demented Monkey CDU mods and the separate LiM 74
 
 The LiM Charts plugin stays. It installs beside this package and the two run together.
 
-Use the MSFS 2024 zip in the MSFS 2024 Community folder. Use the MSFS 2020 zip in the MSFS 2020 Community folder. The folder inside either zip is `z-DementedMonkey-LiM-CDU-v1.0.1`. Double-click `web-cdu/start-web-cdu.cmd` and leave that window open while you fly. If Node.js is not already on the PC, that script downloads a portable copy into `web-cdu/runtime/` the first time and then starts the hub.
+Use the MSFS 2024 zip in the MSFS 2024 Community folder. Use the MSFS 2020 zip in the MSFS 2020 Community folder. The folder inside either zip is `z-DementedMonkey-LiM-CDU-v1.0.2`. Double-click `web-cdu/start-web-cdu.cmd` and leave that window open while you fly. If Node.js is not already on the PC, that script downloads a portable copy into `web-cdu/runtime/` the first time and then starts the hub.
 
 The hub prints a local URL and a LAN URL. Open one of them in a browser on this PC or on a tablet on the same network. The screen stays dark until the CDU in the aircraft has power.
 
@@ -50,7 +50,8 @@ The page stores export, IP, and port for that aircraft title. Every aircraft sta
 | CJ4, King Air C90, FlightFX Piaggio P180, Hawker 800XP | IDX, page 2, RSK 5 |
 | Citation X | NAV, SETTINGS, RSK 1 |
 | 737 MAX | MENU, RSK 5 |
-| 747-8, 747-400 GST, 747-400 LCF | MENU, RSK 5 |
+| 747-8 | MENU, RSK 5 (747 face) |
+| 747-400 GST, 747-400 LCF | MENU, RSK 5 (747-400 CRT face) |
 | 707 | DATA page 1, RSK 5 MAINT, then RSK 1 |
 | Saab 340 | DATA page 1, RSK 5 MAINT, then RSK 1 |
 

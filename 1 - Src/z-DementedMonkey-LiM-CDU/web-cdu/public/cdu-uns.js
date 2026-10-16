@@ -283,6 +283,9 @@
 
     socket.onmessage = function (ev) {
       const raw = String(ev.data || '');
+      if (typeof LIM_maybeRedirect === 'function' && LIM_maybeRedirect(raw, {})) {
+        return;
+      }
       const prefix = 'update:' + PROTOCOL + ':';
       if (raw.indexOf(prefix) !== 0) {
         return;

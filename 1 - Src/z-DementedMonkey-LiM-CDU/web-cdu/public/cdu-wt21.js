@@ -347,6 +347,10 @@
     };
     socket.onmessage = function (ev) {
       const raw = String(ev.data || '');
+      if (typeof LIM_maybeRedirect === 'function' &&
+          LIM_maybeRedirect(raw, { screen: both ? 'both' : String(side) })) {
+        return;
+      }
       const prefix = 'update:' + PROTOCOL + ':';
       if (raw.indexOf(prefix) !== 0) return;
       try { applyUpdate(JSON.parse(raw.slice(prefix.length))); } catch (_) { /* ignore */ }

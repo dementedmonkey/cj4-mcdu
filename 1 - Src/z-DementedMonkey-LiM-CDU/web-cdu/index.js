@@ -296,7 +296,8 @@ async function main() {
 
   const httpServer = http.createServer((req, res) => {
     const urlPath = decodeURIComponent((req.url || '/').split('?')[0]);
-    let rel = urlPath === '/' ? '/wt21.html' : urlPath;
+    // Landing page routes to 747 / 737 / UNS / WT21 faces from the first sim update.
+    let rel = urlPath === '/' ? '/index.html' : urlPath;
     if (rel.includes('..')) {
       res.writeHead(400);
       res.end('Bad request');
